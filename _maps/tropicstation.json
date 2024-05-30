@@ -1,0 +1,45 @@
+{
+	"version": 1,
+	"map_name": "Tropicstation (WIP)",
+	"map_path": "map_files/Tropicstation",
+	"map_file": "tropicstation.dmm",
+	"space_ruin_levels": 0,
+	"space_empty_levels": 0,
+	"planetary": 1,
+	"shuttles": {
+		"cargo": "cargo_skyrat",
+		"ferry": "ferry_skyrat",
+		"whiteship": "whiteship_delta",
+		"emergency": "emergency_meta"
+	},
+	"traits": [
+		{
+			"Up": true,
+			"Mining": true,
+			"Linkage": null,
+			"Gravity": true,
+			"Lava Ruins": true,
+			"Baseturf": "/turf/open/lava/smooth/lava_land_surface",
+			"No Parallax": true
+		},
+		{
+			"Up": true,
+			"Down": true,
+			"Mining": true,
+			"Linkage": null,
+			"Gravity": true,
+			"Jungle Cave Ruins": true,
+			"Baseturf": "/turf/open/misc/dirt/jungle",
+			"No Parallax": true
+		},
+		{
+			"Down": true,
+			"Mining": true,
+			"Linkage": null,
+			"Gravity": true,
+			"Baseturf": "/turf/open/misc/dirt",
+			"No Parallax": true
+		}
+	],
+	"minetype": "none"
+}
