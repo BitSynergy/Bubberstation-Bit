@@ -28,7 +28,6 @@
 			"Mining": true,
 			"Linkage": null,
 			"Gravity": true,
-			"Jungle Cave Ruins": true,
 			"Baseturf": "/turf/open/misc/dirt/jungle",
 			"No Parallax": true
 		},
@@ -41,5 +40,10 @@
 			"No Parallax": true
 		}
 	],
-	"minetype": "none"
+	"minetype": "none",
+	"job_changes": {
+		"Captain": {
+			"special_charter": "island"
+		}
+	}
 }

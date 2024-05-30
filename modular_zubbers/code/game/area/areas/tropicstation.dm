@@ -1,17 +1,17 @@
 /area/tropicstation/
 	name = "placeholder"
-	icon = 'icons/area/areas_station.dmi'
 	icon_state = "station"
 	has_gravity = STANDARD_GRAVITY
 	flags_1 = NONE
 	area_flags = UNIQUE_AREA | FLORA_ALLOWED
 	ambience_index = AMBIENCE_GENERIC
 	sound_environment = SOUND_AREA_STANDARD_STATION
-	ambient_buzz = 'sound/ambience/shore.ogg'
+
 
 /area/tropicstation/outdoors
 	name = "Outdoors"
-	icon_state = "station"
+	icon = 'modular_zubbers/icons/area/areas_island.dmi'
+	icon_state = "outdoor"
 	outdoors = TRUE
 	always_unpowered = TRUE
 	power_environ = FALSE
@@ -21,10 +21,22 @@
 	area_flags = UNIQUE_AREA | FLORA_ALLOWED
 	min_ambience_cooldown = 70 SECONDS
 	max_ambience_cooldown = 220 SECONDS
+	ambientsounds = list(
+		'modular_zubbers/sound/ambience/tropic1.ogg',
+		'modular_zubbers/sound/ambience/tropic2.ogg'
+	)
+
+/area/tropicstation/outdoors/beach
+	name = "Beach"
+	icon_state = "beach"
+	ambientsounds = list(
+		'sound/ambience/shore.ogg',
+		'sound/ambience/seag2.ogg',
+		'sound/ambience/seag3.ogg',
+	)
 
 /area/tropicstation/outdoors/debug
 	name = "Testing Outdoors"
-	icon_state = "station"
 	always_unpowered = FALSE
 	power_environ = TRUE
 	power_equip = TRUE
@@ -46,5 +58,24 @@
 		lighting_turf.set_light(
 			1 + sunlight_freq,
 			1,
-			"#e0d67a"
+			"#eeebd3"
 		)
+
+/area/tropicstation/caves
+	name = "Island Caves"
+	icon = 'icons/area/areas_station.dmi'
+	icon_state = "mining"
+	outdoors = TRUE
+	always_unpowered = TRUE
+	requires_power = TRUE
+	power_environ = FALSE
+	power_equip = FALSE
+	power_light = FALSE
+	area_flags = UNIQUE_AREA | FLORA_ALLOWED
+	min_ambience_cooldown = 70 SECONDS
+	max_ambience_cooldown = 220 SECONDS
+
+/area/tropicstation/caves/unexplored
+	icon_state = "unexplored"
+	area_flags = VALID_TERRITORY | UNIQUE_AREA | CAVES_ALLOWED | FLORA_ALLOWED  | BLOBS_ALLOWED
+	map_generator = /datum/map_generator/cave_generator/tropicstation/cave
