@@ -4,8 +4,8 @@
 	has_gravity = STANDARD_GRAVITY
 	flags_1 = NONE
 	area_flags = UNIQUE_AREA | FLORA_ALLOWED
-	ambience_index = AMBIENCE_GENERIC
-	sound_environment = SOUND_AREA_STANDARD_STATION
+	ambience_index = null
+	sound_environment = null
 
 
 /area/tropicstation/outdoors
@@ -19,9 +19,9 @@
 	power_light = FALSE
 	requires_power = TRUE
 	area_flags = UNIQUE_AREA | FLORA_ALLOWED
-	min_ambience_cooldown = 70 SECONDS
-	max_ambience_cooldown = 220 SECONDS
-	ambientsounds = list(
+	min_ambience_cooldown = 30 SECONDS
+	max_ambience_cooldown = 90 SECONDS
+	ambient_buzz = list(
 		'modular_zubbers/sound/ambience/tropic1.ogg',
 		'modular_zubbers/sound/ambience/tropic2.ogg'
 	)
@@ -38,9 +38,9 @@
 /area/tropicstation/outdoors/debug
 	name = "Testing Outdoors"
 	always_unpowered = FALSE
-	power_environ = TRUE
-	power_equip = TRUE
-	power_light = TRUE
+	power_environ = FALSE
+	power_equip = FALSE
+	power_light = FALSE
 	requires_power = FALSE
 
 /area/tropicstation/outdoors/LateInitialize()
