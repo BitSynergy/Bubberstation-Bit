@@ -8639,7 +8639,6 @@
 #include "modular_zubbers\code\datums\diseases\advance\presets.dm"
 #include "modular_zubbers\code\datums\greyscale\config_types\greyscale_configs\greyscale_clothes.dm"
 #include "modular_zubbers\code\datums\mapgen\Cavegens\moonstation.dm"
-#include "modular_zubbers\code\datums\mapgen\Cavegens\tropicstation.dm"
 #include "modular_zubbers\code\datums\materials\basemats.dm"
 #include "modular_zubbers\code\datums\mood_events\bloodsucker_events.dm"
 #include "modular_zubbers\code\datums\mood_events\dominant_mood.dm"
@@ -8655,7 +8654,6 @@
 #include "modular_zubbers\code\game\area\areas\centcom.dm"
 #include "modular_zubbers\code\game\area\areas\moonstation.dm"
 #include "modular_zubbers\code\game\area\areas\station.dm"
-#include "modular_zubbers\code\game\area\areas\tropicstation.dm"
 #include "modular_zubbers\code\game\brain_damage\severe.dm"
 #include "modular_zubbers\code\game\gamemodes\dynamic\dynamic_rulesets.dm"
 #include "modular_zubbers\code\game\gamemodes\dynamic\dynamic_rulesets_latejoin.dm"
@@ -9298,3 +9296,7 @@
 #include "modular_zubbers\master_files\skyrat\modules\opposing_force\code\opposing_force_subsystem.dm"
 #include "modular_zubbers\master_files\skyrat\modules\verbs\code\subtle.dm"
 // END_INCLUDE
+
+#include "modular_zubbers\code\datums\mapgen\Cavegens\tropicstation.dm"
+#include "modular_zubbers\code\game\area\areas\tropicstation.dm"
+#include "modular_zubbers\code\game\objects\structures\signs\signs_tropicstation.dm"
