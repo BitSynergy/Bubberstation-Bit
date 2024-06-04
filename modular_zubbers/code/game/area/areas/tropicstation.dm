@@ -15,8 +15,7 @@
 	outdoors = TRUE
 	always_unpowered = TRUE
 	power_environ = FALSE
-	power_equip = FALSE
-	power_light = FALSE
+	power_light = 	TRUE
 	requires_power = TRUE
 	area_flags = UNIQUE_AREA | FLORA_ALLOWED
 	min_ambience_cooldown = 30 SECONDS
@@ -38,9 +37,9 @@
 /area/tropicstation/outdoors/debug
 	name = "Testing Outdoors"
 	always_unpowered = FALSE
-	power_environ = FALSE
-	power_equip = FALSE
-	power_light = FALSE
+	power_environ = TRUE
+	power_equip = TRUE
+	power_light = TRUE
 	requires_power = FALSE
 
 /area/tropicstation/outdoors/LateInitialize()
