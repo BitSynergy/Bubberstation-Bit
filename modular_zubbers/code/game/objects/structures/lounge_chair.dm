@@ -1,12 +1,14 @@
 /obj/structure/bed/lounge_chair
 	name = "Lounge Chair"
-	desc = "An unauthorized modification of a station chair for the laziest employees."
-	icon = 'modular_zubbers/icons/obj/structure/lounge_chair.dmi'
+	desc = "A chair used to lay in, sleep in or strap on."
+	icon = 'modular_zubbers/icons/obj/structures/lounge_chair.dmi'
 	icon_state = "loungechair"
 	anchored = TRUE
 	can_buckle = TRUE
 	// The mutable appearance used for the overlay over buckled mobs.
 	var/mutable_appearance/armrest
+	// custom_materials = list(/datum/material/iron = SHEET_MATERIAL_AMOUNT * 4)
+
 
 //Chair armrest code
 /obj/structure/bed/lounge_chair/Initialize(mapload)
