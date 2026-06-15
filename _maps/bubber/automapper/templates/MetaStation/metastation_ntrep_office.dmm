@@ -73,6 +73,11 @@
 /obj/structure/cable,
 /turf/open/floor/wood,
 /area/station/command/heads_quarters/nt_rep)
+"n" = (
+/obj/structure/chair/comfy/beige,
+/obj/machinery/firealarm/directional/west,
+/turf/open/floor/wood,
+/area/station/command/heads_quarters/nt_rep)
 "p" = (
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
@@ -133,7 +138,7 @@
 /turf/open/floor/wood,
 /area/station/command/heads_quarters/nt_rep)
 "A" = (
-/obj/structure/closet/secure_closet/nanotrasen_consultant/station,
+/obj/structure/closet/secure_closet/nanotrasen_consultant,
 /turf/open/floor/carpet/green,
 /area/station/command/heads_quarters/nt_rep)
 "B" = (
@@ -152,7 +157,7 @@
 	pixel_x = 8;
 	pixel_y = 6
 	},
-/obj/item/stamp{
+/obj/item/stamp/granted{
 	pixel_y = 12;
 	pixel_x = 8
 	},
@@ -188,7 +193,7 @@
 /turf/open/floor/wood,
 /area/station/command/heads_quarters/nt_rep)
 "H" = (
-/obj/machinery/vending/boozeomat/all_access,
+/obj/machinery/vending/boozeomat,
 /turf/closed/wall/r_wall,
 /area/station/command/heads_quarters/nt_rep)
 "I" = (
@@ -211,7 +216,7 @@
 /turf/open/floor/carpet/green,
 /area/station/command/heads_quarters/nt_rep)
 "M" = (
-/obj/machinery/time_clock/directional/south,
+/obj/machinery/modular_computer/preset/time_clock/directional/south,
 /turf/open/floor/iron,
 /area/station/hallway/primary/port)
 "N" = (
@@ -236,7 +241,7 @@
 /obj/effect/mapping_helpers/airlock/access/all/cent_com/rep_door,
 /obj/machinery/door/firedoor,
 /obj/effect/turf_decal/siding/wood,
-/obj/effect/mapping_helpers/airlock/unres{
+/obj/effect/mapping_helpers/airlock/unres/delayed{
 	dir = 1
 	},
 /turf/open/floor/carpet/green,
@@ -253,7 +258,7 @@
 /obj/effect/turf_decal/siding/wood{
 	dir = 1
 	},
-/obj/effect/mapping_helpers/airlock/unres,
+/obj/effect/mapping_helpers/airlock/unres/delayed,
 /turf/open/floor/wood,
 /area/station/command/heads_quarters/nt_rep)
 "S" = (
@@ -270,11 +275,10 @@
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
 /obj/effect/mapping_helpers/airlock/access/all/cent_com/rep_door,
 /obj/machinery/door/airlock/maintenance,
-/obj/machinery/door/firedoor,
 /obj/effect/turf_decal/siding/wood{
 	dir = 7
 	},
-/obj/effect/mapping_helpers/airlock/unres{
+/obj/effect/mapping_helpers/airlock/unres/delayed{
 	dir = 1
 	},
 /turf/open/floor/wood,
@@ -286,7 +290,7 @@
 /obj/effect/turf_decal/siding/wood{
 	dir = 1
 	},
-/obj/machinery/photocopier,
+/obj/machinery/photocopier/prebuilt,
 /turf/open/floor/wood,
 /area/station/command/heads_quarters/nt_rep)
 
@@ -307,7 +311,7 @@ a
 f
 s
 v
-b
+n
 I
 x
 d

@@ -1,5 +1,9 @@
 /// A list of all active and visible messengers
 GLOBAL_LIST_EMPTY_TYPED(pda_messengers, /datum/computer_file/program/messenger)
+/// A list of all active and visible messengers
+GLOBAL_LIST_EMPTY_TYPED(pda_messengers_by_job, /datum/computer_file/program/messenger)
+/// A list of all active and visible messengers
+GLOBAL_LIST_EMPTY_TYPED(pda_messengers_by_name, /datum/computer_file/program/messenger)
 
 /// Registers an NTMessenger instance to the list of pda_messengers.
 /proc/add_messenger(datum/computer_file/program/messenger/messenger)
@@ -16,6 +20,9 @@ GLOBAL_LIST_EMPTY_TYPED(pda_messengers, /datum/computer_file/program/messenger)
 		return
 
 	GLOB.pda_messengers[messenger_ref] = messenger
+	BINARY_INSERT_PROC_COMPARE(messenger, GLOB.pda_messengers_by_job, /datum/computer_file/program/messenger, messenger, compare_job, COMPARE_KEY)
+	BINARY_INSERT_PROC_COMPARE(messenger, GLOB.pda_messengers_by_name, /datum/computer_file/program/messenger, messenger, compare_name, COMPARE_KEY)
+
 
 /// Unregisters an NTMessenger instance from the pda_messengers table.
 /proc/remove_messenger(datum/computer_file/program/messenger/messenger)
@@ -26,15 +33,10 @@ GLOBAL_LIST_EMPTY_TYPED(pda_messengers, /datum/computer_file/program/messenger)
 	if(!(messenger_ref in GLOB.pda_messengers))
 		return
 
-	GLOB.pda_messengers.Remove(messenger_ref)
+	GLOB.pda_messengers -= messenger_ref
+	GLOB.pda_messengers_by_job -= messenger
+	GLOB.pda_messengers_by_name -= messenger
 
-/// Gets all messengers, sorted by their name
-/proc/get_messengers_sorted_by_name()
-	return sortTim(GLOB.pda_messengers.Copy(), GLOBAL_PROC_REF(cmp_pdaname_asc), associative = TRUE)
-
-/// Gets all messengers, sorted by their job
-/proc/get_messengers_sorted_by_job()
-	return sortTim(GLOB.pda_messengers.Copy(), GLOBAL_PROC_REF(cmp_pdajob_asc), associative = TRUE)
 
 /// Get the display name of a messenger instance
 /proc/get_messenger_name(datum/computer_file/program/messenger/messenger)
@@ -133,13 +135,16 @@ GLOBAL_LIST_EMPTY_TYPED(pda_messengers, /datum/computer_file/program/messenger)
 	var/everyone
 	/// The station time at which this message was made.
 	var/timestamp
+	/// Whether or not the message is hidden from ghostchat
+	var/subtle // BUBBER EDIT ADDITION - SUBTLE MESSAGES
 
-/datum/pda_message/New(message, outgoing, timestamp, photo_name = null, everyone = FALSE)
+/datum/pda_message/New(message, outgoing, timestamp, photo_name = null, everyone = FALSE, subtle = FALSE) // BUBBER EDIT CHANGE - SUBTLE MESSAGES - Original: /datum/pda_message/New(message, outgoing, timestamp, photo_name = null, everyone = FALSE)
 	src.message = message
 	src.outgoing = outgoing
 	src.timestamp = timestamp
 	src.photo_name = photo_name
 	src.everyone = everyone
+	src.subtle = subtle // BUBBER EDIT ADDITION - SUBTLE MESSAGES
 
 /// Returns an associative list of the message's data, used for ui_data calls.
 /datum/pda_message/proc/get_ui_data(mob/user)
@@ -149,4 +154,5 @@ GLOBAL_LIST_EMPTY_TYPED(pda_messengers, /datum/computer_file/program/messenger)
 	data["photo_path"] = photo_name ? SSassets.transport.get_asset_url(photo_name) : null
 	data["everyone"] = everyone
 	data["timestamp"] = timestamp
+	data["subtle"] = subtle // BUBBER EDIT ADDITION - SUBTLE MESSAGES
 	return data

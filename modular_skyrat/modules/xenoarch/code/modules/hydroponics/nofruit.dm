@@ -1,5 +1,5 @@
 /obj/item/seeds/nofruit
-	name = "pack of nofruit seeds"
+	name = "nofruit seed pack"
 	desc = "These seeds grow into nofruit plants. A strange plant often cultivated by silent performers."
 	icon = 'modular_skyrat/modules/xenoarch/icons/seeds.dmi'
 	icon_state = "nofruit"
@@ -24,5 +24,7 @@
 	filling_color = "#FF4500"
 	bite_consumption_mod = 0.5
 	foodtypes = FRUIT
-	juice_typepath = /datum/reagent/consumable/nothing
 	tastes = list("nothing" = 1)
+
+/obj/item/food/grown/nofruit/juice_typepath()
+	return /datum/reagent/consumable/nothing

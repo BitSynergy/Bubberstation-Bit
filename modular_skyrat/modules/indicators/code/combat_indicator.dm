@@ -47,10 +47,9 @@ GLOBAL_VAR_INIT(combat_indicator_overlay, GenerateCombatOverlay())
 	if(combat_indicator_vehicle)
 		. += GLOB.combat_indicator_overlay
 
-/mob/living/proc/combat_indicator_unconscious_signal()
+/mob/living/proc/combat_indicator_unconscious_signal(datum/source, amount, ignore_canstun)
 	SIGNAL_HANDLER
-	if(stat < UNCONSCIOUS) // sanity check because something is calling this signal improperly -- it may be due to adjustconciousness()
-		stack_trace("Improper COMSIG_LIVING_STATUS_UNCONSCIOUS sent; mob is not unconscious")
+	if(!IsUnconscious() && amount <= 0)
 		return
 	set_combat_indicator(FALSE)
 
@@ -196,8 +195,6 @@ GLOBAL_VAR_INIT(combat_indicator_overlay, GenerateCombatOverlay())
 	. = ..()
 	if(. && isliving(user))
 		var/mob/living/living_user = user
-		living_user.Paralyze(200)
-		living_user.remove_status_effect(/datum/status_effect/grouped/surrender, src)
 		living_user.set_combat_indicator(FALSE)
 
 /datum/emote/living/surrender/select_message_type(mob/user, intentional)

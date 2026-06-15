@@ -1,5 +1,5 @@
 /obj/item/seeds/telriis
-	name = "pack of telriis seeds"
+	name = "telriis seed pack"
 	desc = "These seeds grow into telriis plants. A distant relative of milkweed, this grass can actually be juiced into milk."
 	icon = 'modular_skyrat/modules/xenoarch/icons/seeds.dmi'
 	icon_state = "telriis"
@@ -25,5 +25,7 @@
 	filling_color = "#FF4500"
 	bite_consumption_mod = 0.5
 	foodtypes = FRUIT
-	juice_typepath = /datum/reagent/consumable/coconut_milk
 	tastes = list("milk" = 1)
+
+/obj/item/food/grown/telriis/juice_typepath()
+	return /datum/reagent/consumable/coconut_milk

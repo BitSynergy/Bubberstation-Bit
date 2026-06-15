@@ -1,15 +1,9 @@
-#define SYNTH_CHARGE_MAX 1.1 MEGA JOULES
-#define SYNTH_CHARGE_ALMOST_FULL 900 KILO JOULES
-#define SYNTH_JOULES_PER_NUTRITION 2000
-#define SYNTH_CHARGE_RATE 250 KILO WATTS
-#define SYNTH_APC_MINIMUM_PERCENT 20
-#define SSMACHINES_SECONDS_PER_TICK 2
-
-/obj/item/organ/internal/cyberimp/arm/power_cord
+/obj/item/organ/cyberimp/arm/toolkit/power_cord
 	name = "charging implant"
 	desc = "An internal power cord. Useful if you run on elecricity. Not so much otherwise."
 	items_to_create = list(/obj/item/synth_powercord)
-	zone = "l_arm"
+	zone = BODY_ZONE_L_ARM
+	slot = ORGAN_SLOT_LEFT_ARM_AUG
 
 /obj/item/synth_powercord
 	name = "power cord"
@@ -18,21 +12,23 @@
 	icon_state = "wire1"
 	///Object basetypes which the powercord is allowed to connect to.
 	var/static/list/synth_charge_whitelist = typecacheof(list(
-		/obj/item/stock_parts/cell,
+		/obj/item/stock_parts/power_store,
 		/obj/machinery/power/apc,
 	))
 
 // Attempt to charge from an object by using them on the power cord.
-/obj/item/synth_powercord/attackby(obj/item/attacking_item, mob/user, params)
-	if(!can_power_draw(attacking_item, user))
-		return ..()
-	try_power_draw(attacking_item, user)
+/obj/item/synth_powercord/item_interaction(mob/living/user, obj/item/tool, list/modifiers)
+	if(!can_power_draw(tool, user))
+		return NONE
+	try_power_draw(tool, user)
+	return ITEM_INTERACT_SUCCESS
 
 // Attempt to charge from an object by using the power cord on them.
-/obj/item/synth_powercord/afterattack(atom/target, mob/user, proximity_flag, click_parameters)
-	if(!proximity_flag || !can_power_draw(target, user))
-		return ..()
-	try_power_draw(target, user)
+/obj/item/synth_powercord/interact_with_atom(atom/interacting_with, mob/living/user, list/modifiers)
+	if(!can_power_draw(interacting_with, user))
+		return NONE
+	try_power_draw(interacting_with, user)
+	return ITEM_INTERACT_SUCCESS
 
 /// Returns TRUE or FALSE depending on if the target object can be used as a power source.
 /obj/item/synth_powercord/proc/can_power_draw(obj/target, mob/user)
@@ -45,7 +41,7 @@
 	var/nutrition_level_joules = user.nutrition * SYNTH_JOULES_PER_NUTRITION
 	user.changeNext_move(CLICK_CD_MELEE)
 
-	var/obj/item/organ/internal/stomach/synth/synth_cell = user.get_organ_slot(ORGAN_SLOT_STOMACH)
+	var/obj/item/organ/stomach/synth/synth_cell = user.get_organ_slot(ORGAN_SLOT_STOMACH)
 	if(QDELETED(synth_cell) || !istype(synth_cell))
 		to_chat(user, span_warning("You plug into [target], but nothing happens! It seems you don't have an internal cell to charge."))
 		return
@@ -83,11 +79,11 @@
 	if(istype(target, /obj/machinery/power/apc))
 		target_apc = target
 
-	var/obj/item/stock_parts/cell/target_cell = target_apc ? target_apc.cell : target
+	var/obj/item/stock_parts/power_store/target_cell = target_apc ? target_apc.cell : target
 	var/minimum_cell_charge = target_apc ? SYNTH_APC_MINIMUM_PERCENT : 0
 
 	if(!target_cell || target_cell.percent() < minimum_cell_charge)
-		user.balloon_alert(user, "APC charge low!")
+		user.balloon_alert(user, UNLINT("APC charge low!"))
 		return
 
 	var/energy_needed
@@ -96,14 +92,14 @@
 		// Ensures minimum draw is always lower than this margin.
 		nutrition_level_joules = user.nutrition * SYNTH_JOULES_PER_NUTRITION
 		energy_needed = SYNTH_CHARGE_MAX - nutrition_level_joules
-		if(energy_needed < SYNTH_CHARGE_MAX - SYNTH_CHARGE_ALMOST_FULL - 125 KILO JOULES)
+		if(energy_needed < (SYNTH_CHARGE_MAX - SYNTH_CHARGE_ALMOST_FULL))
 			user.balloon_alert(user, "cell fully charged!")
 			break
 
 		// Check if the charge level of the cell is below the minimum.
 		// Prevents synths from overloading the cell.
 		if(target_cell.percent() < minimum_cell_charge)
-			user.balloon_alert(user, "APC charge low!")
+			user.balloon_alert(user, UNLINT("APC charge low!"))
 			break
 
 		// Attempt to drain charge from the cell.
@@ -111,18 +107,18 @@
 			break
 
 		// Calculate how much to draw from the cell this cycle.
-		var/current_draw = min(energy_needed, SYNTH_CHARGE_RATE * SSMACHINES_SECONDS_PER_TICK)
+		var/current_draw = min(energy_needed, SYNTH_CHARGE_RATE * SSmachines.wait)
 
 		var/energy_delivered = target_cell.use(current_draw)
 		if(!energy_delivered)
 			// The cell could be sabotaged, which causes it to explode and qdelete.
 			if(QDELETED(target_cell))
 				return
-			user.balloon_alert(user, "APC failure!")
+			user.balloon_alert(user, UNLINT("APC failure!"))
 			break
 
 		// If charging was successful, then increase user nutrition and emit sparks.
-		var/nutrition_gained = (energy_delivered / SYNTH_JOULES_PER_NUTRITION) / SSMACHINES_SECONDS_PER_TICK
+		var/nutrition_gained = (energy_delivered / SYNTH_JOULES_PER_NUTRITION) / SSmachines.wait
 		user.nutrition += nutrition_gained
 		do_sparks(1, FALSE, target_cell.loc)
 
@@ -130,9 +126,3 @@
 	if(target_apc && !QDELETED(target_apc) && !QDELETED(target_apc.cell) && target_apc.main_status > APC_NO_POWER)
 		target_apc.charging = APC_CHARGING
 		target_apc.update_appearance()
-
-#undef SYNTH_CHARGE_MAX
-#undef SYNTH_JOULES_PER_NUTRITION
-#undef SYNTH_CHARGE_RATE
-#undef SYNTH_APC_MINIMUM_PERCENT
-#undef SSMACHINES_SECONDS_PER_TICK

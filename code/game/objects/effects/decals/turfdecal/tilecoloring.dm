@@ -83,7 +83,19 @@ TILE_DECAL_SUBTYPE_HELPER(/obj/effect/turf_decal/tile/yellow)
 
 /obj/effect/turf_decal/tile/red
 	name = "red tile decal"
-	color = "#486091" // SKYRAT EDIT CHANGE
+	color = "#DE3A3A"
+
+TILE_DECAL_SUBTYPE_HELPER(/obj/effect/turf_decal/tile/red)
+
+/// Dark red tiles
+
+/obj/effect/turf_decal/tile/dark_red
+	name = "dark red tile decal"
+	color = "#B11111"
+
+TILE_DECAL_SUBTYPE_HELPER(/obj/effect/turf_decal/tile/dark_red)
+
+/// Bar tiles
 
 TILE_DECAL_SUBTYPE_HELPER(/obj/effect/turf_decal/tile/red)
 
@@ -263,7 +275,7 @@ TRIMLINE_SUBTYPE_HELPER(/obj/effect/turf_decal/trimline/white)
 
 /// Red trimlines
 /obj/effect/turf_decal/trimline/red
-	color = "#486091" //SKYRAT EDIT CHANGE
+	color = "#DE3A3A"
 
 TRIMLINE_SUBTYPE_HELPER(/obj/effect/turf_decal/trimline/red)
 

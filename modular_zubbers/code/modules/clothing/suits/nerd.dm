@@ -9,9 +9,10 @@
 		via surplus medical technology found in the abandoned part of maintenance no one seems to want to talk about. \
 		Unfortunately the research department couldn't design a helmet before the third quarter so this is definitely not spaceproof. \
 		One size fits most."
-	icon = 'modular_zubbers/icons/obj/clothing/suits/nerd.dmi'
-	worn_icon = 'modular_zubbers/icons/mob/clothing/suits/nerd.dmi'
-	worn_icon_digi = 'modular_zubbers/icons/mob/clothing/suits/nerd_digi.dmi'
+	icon = 'modular_zubbers/icons/obj/clothing/suits/armor.dmi'
+	worn_icon = 'modular_zubbers/icons/mob/clothing/suits/armor.dmi'
+	worn_icon_digi = 'modular_zubbers/icons/mob/clothing/suits/armor_digi.dmi'
+	worn_icon_teshari = 'modular_zubbers/icons/mob/clothing/suits/armor_teshari.dmi'
 	icon_state = "nerd"
 	blood_overlay_type = "suit"
 

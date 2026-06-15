@@ -1,0 +1,174 @@
+//Title Capitalization for names please!!!
+
+/datum/loadout_item/head/pinwheel_hat //sprites by Keila.
+	name = "Pinwheel Hat"
+	item_path = /obj/item/clothing/head/helmet/toggleable/pinwheel
+
+/datum/loadout_item/head/hats/bubber/clown/jester/amazing
+	name = "Amazing Jester Hat"
+	item_path = /obj/item/clothing/head/costume/bubber/jester
+	restricted_roles = list(JOB_CLOWN)
+
+/datum/loadout_item/head/hats/bubber/clown/clussy
+	name = "Pink Clown Wig"
+	item_path = /obj/item/clothing/head/costume/bubber/clussy
+
+/datum/loadout_item/head/hats/bubber/hench
+	name = "Henchmen Flat Cap"
+	item_path = /obj/item/clothing/head/henchmen_hat
+
+/datum/loadout_item/head/alien_fake
+	name = "Kabrus Utility Helmet"
+	item_path = /obj/item/clothing/head/helmet/abductor/fake
+	donator_only = TRUE //Dono item for MyphicBowser
+
+/datum/loadout_item/head/hats/warden/drill
+	name = "Warden's Campaign Hat"
+	item_path = /obj/item/clothing/head/hats/warden/drill
+	restricted_roles = list(JOB_WARDEN)
+
+/datum/loadout_item/head/helmet/sec/futuristic
+	name = "Futuristic Security Helmet"
+	item_path = /obj/item/clothing/head/helmet/sec/futuristic
+	restricted_roles = list(ALL_JOBS_SEC)
+
+/datum/loadout_item/head/sombrero
+	name = "Sombrero"
+	item_path = /obj/item/clothing/head/costume/sombrero
+
+/datum/loadout_item/head/hats/caphat/drill
+	name = "Captain's Campaign Hat"
+	item_path = /obj/item/clothing/head/hats/warden/drill/captain
+	donator_only = TRUE
+	restricted_roles = list(JOB_CAPTAIN)
+
+/datum/loadout_item/head/hats/blueshield/drill
+	name = "Blueshield's Campaign Hat"
+	item_path = /obj/item/clothing/head/hats/warden/drill/blueshield
+	donator_only = TRUE
+	restricted_roles = list(JOB_BLUESHIELD)
+
+/datum/loadout_item/head/hats/hos/drill
+	name = "Head of Security's Campaign Hat"
+	item_path = /obj/item/clothing/head/hats/warden/drill/hos
+	donator_only = TRUE
+	restricted_roles = list(JOB_HEAD_OF_SECURITY)
+
+/datum/loadout_item/head/hats/nanotrasen_consultant/drill
+	name = "Nanotrasen Representative's Campaign Hat"
+	item_path = /obj/item/clothing/head/hats/warden/drill/nanotrasen
+	donator_only = TRUE
+	restricted_roles = list(JOB_NT_REP)
+
+/datum/loadout_item/head/hats/blueshield_beret
+	name = "Blueshield's Beret"
+	item_path = /obj/item/clothing/head/beret/blueshield
+	restricted_roles = list(JOB_BLUESHIELD)
+
+
+/datum/loadout_item/head/hats/blueshield_beret_navy
+	name = "Navy Blueshield's Beret"
+	item_path = /obj/item/clothing/head/beret/blueshield/navy
+	restricted_roles = list(JOB_BLUESHIELD)
+
+/datum/loadout_item/head/security_cap/soft
+	name = "Security Soft Cap"
+	item_path = /obj/item/clothing/head/soft/sec
+	restricted_roles = list(ALL_JOBS_SEC)
+
+/datum/loadout_item/head/security_cap/veteran
+	name = "Veteran's Soft Security Cap"
+	item_path = /obj/item/clothing/head/soft/veteran
+	restricted_roles = list(ALL_JOBS_SEC)
+
+/datum/loadout_item/head/security_cap/colonial
+	name = "Imperial Police Cap"
+	item_path = /obj/item/clothing/head/hats/colonial/nri_police
+	restricted_roles = list(ALL_JOBS_SEC, JOB_CUSTOMS_AGENT)
+
+/datum/loadout_item/head/security_beanie
+	name = "Security Beanie"
+	item_path = /obj/item/clothing/head/security_beanie
+	restricted_roles = list(ALL_JOBS_SEC)
+
+/datum/loadout_item/head/beret/sec/peacekeeper
+	name = "Peacekeeper Beret"
+	item_path = /obj/item/clothing/head/beret/sec
+	restricted_roles = list(ALL_JOBS_SEC)
+
+/datum/loadout_item/head/beret/sec/peacekeeper/white
+	name = "Peacekeeper White Beret"
+	item_path = /obj/item/clothing/head/beret/sec/white
+	restricted_roles = list(ALL_JOBS_SEC)
+
+/datum/loadout_item/head/helmet/sec/redsec
+	name = "Security Red Helmet"
+	item_path = /obj/item/clothing/head/helmet/sec/redsec
+	restricted_roles = list(ALL_JOBS_SEC)
+
+/datum/loadout_item/head/helmet/nri_police
+	name = "Imperial Police Helmet"
+	item_path = /obj/item/clothing/head/helmet/nri_police
+	restricted_roles = list(ALL_JOBS_SEC, JOB_CUSTOMS_AGENT)
+
+/datum/loadout_item/head/hats/security_kepi
+	name = "Security Kepi"
+	item_path = /obj/item/clothing/head/security_kepi
+	restricted_roles = list(ALL_JOBS_SEC)
+
+/datum/loadout_item/head/beret/sec/peacekeeper/armadyne
+	name = "Armadyne Corporate Beret"
+	item_path = /obj/item/clothing/head/beret/sec/peacekeeper/armadyne
+	restricted_roles = list(ALL_JOBS_SEC)
+
+/datum/loadout_item/head/helmet/sec/peacekeeper/security_medic
+	name = "Security Medic Helmet"
+	item_path = /obj/item/clothing/head/helmet/sec/peacekeeper/security_medic
+	restricted_roles = list(JOB_SECURITY_MEDIC)
+
+/datum/loadout_item/head/beret/sec/peacekeeper/security_medic
+	name = "Security Medic Beret"
+	item_path = /obj/item/clothing/head/beret/sec/security_medic
+	restricted_roles = list(JOB_SECURITY_MEDIC)
+
+/datum/loadout_item/head/lace_bow
+	name = "Hair Bow"
+	item_path = /obj/item/clothing/head/costume/hairbow
+	donator_only = TRUE
+
+/datum/loadout_item/head/tactical_maid_headband //Donor item for skyefree
+	name = "Tactical Maid Headband"
+	item_path = /obj/item/clothing/head/costume/maid_headband/syndicate
+	donator_only = TRUE
+
+/datum/loadout_item/head/mime_bunny_ears
+	name = "Mime's Bunny Ears"
+	item_path = /obj/item/clothing/head/playbunnyears/mime
+
+/datum/loadout_item/head/kabuto
+	name = "Kabuto"
+	item_path = /obj/item/clothing/head/costume/kabuto
+
+/datum/loadout_item/head/bunny_ears_headband
+	name = "Bunny Ears Headband"
+	item_path = /obj/item/clothing/head/playbunnyears
+
+/datum/loadout_item/head/soft/galfedcap
+	name = "Galactic Federation Cap"
+	item_path = /obj/item/clothing/head/soft/galfedcap
+
+/datum/loadout_item/head/soft/frontier_colonist
+	name = "Frontier Cap"
+	item_path = /obj/item/clothing/head/soft/frontier_colonist
+
+/datum/loadout_item/head/skull
+	name = "Skull Helmet"
+	item_path = /obj/item/clothing/head/helmet/skull/fake
+
+/datum/loadout_item/head/soft/plasmax_black
+	name = "PlasMAX Envirosuit Helmet"
+	item_path = /obj/item/clothing/head/helmet/space/plasmaman/plasmax_black
+
+/datum/loadout_item/head/colonial
+	name = "Colonial Cap"
+	item_path = /obj/item/clothing/head/hats/colonial

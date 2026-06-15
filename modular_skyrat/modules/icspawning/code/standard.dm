@@ -1,4 +1,4 @@
-//SKYRAT MODULE IC-SPAWNING https://github.com/Skyrat-SS13/Skyrat-tg/pull/104
+// SKYRAT MODULE IC-SPAWNING https://github.com/Skyrat-SS13/Skyrat-tg/pull/104
 /obj/item/gun/energy/taser/debug
 	ammo_type = list(/obj/item/ammo_casing/energy/electrode/debug)
 	w_class = WEIGHT_CLASS_TINY
@@ -83,7 +83,18 @@
 	atom_storage.max_total_storage = 20000
 
 /// An extension to the default RPED part replacement action - if you don't have the requisite parts in the RPED already, it will spawn T4 versions to use.
-/obj/item/storage/part_replacer/bluespace/tier4/bst/part_replace_action(obj/attacked_object, mob/living/user)
+/obj/item/storage/part_replacer/bluespace/tier4/bst/interact_with_atom(obj/attacked_object, mob/living/user, list/modifiers)
+	if(user.combat_mode)
+		return ITEM_INTERACT_SKIP_TO_ATTACK
+
+	//its very important to NOT block so frames can still interact with it
+	if(!ismachinery(attacked_object) || istype(attacked_object, /obj/machinery/computer))
+		return NONE
+
+	var/obj/machinery/attacked_machinery = attacked_object
+	if(!LAZYLEN(attacked_machinery.component_parts))
+		return ITEM_INTERACT_FAILURE
+
 	// We start with setting up a list of the current contents of the RPED when using auto-clear.  This is used to detect new items after upgrades are applied & remove them.
 	var/list/old_contents = list()
 	var/list/inv_grab = atom_storage.return_inv(FALSE)
@@ -102,12 +113,14 @@
 	else
 		// It's not a machine frame, so let's check if it's a regular machine.
 		if(ismachinery(attacked_object) && !istype(attacked_object, /obj/machinery/computer))
-			var/obj/machinery/attacked_machinery = attacked_object
 			var/obj/item/circuitboard/machine/circuit = attacked_machinery.circuit
 			// If it is, we need to use the circuit's components; there's no good way to get required components off of an already-built machine.
 			if(istype(circuit))
 				spawn_parts_for_components(user, circuit.req_components)
-	. = ..()
+
+	if(!attacked_machinery.exchange_parts(user, src))
+		return ITEM_INTERACT_FAILURE
+
 	// If auto-clear is in use,
 	if(auto_clear)
 		inv_grab.Cut()
@@ -115,6 +128,8 @@
 		for(var/obj/item/stored_item in inv_grab)
 			if(!(stored_item in old_contents))
 				qdel(stored_item)
+
+	return ITEM_INTERACT_SUCCESS
 
 /// A bespoke proc for spawning in parts
 /obj/item/storage/part_replacer/bluespace/tier4/bst/proc/spawn_parts_for_components(mob/living/user, list/required_components)
@@ -214,7 +229,7 @@
 			to_chat(user, span_notice("Something went wrong manufacturing [req_component]. Alert the devs, and let them know what machine it was!"))
 
 /// BSTs' special Bluespace RPED can manufacture parts on Alt-RMB, either cables, glass, machine boards, or stock parts.
-/obj/item/storage/part_replacer/bluespace/tier4/bst/alt_click_secondary(mob/user)
+/obj/item/storage/part_replacer/bluespace/tier4/bst/click_alt_secondary(mob/user)
 	// Ask the user what they want to make, or if they want to clear the storage.
 	var/spawn_selection = tgui_input_list(user, "Pick a part, or clear storage", "RPED Manufacture", list("Clear All Items", "Toggle Auto-Clear", "Cables", "Glass", "Spare T4s", "Machine Board", "Stock Part", "Beaker"))
 	// If they didn't cancel out of the list selection, we do things.  Clear-all removes all items, auto-clear destroys left-overs after upgrades, and everything else is pretty self-explanatory.
@@ -239,7 +254,7 @@
 			atom_storage.attempt_insert(new /obj/item/stock_parts/servo/femto(src), user, TRUE)
 			atom_storage.attempt_insert(new /obj/item/stock_parts/micro_laser/quadultra(src), user, TRUE)
 			atom_storage.attempt_insert(new /obj/item/stock_parts/matter_bin/bluespace(src), user, TRUE)
-			atom_storage.attempt_insert(new /obj/item/stock_parts/cell/bluespace(src), user, TRUE)
+			atom_storage.attempt_insert(new /obj/item/stock_parts/power_store/cell/bluespace(src), user, TRUE)
 	else
 		var/subtype
 		if(spawn_selection == "Machine Board")

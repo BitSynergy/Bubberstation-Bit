@@ -1,25 +1,28 @@
-// Prevents Bloodsuckers from getting affected by blood
-/mob/living/carbon/human/handle_blood(seconds_per_tick, times_fired)
-	if(mind && IS_BLOODSUCKER(src))
-		return FALSE
-	return ..()
+
+// this suggests that your heart is beating, when it is not
+/mob/living/carbon/bleed_warn(bleed_amt = 0, forced = FALSE)
+	if(mind && IS_BLOODSUCKER(src) && !HAS_TRAIT(src, TRAIT_MASQUERADE))
+		return
+	. = ..()
 
 /datum/reagent/blood/expose_mob(mob/living/exposed_mob, methods=TOUCH, reac_volume, show_message=TRUE, touch_protection=0)
 	var/datum/antagonist/bloodsucker/bloodsuckerdatum = IS_BLOODSUCKER(exposed_mob)
 	if(!bloodsuckerdatum)
 		return ..()
-
-	if(istype(bloodsuckerdatum.my_clan, /datum/bloodsucker_clan/ventrue) && bloodsuckerdatum.GetBloodVolume() >= BLOOD_VOLUME_SAFE)
+	if(!(methods & (INJECT|INGEST)))
 		return ..()
-	if(bloodsuckerdatum.GetBloodVolume() >= BLOOD_VOLUME_MAXIMUM)
+
+	if(bloodsuckerdatum.my_clan && istype(bloodsuckerdatum.my_clan, /datum/bloodsucker_clan/ventrue) && bloodsuckerdatum.GetBloodVolume() >= BLOOD_VOLUME_SAFE)
+		return ..()
+	if(bloodsuckerdatum.GetBloodVolume() >= BLOOD_VOLUME_NORMAL)
 		return ..()
 	bloodsuckerdatum.AdjustBloodVolume(round(reac_volume, 0.1))
 
-/mob/living/carbon/transfer_blood_to(atom/movable/AM, amount, forced)
+/mob/living/carbon/transfer_blood_to(atom/movable/receiver, amount, ignore_low_blood = FALSE, ignore_incompatibility = FALSE, transfer_viruses = TRUE)
 	. = ..()
 	if(!mind)
 		return
-	var/datum/antagonist/bloodsucker/bloodsuckerdatum = mind.has_antag_datum(/datum/antagonist/bloodsucker)
+	var/datum/antagonist/bloodsucker/bloodsuckerdatum = IS_BLOODSUCKER(src)
 	if(!bloodsuckerdatum)
 		return
 	bloodsuckerdatum.AdjustBloodVolume(-amount)
@@ -38,7 +41,7 @@
 		return 0
 	return ..()
 
-// Used when analyzing a Bloodsucker, Masquerade will hide brain traumas (Unless you're a Beefman)
+// Used when analyzing a Bloodsucker, Masquerade will hide brain traumas
 /// todo move this to it's own trait or something
 /mob/living/carbon/get_traumas()
 	if(!mind)
@@ -53,7 +56,7 @@
 	. = ..()
 	if(!mind)
 		return ..()
-	var/datum/antagonist/bloodsucker/bloodsuckerdatum = mind.has_antag_datum(/datum/antagonist/bloodsucker)
+	var/datum/antagonist/bloodsucker/bloodsuckerdatum = IS_BLOODSUCKER(src)
 	if(bloodsuckerdatum)
 		. += ""
 		. += "Blood Drank: [bloodsuckerdatum.total_blood_drank]"
@@ -84,10 +87,10 @@
 * All overrides of mob/living and mob/living/carbon
 */
 /// Brute
-/mob/living/proc/getBruteLoss_nonProsthetic()
-	return getBruteLoss()
+/mob/living/proc/get_brute_loss_nonProsthetic()
+	return get_brute_loss()
 
-/mob/living/carbon/getBruteLoss_nonProsthetic()
+/mob/living/carbon/get_brute_loss_nonProsthetic()
 	var/amount = 0
 	for(var/obj/item/bodypart/chosen_bodypart as anything in bodyparts)
 		if(!IS_ORGANIC_LIMB(chosen_bodypart))
@@ -96,10 +99,10 @@
 	return amount
 
 /// Burn
-/mob/living/proc/getFireLoss_nonProsthetic()
-	return getFireLoss()
+/mob/living/proc/get_fire_loss_nonProsthetic()
+	return get_fire_loss()
 
-/mob/living/carbon/getFireLoss_nonProsthetic()
+/mob/living/carbon/get_fire_loss_nonProsthetic()
 	var/amount = 0
 	for(var/obj/item/bodypart/chosen_bodypart as anything in bodyparts)
 		if(!IS_ORGANIC_LIMB(chosen_bodypart))
@@ -113,9 +116,3 @@
 	if(IS_BLOODSUCKER(src))
 		return TRUE
 	. =..()
-
-// prevents players being trapped in their brain, alive, yet limbless and voiceless
-/obj/item/bodypart/head/drop_organs(mob/user, violent_removal)
-	var/obj/item/organ/internal/brain/brain = locate(/obj/item/organ/internal/brain) in src
-	brain?.brainmob.death()
-	. = ..()

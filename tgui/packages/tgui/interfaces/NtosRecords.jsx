@@ -1,8 +1,8 @@
-import { createSearch } from 'common/string';
 import { useState } from 'react';
+import { Box, Icon, Input, Section } from 'tgui-core/components';
+import { createSearch } from 'tgui-core/string';
 
 import { useBackend } from '../backend';
-import { Box, Icon, Input, Section } from '../components';
 import { NtosWindow } from '../layouts';
 
 export const NtosRecords = (props) => {
@@ -20,11 +20,12 @@ export const NtosRecords = (props) => {
         </Section>
         <Section>
           <Input
-            placeholder={'Filter results...'}
+            placeholder="Filter results..."
             value={searchTerm}
             fluid
             textAlign="center"
-            onChange={(e, value) => setSearchTerm(value)}
+            onChange={setSearchTerm}
+            expensive
           />
         </Section>
         {mode === 'security' &&
@@ -45,6 +46,10 @@ export const NtosRecords = (props) => {
                       ' ' +
                       record.age +
                       ' ' +
+                      /* SKYRAT EDIT ADDITION BEGIN - Chronological age */
+                      record.chrono_age +
+                      ' ' +
+                      /* SKYRAT EDIT ADDITION END */
                       record.fingerprint,
                   )
                 )
@@ -61,8 +66,14 @@ export const NtosRecords = (props) => {
               <br />
               Gender: {record.gender}
               <br />
-              Age: {record.age}
+              {/* SKYRAT EDIT CHANGE - Chronological age, ORIGINAL: Age: {record.age} */}
+              Physical Age: {record.age}
+              {/* SKYRAT EDIT CHANGE END */}
               <br />
+              {/* SKYRAT EDIT ADDITION BEGIN - Chronological age */}
+              Chronological Age: {record.chrono_age}
+              <br />
+              {/* SKYRAT EDIT ADDITION END */}
               Fingerprint Hash: {record.fingerprint}
               <br />
               <br />
@@ -93,6 +104,12 @@ export const NtosRecords = (props) => {
                 {record.name}
               </Box>
               <br />
+              {/* SKYRAT EDIT ADDITION BEGIN - Chronological age */}
+              Physical Age: {record.age}
+              <br />
+              Chronological Age: {record.chrono_age}
+              <br />
+              {/* SKYRAT EDIT ADDITION END */}
               Bloodtype: {record.bloodtype}
               <br />
               Minor Disabilities: {record.mi_dis}

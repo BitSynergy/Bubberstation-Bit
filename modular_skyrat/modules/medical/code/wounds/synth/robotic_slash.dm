@@ -30,12 +30,13 @@
 	simple_treat_text = "<b>Replacing</b> of broken wiring, or <b>repairing</b> via a wirecutter. <b>Bandaging</b> binds the wiring and reduces intensity buildup, \
 	as does <b>firmly grasping</b> the limb - both the victim and someone else can do this. <b>Roboticists/Engineers</b> get a bonus to treatment, as do <b>diagnostic HUDs</b>."
 	homemade_treat_text = "<b>Sutures</b> can repair the wiring at reduced efficiency, as can <b>retractors</b>. In a pinch, <b>high temperatures</b> can repair the wiring!"
+	treat_text_short = "Replace wiring or apply wirecutters."
 
 	wound_flags = (ACCEPTS_GAUZE|CAN_BE_GRASPED|SPLINT_OVERLAY)
 
 	treatable_tools = list(TOOL_WIRECUTTER, TOOL_RETRACTOR)
 	treatable_by = list(/obj/item/stack/medical/suture)
-	treatable_by_grabbed = list(/obj/item/stack/cable_coil)
+	var/treatable_by_grabbed = list(/obj/item/stack/cable_coil)
 
 	default_scar_file = METAL_SCAR_FILE
 
@@ -105,7 +106,7 @@
 /datum/wound_pregen_data/electrical_damage
 	abstract = TRUE
 	required_limb_biostate = (BIO_WIRED)
-	required_wounding_types = list(WOUND_SLASH)
+	required_wounding_type = WOUND_SLASH
 	wound_series = WOUND_SERIES_WIRE_SLASH_ELECTRICAL_DAMAGE
 
 /datum/wound_pregen_data/electrical_damage/generate_scar_priorities()
@@ -210,7 +211,8 @@
 	if (HAS_TRAIT(victim, TRAIT_SHOCKIMMUNE)) // it'd be a bit cheesy to just become immune to this, so it only makes it a lot lot better
 		base_mult *= shock_immunity_self_damage_reduction
 
-	var/splint_mult = (limb.current_gauze ? limb.current_gauze.splint_factor : 1)
+	var/obj/item/stack/medical/wrap/current_gauze = LAZYACCESS(limb.applied_items, LIMB_ITEM_GAUZE)
+	var/splint_mult = (current_gauze ? current_gauze.splint_factor : 1)
 	base_mult *= splint_mult
 
 	return overall_effect_mult * base_mult
@@ -224,6 +226,9 @@
 
 	if (seconds_for_intensity > 0 && HAS_TRAIT(victim, TRAIT_COAGULATING))
 		seconds_for_intensity *= ELECTRICAL_DAMAGE_CLOTTING_PROGRESS_MULT
+
+	if (HAS_TRAIT(src, TRAIT_ELECTRICAL_DAMAGE_REPAIRING))
+		seconds_for_intensity = min(seconds_for_intensity, 0) // it cant get any worse
 
 	return seconds_for_intensity
 
@@ -256,7 +261,7 @@
 /datum/wound/electrical_damage/modify_desc_before_span(desc, mob/user)
 	. = ..()
 
-	if (limb.current_gauze)
+	if (LAZYACCESS(limb.applied_items, LIMB_ITEM_GAUZE))
 		return
 
 	var/intensity_mult = get_intensity_mult()
@@ -344,6 +349,14 @@
 	if (HAS_TRAIT(src, TRAIT_WOUND_SCANNED))
 		change *= 1.5
 
+	ADD_TRAIT(src, TRAIT_ELECTRICAL_DAMAGE_REPAIRING, REF(user))
+	do_suture_repairs(suturing_item, user, change, delay_mult)
+	REMOVE_TRAIT(src, TRAIT_ELECTRICAL_DAMAGE_REPAIRING, REF(user))
+	return TRUE
+
+/// Does a while loop that repairs us with cables. A proc for containing runtimes and allowing trait removal at all times.
+/datum/wound/electrical_damage/proc/do_suture_repairs(obj/item/stack/suturing_item, mob/living/carbon/human/user, change, delay_mult)
+	var/is_suture = (istype(suturing_item, /obj/item/stack/medical/suture))
 	var/their_or_other = (user == victim ? "[user.p_their()]" : "[victim]'s")
 	var/your_or_other = (user == victim ? "your" : "[victim]'s")
 	var/replacing_or_suturing = (is_suture ? "repairing some" : "replacing")
@@ -351,7 +364,7 @@
 		user?.visible_message(span_danger("[user] begins [replacing_or_suturing] wiring within [their_or_other] [limb.plaintext_zone] with [suturing_item]..."), \
 			span_notice("You begin [replacing_or_suturing] wiring within [your_or_other] [limb.plaintext_zone] with [suturing_item]..."))
 		if (!suturing_item.use_tool(target = victim, user = user, delay = ELECTRICAL_DAMAGE_SUTURE_WIRE_BASE_DELAY * delay_mult, amount = 1, volume = 50, extra_checks = CALLBACK(src, PROC_REF(still_exists))))
-			return TRUE
+			return
 
 		if (user != victim && user.combat_mode)
 			user?.visible_message(span_danger("[user] mangles some of [their_or_other] [limb.plaintext_zone]'s wiring!"), \
@@ -364,11 +377,10 @@
 			user?.visible_message(span_notice("[user] [repairs_or_replaces] some of [their_or_other] [limb.plaintext_zone]'s wiring!"), \
 				span_notice("You [repair_or_replace] some of [your_or_other] [limb.plaintext_zone]'s wiring!"))
 			adjust_intensity(-change)
-			victim.balloon_alert(user, "intensity reduced to [get_intensity_mult() * 100]%")
+			victim?.balloon_alert(user, "intensity reduced to [get_intensity_mult() * 100]%")
 
 		if (fixed())
-			return TRUE
-	return TRUE
+			return
 
 /**
  * The "proper" treatment, done with wirecutters/retractors. Retractors get a debuff.
@@ -403,13 +415,20 @@
 	if (HAS_TRAIT(src, TRAIT_WOUND_SCANNED))
 		change *= 1.5
 
+	ADD_TRAIT(src, TRAIT_ELECTRICAL_DAMAGE_REPAIRING, REF(user))
+	do_wirecutter_repairs(wirecutting_tool, user, change, delay_mult)
+	REMOVE_TRAIT(src, TRAIT_ELECTRICAL_DAMAGE_REPAIRING, REF(user))
+	return TRUE
+
+/// Does a while loop that repairs us with a wirecutter. A proc for containing runtimes and allowing trait removal at all times.
+/datum/wound/electrical_damage/proc/do_wirecutter_repairs(obj/item/wirecutting_tool, mob/living/carbon/human/user, change, delay_mult)
 	var/their_or_other = (user == victim ? "[user.p_their()]" : "[victim]'s")
 	var/your_or_other = (user == victim ? "your" : "[victim]'s")
 	while (wirecutting_tool.tool_start_check())
 		user?.visible_message(span_danger("[user] begins resetting misplaced wiring within [their_or_other] [limb.plaintext_zone]..."), \
 			span_notice("You begin resetting misplaced wiring within [your_or_other] [limb.plaintext_zone]..."))
 		if (!wirecutting_tool.use_tool(target = victim, user = user, delay = ELECTRICAL_DAMAGE_WIRECUTTER_BASE_DELAY * delay_mult, volume = 50, extra_checks = CALLBACK(src, PROC_REF(still_exists))))
-			return TRUE
+			return
 
 		if (user != victim && user.combat_mode)
 			user?.visible_message(span_danger("[user] mangles some of [their_or_other] [limb.plaintext_zone]'s wiring!"), \
@@ -420,11 +439,10 @@
 			user?.visible_message(span_notice("[user] resets some of [their_or_other] [limb.plaintext_zone]'s wiring!"), \
 				span_notice("You reset some of [your_or_other] [limb.plaintext_zone]'s wiring!"))
 			adjust_intensity(-change)
-			victim.balloon_alert(user, "intensity reduced to [get_intensity_mult() * 100]%")
+			victim?.balloon_alert(user, "intensity reduced to [get_intensity_mult() * 100]%")
 
 		if (fixed())
-			return TRUE
-	return TRUE
+			return
 
 /// If fixed() is true, we remove ourselves and return TRUE. FALSE otherwise.
 /datum/wound/electrical_damage/proc/remove_if_fixed()
@@ -516,8 +534,8 @@
 	process_shock_spark_count_max = 1
 	process_shock_spark_count_min = 1
 
-	wirecut_repair_percent = 0.14
-	wire_repair_percent = 0.035
+	wirecut_repair_percent = 0.1
+	wire_repair_percent = 0.0368
 
 	initial_sparks_amount = 1
 
@@ -538,6 +556,7 @@
 	occur_text = "sends some electrical fiber in the direction of the blow, beginning to profusely spark"
 	examine_desc = "has multiple severed wires visible to the outside"
 	treat_text = "Containment of damaged wiring via gauze, then application of fresh wiring/sutures, or resetting of displaced wiring via wirecutter/retractor."
+	treat_text_short = "Apply gauze and replace wiring."
 
 	sound_effect = 'modular_skyrat/modules/medical/sound/robotic_slash_T2.ogg'
 
@@ -559,8 +578,8 @@
 	process_shock_spark_count_max = 2
 	process_shock_spark_count_min = 1
 
-	wirecut_repair_percent = 0.128
-	wire_repair_percent = 0.032
+	wirecut_repair_percent = 0.09
+	wire_repair_percent = 0.03
 
 	initial_sparks_amount = 3
 
@@ -579,9 +598,10 @@
 	name = "Systemic Fault"
 	desc = "A significant portion of the power distribution network has been cut open, resulting in massive power loss and runaway electrocution."
 	occur_text = "lets out a violent \"zhwarp\" sound as angry electric arcs attack the surrounding air"
-	examine_desc = "has lots of wires mauled wires sticking out"
+	examine_desc = "has lots of mauled wires sticking out"
 	treat_text = "Immediate securing via gauze, followed by emergency cable replacement and securing via wirecutters or retractor. \
 		If the fault has become uncontrollable, extreme heat therapy is recommended."
+	treat_text_short = "Apply gauze, replace wires, and use wirecutters or a retractor."
 
 	severity = WOUND_SEVERITY_CRITICAL
 	wound_flags = (ACCEPTS_GAUZE|MANGLES_EXTERIOR|CAN_BE_GRASPED|SPLINT_OVERLAY)
@@ -604,8 +624,8 @@
 	process_shock_spark_count_max = 3
 	process_shock_spark_count_min = 2
 
-	wirecut_repair_percent = 0.12
-	wire_repair_percent = 0.03
+	wirecut_repair_percent = 0.08
+	wire_repair_percent = 0.027
 
 	initial_sparks_amount = 8
 

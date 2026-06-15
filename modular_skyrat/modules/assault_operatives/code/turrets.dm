@@ -10,10 +10,10 @@
 //Exterior ship turrets
 /obj/machinery/porta_turret/syndicate/assaultops/shuttle
 	scan_range = 9
-	lethal_projectile = /obj/projectile/bullet/a357
+	lethal_projectile = /obj/projectile/bullet/c357
 	lethal_projectile_sound = 'modular_skyrat/modules/aesthetics/guns/sound/sniperrifle.ogg'
 	stun_projectile = /obj/projectile/energy/electrode
-	stun_projectile_sound = 'sound/weapons/taser.ogg'
+	stun_projectile_sound = 'sound/items/weapons/taser.ogg'
 	max_integrity = 600
 	armor_type = /datum/armor/assaultops_shuttle
 
@@ -35,6 +35,6 @@
 	icon_state = "standard_stun"
 	base_icon_state = "standard"
 	stun_projectile = /obj/projectile/energy/electrode
-	stun_projectile_sound = 'sound/weapons/taser.ogg'
+	stun_projectile_sound = 'sound/items/weapons/taser.ogg'
 	lethal_projectile = /obj/projectile/beam/laser/heavylaser
-	lethal_projectile_sound = 'sound/weapons/lasercannonfire.ogg'
+	lethal_projectile_sound = 'sound/items/weapons/lasercannonfire.ogg'

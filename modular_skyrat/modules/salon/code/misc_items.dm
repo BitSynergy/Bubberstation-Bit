@@ -23,12 +23,14 @@
 	INVOKE_ASYNC(src, PROC_REF(async_set_color), attacked_mob, user)
 
 /obj/item/lipstick/quantum/proc/async_set_color(mob/attacked_mob, mob/user)
-	var/new_color = input(
+	// BUBBERSTATION EDIT START: TGUI COLOR PICKER
+	var/new_color = tgui_color_picker(
 			user,
 			"Select lipstick color",
 			null,
 			COLOR_WHITE,
-		) as color | null
+		)
+	// BUBBERSTATION EDIT END: TGUI COLOR PICKER
 
 	var/mob/living/carbon/human/target = attacked_mob
 	if(target.is_mouth_covered())
@@ -118,8 +120,9 @@
 			to_chat(user, span_warning("There is no facial hair to shave!"))
 			return
 
-		if(!get_location_accessible(target_human, location))
-			to_chat(user, span_warning("The mask is in the way!"))
+		var/covering = target_human.is_mouth_covered()
+		if(covering)
+			to_chat(user, span_warning("[covering] is in the way!"))
 			return
 
 		if(HAS_TRAIT(target_human, TRAIT_SHAVED))
@@ -145,7 +148,7 @@
 			to_chat(user, span_warning("There is no hair to shave!"))
 			return
 
-		if(!get_location_accessible(target_human, location))
+		if(!target_human.is_location_accessible(location))
 			to_chat(user, span_warning("The headgear is in the way!"))
 			return
 
@@ -178,17 +181,12 @@
 	icon_state = "barber"
 	buildable_sign = FALSE // Don't want them removed, they look too jank.
 
-/obj/item/storage/box/perfume
-	name = "box of perfumes"
+MAPPING_DIRECTIONAL_HELPERS(/obj/structure/sign/barber, 13)
 
-/obj/item/storage/box/perfume/PopulateContents()
-	new /obj/item/perfume/cologne(src)
-	new /obj/item/perfume/wood(src)
-	new /obj/item/perfume/rose(src)
-	new /obj/item/perfume/jasmine(src)
-	new /obj/item/perfume/mint(src)
-	new /obj/item/perfume/vanilla(src)
-	new /obj/item/perfume/pear(src)
-	new /obj/item/perfume/strawberry(src)
-	new /obj/item/perfume/cherry(src)
-	new /obj/item/perfume/amber(src)
+/obj/structure/sign/barber/Initialize(mapload)
+	. = ..()
+	if(mapload)
+		find_and_mount_on_atom()
+
+/obj/structure/sign/barber/get_turfs_to_mount_on()
+	return list(get_step(src, dir))

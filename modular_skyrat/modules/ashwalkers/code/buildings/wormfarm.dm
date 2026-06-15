@@ -5,6 +5,7 @@
 	icon_state = "wormbarrel"
 	density = TRUE
 	anchored = FALSE
+	custom_materials = list(/datum/material/wood = SHEET_MATERIAL_AMOUNT * 5)
 	/// How many worms can the barrel hold
 	var/max_worm = 10
 	/// How many worms the barrel is currently holding
@@ -118,8 +119,8 @@
 			return
 		in_use = TRUE
 
-		balloon_alert(user, "feeding the worms")
 		var/skill_modifier = user.mind.get_skill_modifier(/datum/skill/primitive, SKILL_SPEED_MODIFIER)
+		var/ate_food = FALSE
 		for(var/obj/item/food/selected_food in attacking_item.contents)
 			if(!do_after(user, 1 SECONDS * skill_modifier, src))
 				in_use = FALSE
@@ -127,10 +128,15 @@
 
 			qdel(selected_food)
 			current_food++
+			ate_food = TRUE
 			if(prob(user.mind.get_skill_modifier(/datum/skill/primitive, SKILL_PROBS_MODIFIER)))
 				current_food++
+			user.mind.adjust_experience(/datum/skill/primitive, 5)
 
-		user.mind.adjust_experience(/datum/skill/primitive, 5)
+		if(ate_food)
+			balloon_alert(user, "feeding the worms")
+		else
+			balloon_alert(user, "no food in the bag")
 		in_use = FALSE
 		return
 
@@ -143,6 +149,8 @@
 	desc = "When you fed your worms, you should have expected this."
 	icon = 'modular_skyrat/modules/ashwalkers/icons/misc_tools.dmi'
 	icon_state = "fertilizer"
-	grind_results = list(/datum/reagent/plantnutriment/eznutriment = 3, /datum/reagent/plantnutriment/left4zednutriment = 3, /datum/reagent/plantnutriment/robustharvestnutriment = 3)
 	singular_name = "fertilizer"
 	merge_type = /obj/item/stack/worm_fertilizer
+
+/obj/item/stack/worm_fertilizer/grind_results()
+	return list(/datum/reagent/plantnutriment/eznutriment = 3, /datum/reagent/plantnutriment/left4zednutriment = 3, /datum/reagent/plantnutriment/robustharvestnutriment = 3)

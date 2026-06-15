@@ -1,4 +1,4 @@
-import { BooleanLike } from 'common/react';
+import type { BooleanLike } from 'tgui-core/react';
 
 export type MedicalRecordData = {
   assigned_view: string;
@@ -9,10 +9,12 @@ export type MedicalRecordData = {
   records: MedicalRecord[];
   min_age: number;
   max_age: number;
+  max_chrono_age: number; // SKYRAT EDIT ADDITION - Chronological age
 };
 
 export type MedicalRecord = {
   age: number;
+  chrono_age: number; // SKYRAT EDIT ADDITION - Chronological age
   blood_type: string;
   crew_ref: string;
   dna: string;
@@ -20,6 +22,7 @@ export type MedicalRecord = {
   major_disabilities: string;
   minor_disabilities: string;
   physical_status: string;
+  cause_of_death: string;
   mental_status: string;
   name: string;
   notes: MedicalNote[];

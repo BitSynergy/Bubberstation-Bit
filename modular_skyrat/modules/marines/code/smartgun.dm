@@ -10,8 +10,8 @@
 	worn_icon_state = "module_smartgun_off" // just in case. You shouldn't be able to do this, though
 	inhand_icon_state = "smartgun"
 	fire_sound = 'modular_skyrat/modules/modular_weapons/sounds/rifle_heavy.ogg'
-	rack_sound = 'sound/weapons/gun/l6/l6_rack.ogg'
-	suppressed_sound = 'sound/weapons/gun/general/heavy_shot_suppressed.ogg'
+	rack_sound = 'sound/items/weapons/gun/l6/l6_rack.ogg'
+	suppressed_sound = 'sound/items/weapons/gun/general/heavy_shot_suppressed.ogg'
 	fire_sound_volume = 70
 	weapon_weight = WEAPON_HEAVY
 	slot_flags = ITEM_SLOT_BACK
@@ -56,11 +56,14 @@
 		. += span_notice("It seems like you could use an <b>empty hand</b> to remove the magazine.")
 
 /obj/item/gun/ballistic/automatic/smart_machine_gun/attack_hand_secondary(mob/user, list/modifiers)
-	if(!user.can_perform_action(src))
+	. = ..()
+	if(. == SECONDARY_ATTACK_CANCEL_ATTACK_CHAIN)
 		return
+	if(!user.can_perform_action(src))
+		return SECONDARY_ATTACK_CANCEL_ATTACK_CHAIN
 	cover_open = !cover_open
 	to_chat(user, span_notice("You [cover_open ? "open" : "close"] [src]'s cover."))
-	playsound(src, 'sound/weapons/gun/l6/l6_door.ogg', 60, TRUE)
+	playsound(src, 'sound/items/weapons/gun/l6/l6_door.ogg', 60, TRUE)
 	update_appearance()
 	return SECONDARY_ATTACK_CANCEL_ATTACK_CHAIN
 
@@ -106,14 +109,6 @@
 
 /obj/item/ammo_casing/smart/Initialize(mapload)
 	. = ..()
-	RegisterSignal(src, COMSIG_CHAMBERED_BULLET_FIRE, PROC_REF(iff_transfer))
-
-/obj/item/ammo_casing/smart/proc/iff_transfer(datum/source, list/iff_factions)
-	SIGNAL_HANDLER
-
-	if(istype(loaded_projectile, /obj/projectile/bullet/smart))
-		var/obj/projectile/bullet/smart/smart_proj = loaded_projectile
-		smart_proj.ignored_factions = iff_factions.Copy()
 
 /obj/item/ammo_casing/smart
 	firing_effect_type = null
@@ -150,6 +145,6 @@
 
 /obj/projectile/bullet/smart/a10x28 // utter peashooter, but it has 6000rpm
 	name = "10x28mm bullet"
-	damage = 6
+	damage = 9
 	wound_bonus = -5
-	wound_falloff_tile = 1
+	wound_falloff_tile = -1

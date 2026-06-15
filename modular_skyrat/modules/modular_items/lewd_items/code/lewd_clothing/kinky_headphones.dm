@@ -43,7 +43,7 @@
 /obj/item/clothing/ears/kinky_headphones/proc/check_menu(mob/living/user)
 	if(!istype(user))
 		return FALSE
-	if(user.incapacitated())
+	if(user.incapacitated)
 		return FALSE
 	return TRUE
 
@@ -91,6 +91,8 @@
 	desc = "Plays some nice relaxing music"
 
 /datum/action/item_action/toggle_kinky_headphones/Trigger(trigger_flags)
+	if(!..())
+		return FALSE
 	var/obj/item/clothing/ears/kinky_headphones/headphones = target
 	if(istype(headphones))
 		headphones.toggle(owner)

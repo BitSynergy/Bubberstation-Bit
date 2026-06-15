@@ -32,7 +32,7 @@
 
 		// If there are no starting areas, default to these
 	var/static/list/area/default_starting_areas = list(
-		/area/station/ai_monitored/turret_protected/ai,
+		/area/station/ai/satellite/chamber,
 		/area/station/engineering/atmos,
 		/area/station/medical/virology,
 		/area/station/science/xenobiology,
@@ -85,6 +85,7 @@
 		/area/station/science/ordnance/freezerchamber,
 		/area/station/solars,
 		/area/station/tcommsat/server,
+		/area/station/commons/vacant_room/office, // BUBBER EDIT ADDITION - We often overwrite the vacant room with the NT Rep office, which can lead to incorrect failures
 	)
 
 	for(var/area/ignored as anything in ignored_types)

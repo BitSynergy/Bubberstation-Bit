@@ -1,5 +1,5 @@
 /obj/item/seeds/cocaleaf
-	name = "pack of coca leaf seeds"
+	name = "coca leaf seed pack"
 	desc = "These seeds grow into coca shrubs. They make you feel energized just looking at them..."
 	icon = 'modular_skyrat/master_files/icons/obj/hydroponics/seeds.dmi'
 	growing_icon = 'modular_skyrat/master_files/icons/obj/hydroponics/growing.dmi'
@@ -11,7 +11,7 @@
 	growthstages = 1
 	product = /obj/item/food/grown/cocaleaf
 	mutatelist = list()
-	reagents_add = list(/datum/reagent/drug/cocaine = 0.3, /datum/reagent/consumable/nutriment = 0.15)
+	reagents_add = list(/datum/reagent/drug/coca_powder = 0.3, /datum/reagent/consumable/nutriment = 0.15)
 
 /obj/item/food/grown/cocaleaf
 	seed = /obj/item/seeds/cocaleaf

@@ -40,6 +40,13 @@
 		"medium" = image(icon = src.icon, icon_state = "buttplug_pink_medium"),
 		"big" = image(icon = src.icon, icon_state = "buttplug_pink_big"))
 
+/obj/item/clothing/sextoy/buttplug/examine(mob/user)
+	. = ..()
+	if(!color_changed)
+		. += span_notice("Alt-click to change it's colors.")
+	else if(!form_changed)
+		. += span_notice("Alt-click to change it's size.")
+
 /obj/item/clothing/sextoy/buttplug/click_alt(mob/user)
 	if(!color_changed)
 		var/choice = show_radial_menu(user, src, buttplug_designs, custom_check = CALLBACK(src, PROC_REF(check_menu), user), radius = 36, require_near = TRUE)
@@ -53,7 +60,7 @@
 		color_changed = TRUE
 		return CLICK_ACTION_SUCCESS
 	else
-		if(form_changed == FALSE)
+		if(!form_changed)
 			var/choice = show_radial_menu(user, src, buttplug_forms, custom_check = CALLBACK(src, PROC_REF(check_menu), user), radius = 36, require_near = TRUE)
 			if(!choice)
 				return CLICK_ACTION_BLOCKING
@@ -90,7 +97,7 @@
 		user.cut_overlay(user.overlays_standing[VAGINA_LAYER])
 
 	// I did this shit with taur icons on purpose because fuck skyrat's system with taurs, it's dumb and maybe dumber than me I CANT DO THIS ANYMORE WHY THIS OVERLAPPING WITH MY SPRITES AAAAAARGH
-	if(user.dna.species.mutant_bodyparts["taur"] && src == user.anus)
+	if(user.dna.species.mutant_bodyparts[FEATURE_TAUR] && src == user.anus)
 		user.cut_overlay(user.overlays_standing[ANUS_LAYER])
 
 /obj/item/clothing/sextoy/buttplug/dropped(mob/user, slot)

@@ -4,6 +4,7 @@
 	icon = 'icons/turf/walls.dmi'
 	explosive_resistance = 50
 	rust_resistance = RUST_RESISTANCE_ABSOLUTE
+	turf_flags = IS_SOLID | NO_RUST
 
 /turf/closed/indestructible/TerraformTurf(path, new_baseturf, flags, defer_change = FALSE, ignore_air = FALSE)
 	return
@@ -18,11 +19,15 @@
 /turf/closed/indestructible/singularity_act()
 	return
 
-/turf/closed/indestructible/attackby(obj/item/attacking_item, mob/user, params)
-	if(istype(attacking_item, /obj/item/poster) && Adjacent(user))
-		return place_poster(attacking_item, user)
+/turf/closed/indestructible/attackby(obj/item/attacking_item, mob/user, list/modifiers)	//BUBBER EDIT START - Its almost certain that people are going to want to make use of lewd portals on the interlink so they can be placed on reinforced walls
 
-	return ..()
+	if(istype(attacking_item, /obj/item/wallframe/lewd_portal) && Adjacent(user))
+		var/obj/item/wallframe/lewd_portal = attacking_item
+		if(lewd_portal.try_build(src, user))
+			lewd_portal.interact_with_atom(src, user)
+			return TRUE
+	return ..()	//BUBBER EDIT END
+
 
 /turf/closed/indestructible/oldshuttle
 	name = "strange shuttle wall"
@@ -63,6 +68,7 @@
 /turf/closed/indestructible/splashscreen
 	name = "Space Station 13"
 	desc = null
+	baseturfs = /turf/cordon
 	icon = 'icons/blanks/blank_title.png'
 	icon_state = ""
 	pixel_x = 0 // SKYRAT EDIT - Re-centering the title screen - ORIGINAL: pixel_x = -64
@@ -86,10 +92,6 @@ INITIALIZE_IMMEDIATE(/turf/closed/indestructible/splashscreen)
 		pixel_x = 0
 	else if(width == 608) // 608x480 is widescreen
 		pixel_x = -64
-	// SKYRAT EDIT START - Wider widescreen
-	else if(width == 672) // Skyrat's widescreen is slightly wider than /tg/'s, so we need to accomodate that too.
-		pixel_x = -96
-	// SKYRAT EDIT END
 
 /turf/closed/indestructible/splashscreen/vv_edit_var(var_name, var_value)
 	. = ..()
@@ -103,11 +105,6 @@ INITIALIZE_IMMEDIATE(/turf/closed/indestructible/splashscreen)
 	desc = pick(strings(SPLASH_FILE, "splashes"))
 	return ..()
 SKYRAT EDIT REMOVAL END */
-
-/turf/closed/indestructible/start_area
-	name = null
-	desc = null
-	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 
 /turf/closed/indestructible/reinforced
 	name = "reinforced wall"
@@ -159,11 +156,12 @@ SKYRAT EDIT REMOVAL END */
 	icon_state = "plastinum_wall-0"
 	base_icon_state = "plastinum_wall"
 	smoothing_flags = SMOOTH_BITMASK | SMOOTH_DIAGONAL_CORNERS
-	smoothing_groups = SMOOTH_GROUP_WALLS + SMOOTH_GROUP_PLASTINUM_WALLS + SMOOTH_GROUP_CLOSED_TURFS
+	smoothing_groups = SMOOTH_GROUP_WALLS + SMOOTH_GROUP_CLOSED_TURFS + SMOOTH_GROUP_PLASTINUM_WALLS
 	canSmoothWith = SMOOTH_GROUP_PLASTINUM_WALLS
 
 /turf/closed/indestructible/riveted/plastinum/nodiagonal
-	icon_state = "map-shuttle_nd"
+	icon = MAP_SWITCH('icons/turf/walls/plastinum_wall.dmi', 'icons/turf/walls/misc_wall.dmi')
+	icon_state = MAP_SWITCH("plastinum_wall-0", "plastinum_nd")
 	smoothing_flags = SMOOTH_BITMASK
 
 /turf/closed/indestructible/wood
@@ -185,6 +183,9 @@ SKYRAT EDIT REMOVAL END */
 	smoothing_groups = SMOOTH_GROUP_ABDUCTOR_WALLS + SMOOTH_GROUP_WALLS + SMOOTH_GROUP_CLOSED_TURFS
 	canSmoothWith = SMOOTH_GROUP_ABDUCTOR_WALLS
 
+/turf/closed/indestructible/alien/nodiagonal
+	icon_state = "abductor_wall-15"
+	smoothing_flags = SMOOTH_BITMASK
 
 /turf/closed/indestructible/cult
 	name = "runed metal wall"
@@ -216,8 +217,8 @@ SKYRAT EDIT REMOVAL END */
 
 /turf/closed/indestructible/fakeglass/Initialize(mapload)
 	. = ..()
-	underlays += mutable_appearance('icons/obj/structures.dmi', "grille", layer - 0.01) //add a grille underlay
-	underlays += mutable_appearance('icons/turf/floors.dmi', "plating", layer - 0.02) //add the plating underlay, below the grille
+	underlays += mutable_appearance('icons/obj/structures.dmi', "grille", layer - 0.01, src) //add a grille underlay
+	underlays += mutable_appearance('icons/turf/floors.dmi', "plating", layer - 0.02, src) //add the plating underlay, below the grille
 
 /turf/closed/indestructible/opsglass
 	name = "window"
@@ -231,9 +232,8 @@ SKYRAT EDIT REMOVAL END */
 
 /turf/closed/indestructible/opsglass/Initialize(mapload)
 	. = ..()
-	icon_state = null
-	underlays += mutable_appearance('icons/obj/structures.dmi', "grille", layer - 0.01)
-	underlays += mutable_appearance('icons/turf/floors.dmi', "plating", layer - 0.02)
+	underlays += mutable_appearance('icons/obj/structures.dmi', "grille", layer - 0.01, src)
+	underlays += mutable_appearance('icons/turf/floors.dmi', "plating", layer - 0.02, src)
 
 /turf/closed/indestructible/fakedoor
 	name = "airlock"
@@ -333,13 +333,22 @@ SKYRAT EDIT REMOVAL END */
 	return TRUE
 
 /turf/closed/indestructible/riveted/hierophant
-	name = "wall"
-	desc = "A wall made out of a strange metal. The squares on it pulse in a predictable pattern."
+	name = "runic wall"
+	desc = "A wall made out of strange stone, runes on its sides pulsating in a rythmic pattern."
 	icon = 'icons/turf/walls/hierophant_wall.dmi'
-	icon_state = "wall"
-	smoothing_flags = SMOOTH_CORNERS
+	icon_state = "hierophant_wall-0"
+	base_icon_state = "hierophant_wall"
+	smoothing_flags = SMOOTH_BITMASK
 	smoothing_groups = SMOOTH_GROUP_HIERO_WALL
 	canSmoothWith = SMOOTH_GROUP_HIERO_WALL
+
+/turf/closed/indestructible/riveted/hierophant/set_smoothed_icon_state(new_junction)
+	. = ..()
+	update_appearance(UPDATE_OVERLAYS)
+
+/turf/closed/indestructible/riveted/hierophant/update_overlays()
+	. = ..()
+	. += emissive_appearance('icons/turf/walls/hierophant_wall_e.dmi', icon_state, src)
 
 /turf/closed/indestructible/resin
 	name = "resin wall"
@@ -361,7 +370,7 @@ SKYRAT EDIT REMOVAL END */
 
 /turf/closed/indestructible/resin/membrane/Initialize(mapload)
 	. = ..()
-	underlays += mutable_appearance('icons/turf/floors.dmi', "engine") // add the reinforced floor underneath
+	underlays += mutable_appearance('icons/turf/floors.dmi', "engine", layer - 0.01, src) // add the reinforced floor underneath
 
 /turf/closed/indestructible/grille
 	name = "grille"
@@ -371,7 +380,7 @@ SKYRAT EDIT REMOVAL END */
 
 /turf/closed/indestructible/grille/Initialize(mapload)
 	. = ..()
-	underlays += mutable_appearance('icons/turf/floors.dmi', "plating")
+	underlays += mutable_appearance('icons/turf/floors.dmi', "plating", layer - 0.01, src)
 
 /turf/closed/indestructible/meat
 	name = "dense meat wall"

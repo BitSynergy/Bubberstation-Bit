@@ -11,7 +11,7 @@
 	barefootstep = FOOTSTEP_SAND
 	clawfootstep = FOOTSTEP_SAND
 	heavyfootstep = FOOTSTEP_GENERIC_HEAVY
-	tiled_dirt = FALSE
+	tiled_turf = FALSE
 	planetary_atmos = TRUE
 	baseturfs = /turf/open/misc/moonstation_rock
 	flags_1 = NONE
@@ -32,12 +32,11 @@
 /turf/open/misc/moonstation_rock
 	name = "lunar rock"
 	gender = NEUTER
-	desc = "You've hit rock bottom, here."
+	desc = "You've hit rock bottom, and now you're here."
 	initial_gas_mix = MOONSTATION_ATMOS
 	icon = 'modular_zubbers/icons/turf/lunar_rock.dmi'
 	icon_state = "0,0"
 	planetary_atmos = TRUE
-	baseturfs = /turf/open/misc/moonstation_rock //You have hit rock bottom.
 
 /turf/open/misc/moonstation_rock/break_tile()
 	. = ..()
@@ -61,7 +60,6 @@
 
 /turf/open/floor/catwalk_floor/rust/moonstation
 	initial_gas_mix = MOONSTATION_ATMOS
-	baseturfs = /turf/open/floor/plating/rust/moonstation
 	planetary_atmos = TRUE
 
 /turf/open/floor/iron/solarpanel/moonstation

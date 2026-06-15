@@ -1,5 +1,6 @@
 /obj/item/clothing/under/rank/rnd
 	worn_icon_digi = 'modular_skyrat/master_files/icons/mob/clothing/under/rnd_digi.dmi'	// Anything that was in the rnd.dmi, should be in the rnd_digi.dmi
+	supports_variations_flags = CLOTHING_DIGITIGRADE_VARIATION
 
 /obj/item/clothing/under/rank/rnd/scientist/skyrat
 	icon = 'modular_skyrat/master_files/icons/obj/clothing/under/rnd.dmi'
@@ -23,7 +24,7 @@
 	name = "science utility uniform"
 	desc = "A utility uniform worn by NT-certified Science staff."
 	icon_state = "util_sci"
-	supports_variations_flags = CLOTHING_DIGITIGRADE_VARIATION | CLOTHING_MONKEY_VARIATION
+	supports_variations_flags = CLOTHING_DIGITIGRADE_VARIATION
 	can_adjust = FALSE
 
 /obj/item/clothing/under/rank/rnd/scientist/skyrat/utility/syndicate
@@ -42,7 +43,7 @@
 */
 
 /obj/item/clothing/under/rank/rnd/roboticist/skyrat/sleek
-	name = "sleek roboticst jumpsuit"
+	name = "sleek roboticist jumpsuit"
 	desc = "A sleek version of the roboticist uniform, complete with amber sci-fi stripes."
 	icon_state = "robosleek"
 	can_adjust = FALSE
@@ -65,11 +66,6 @@
 	dying_key = DYE_REGISTRY_JUMPSKIRT
 	female_sprite_flags = FEMALE_UNIFORM_TOP_ONLY
 	supports_variations_flags = CLOTHING_DIGITIGRADE_VARIATION_NO_NEW_ICON
-
-/obj/item/clothing/under/rank/rnd/research_director/skyrat/imperial //Rank pins of the Major General
-	desc = "An off-white naval suit over black pants, with a rank badge denoting the Officer of the Internal Science Division. It's a peaceful life."
-	name = "research director's naval jumpsuit"
-	icon_state = "imprd"
 
 /*
 *	OVERRIDES

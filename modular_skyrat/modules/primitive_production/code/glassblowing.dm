@@ -106,6 +106,7 @@
 	desc = "A tool that is used to hold the molten glass as well as help shape it."
 	icon_state = "blow_pipe_empty"
 	tool_behaviour = TOOL_BLOWROD
+	custom_materials = list(/datum/material/iron = SHEET_MATERIAL_AMOUNT * 5)
 	/// Whether the rod is in use currently; will try to prevent many other actions on it
 	var/in_use = FALSE
 	/// A ref to the glass item being blown
@@ -143,22 +144,20 @@
 	if(glass.steps_remaining[STEP_JACKS])
 		. += "The glass requires [glass.steps_remaining[STEP_JACKS]] more jacking actions!"
 
-/obj/item/glassblowing/blowing_rod/afterattack(atom/target, mob/user, proximity_flag, click_parameters)
-	if(!proximity_flag)
-		return ..()
-	if(istype(target, /obj/item/glassblowing/molten_glass))
-		var/obj/item/glassblowing/molten_glass/attacking_glass = target
-		var/obj/item/glassblowing/molten_glass/glass = glass_ref?.resolve()
-		if(glass)
-			to_chat(user, span_warning("[src] already has some glass on it!"))
-			return
-		if(!user.transferItemToLoc(attacking_glass, src))
-			return
-		glass_ref = WEAKREF(attacking_glass)
-		to_chat(user, span_notice("[src] picks up [target]."))
-		icon_state = "blow_pipe_full"
-		return
-	return ..()
+/obj/item/glassblowing/blowing_rod/interact_with_atom(atom/interacting_with, mob/living/user, list/modifiers)
+	var/obj/item/glassblowing/molten_glass/attacking_glass = interacting_with
+	if(!istype(attacking_glass))
+		return NONE
+
+	if(glass_ref?.resolve())
+		to_chat(user, span_warning("[src] already has some glass on it!"))
+		return ITEM_INTERACT_BLOCKING
+	if(!user.transferItemToLoc(attacking_glass, src))
+		return ITEM_INTERACT_BLOCKING
+	glass_ref = WEAKREF(attacking_glass)
+	to_chat(user, span_notice("[src] picks up [attacking_glass]."))
+	icon_state = "blow_pipe_full"
+	return ITEM_INTERACT_SUCCESS
 
 /obj/item/glassblowing/blowing_rod/attackby(obj/item/attacking_item, mob/living/user, params)
 	var/actioning_speed = user.mind.get_skill_modifier(/datum/skill/production, SKILL_SPEED_MODIFIER) * DEFAULT_TIMED
@@ -486,6 +485,7 @@
 	name = "jacks"
 	desc = "A tool that helps shape glass during the art process."
 	icon_state = "jacks"
+	custom_materials = list(/datum/material/iron = SHEET_MATERIAL_AMOUNT * 5)
 
 /datum/crafting_recipe/glassblowing_recipe/glass_jack
 	name = "Glass-blowing Jacks"
@@ -495,6 +495,7 @@
 	name = "paddle"
 	desc = "A tool that helps shape glass during the art process."
 	icon_state = "paddle"
+	custom_materials = list(/datum/material/iron = SHEET_MATERIAL_AMOUNT * 5)
 
 /datum/crafting_recipe/glassblowing_recipe/glass_paddle
 	name = "Glass-blowing Paddle"
@@ -504,6 +505,7 @@
 	name = "shears"
 	desc = "A tool that helps shape glass during the art process."
 	icon_state = "shears"
+	custom_materials = list(/datum/material/iron = SHEET_MATERIAL_AMOUNT * 5)
 
 /datum/crafting_recipe/glassblowing_recipe/glass_shears
 	name = "Glass-blowing Shears"
@@ -513,6 +515,7 @@
 	name = "metal cup"
 	desc = "A tool that helps shape glass during the art process."
 	icon_state = "metal_cup_empty"
+	custom_materials = list(/datum/material/iron = SHEET_MATERIAL_AMOUNT * 5)
 	var/has_sand = FALSE
 
 /datum/crafting_recipe/glassblowing_recipe/glass_metal_cup

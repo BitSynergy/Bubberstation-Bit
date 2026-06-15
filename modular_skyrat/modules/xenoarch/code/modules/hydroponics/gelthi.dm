@@ -1,5 +1,5 @@
 /obj/item/seeds/gelthi
-	name = "pack of gelthi seeds"
+	name = "gelthi seed pack"
 	desc = "These seeds grow into gelthi plants. Lauded by chefs for its unique ability to produce honey, and often hoarded for this very reason."
 	icon = 'modular_skyrat/modules/xenoarch/icons/seeds.dmi'
 	icon_state = "gelthi"
@@ -24,5 +24,7 @@
 	filling_color = "#FF4500"
 	bite_consumption_mod = 0.5
 	foodtypes = FRUIT
-	juice_typepath = /datum/reagent/consumable/sugar
 	tastes = list("overpowering sweetness" = 1)
+
+/obj/item/food/grown/gelthi/juice_typepath()
+	return /datum/reagent/consumable/sugar

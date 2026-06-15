@@ -1,14 +1,14 @@
 #define MAX_MOLD_FOAM_RANGE_BULB 7
 #define MAX_MOLD_FOAM_RANGE_CORE 4
 
-#define TEMP_REAGENT_HOLDER_CAPACITY_LARGE 120 //BUBBERSTATION CHANGE
-#define TEMP_REAGENT_HOLDER_CAPACITY_SMALL 60 //BUBBERSTATION CHANGE
+#define TEMP_REAGENT_HOLDER_CAPACITY_LARGE 120
+#define TEMP_REAGENT_HOLDER_CAPACITY_SMALL 60
 
 // Disease
 #define DISEASE_PUFF_RANGE_BULB 4
 #define DISEASE_PUFF_RANGE_CORE 5
 
-#define PUFF_REAGENT_AMOUNT 25 //BUBBERSTATION CHANGE
+#define PUFF_REAGENT_AMOUNT 25
 #define PUFF_REAGENT_EFFICIENCY 24
 
 // EMP
@@ -16,11 +16,11 @@
 #define ELECTRICAL_DISCHARGE_LIGHT_RANGE 7
 #define ELECTRICAL_DISCHARGE_SPARKS_AMOUNT 3
 
-#define EMP_SEVERE_EFFECT_CHANCE 25 //BUBBERSTATION CHANGE
+#define EMP_SEVERE_EFFECT_CHANCE 25
 #define EMP_ZAP_RANGE 4
 #define EMP_ZAP_POWER 10000
 
-#define EMP_STUN_LENGTH 1 SECONDS //BUBBERSTATION CHANGE
+#define EMP_STUN_LENGTH 1 SECONDS
 #define EMP_STUN_RANGE 3
 #define EMP_SOUNDBANG_INTENSITY 1
 #define EMP_SOUNDBANG_STUN_POWER 20
@@ -28,10 +28,9 @@
 #define EMP_SOUNDBANG_DEAFEN_POWER 5
 
 // Radiation
-#define RAD_PULSE_RANGE 750 //BUBBERSTATION CHANGE
+#define RAD_PULSE_RANGE 750
 #define RAD_IRRADIATE_THRESHOLD_BULB 15
 #define RAD_IRRADIATE_THRESHOLD_CORE 10
-
 
 /datum/mold_type
 	var/name = "debug"
@@ -54,7 +53,6 @@
 	/// The mold type's preferred atmospheric conditions
 	var/preferred_atmos_conditions
 
-
 /**
  * What happens when the core is attacked.
  *
@@ -66,7 +64,6 @@
  */
 /datum/mold_type/proc/core_defense(obj/structure/mold/structure/core/core)
 	return
-
 
 /**
  * What happens when a bulb discharges.
@@ -83,7 +80,6 @@
 	bulb.visible_message(span_warning("[bulb] ruptures!"))
 	return
 
-
 /**
  * The optional bonus effect alongside conditioner's puff of atmos.
  *
@@ -94,7 +90,6 @@
  */
 /datum/mold_type/proc/bonus_conditioner_effects(obj/structure/mold/structure/conditioner/conditioner)
 	return
-
 
 /**
  * A release of foam from a mold structure.
@@ -114,11 +109,7 @@
 	var/datum/reagents/spewed_reagents = new /datum/reagents(reagent_capacity)
 	spewed_reagents.my_atom = source
 	spewed_reagents.add_reagent(reagent_to_add, amount_of_reagent)
-	var/datum/effect_system/fluid_spread/foam/foam = new
-	var/turf/source_turf = get_turf(source)
-	foam.set_up(range, location = source_turf, carry = spewed_reagents)
-	foam.start()
-
+	do_foam(range, source, get_turf(source), carry = spewed_reagents)
 
 /**
  * Fire mold
@@ -134,7 +125,7 @@
 	structure_light_color = LIGHT_COLOR_FIRE
 	examine_text = "It feels hot to the touch."
 	mob_types = list(/mob/living/basic/mold/oil_shambler)
-	preferred_atmos_conditions = "co2=30;TEMP=400" //BUBBERSTATION CHANGE
+	preferred_atmos_conditions = "co2=30;TEMP=400"
 	resistance_flags = FIRE_PROOF
 
 /datum/mold_type/fire/core_defense(obj/structure/mold/structure/core/core)
@@ -147,8 +138,7 @@
 
 /datum/mold_type/fire/proc/spawn_atmos(obj/structure/mold/structure/source)
 	var/turf/source_turf = get_turf(source)
-	source_turf.atmos_spawn_air("plasma=10;TEMP=300") //BUBBERSTATION CHANGE
-
+	source_turf.atmos_spawn_air("plasma=10;TEMP=300")
 
 /**
  * Disease mold
@@ -165,7 +155,7 @@
 	examine_text = "It looks like it's rotting."
 	mob_types = list(/mob/living/basic/mold/diseased_rat)
 	spawn_cooldown = 5 SECONDS
-	preferred_atmos_conditions = "miasma=10;TEMP=296" //BUBBERSTATION CHANGE
+	preferred_atmos_conditions = "miasma=10;TEMP=296"
 
 /datum/mold_type/disease/core_defense(obj/structure/mold/structure/core/core)
 	core.visible_message(span_warning("[core] emits a cloud!"))
@@ -178,18 +168,15 @@
 /datum/mold_type/disease/proc/fungal_puff(source, range)
 	var/datum/reagents/reagents = new/datum/reagents(TEMP_REAGENT_HOLDER_CAPACITY_LARGE)
 	reagents.my_atom = source
-	reagents.add_reagent(/datum/reagent/toxin/histamine, PUFF_REAGENT_AMOUNT) //BUBBERSTATION CHANGE
-	var/datum/effect_system/fluid_spread/smoke/chem/smoke_machine/puff = new
-	var/turf/source_turf = get_turf(source)
-	puff.set_up(
+	reagents.add_reagent(/datum/reagent/toxin/histamine, PUFF_REAGENT_AMOUNT)
+	do_chem_smoke(
 		range,
-		location = source_turf,
+		holder = source,
+		location = get_turf(source),
 		carry = reagents,
-		efficiency = PUFF_REAGENT_EFFICIENCY,
+		carry_limit = PUFF_REAGENT_EFFICIENCY,
+		smoke_type = /datum/effect_system/fluid_spread/smoke/chem/smoke_machine
 	)
-	puff.attach(source)
-	puff.start()
-
 
 /**
  * EMP mold
@@ -204,7 +191,7 @@
 	examine_text = "You can notice small sparks travelling in the vines."
 	mob_types = list(/mob/living/basic/mold/electric_mosquito)
 	spawn_cooldown = 5 SECONDS
-	preferred_atmos_conditions = "n2=30;TEMP=150" //BUBBERSTATION CHANGE
+	preferred_atmos_conditions = "n2=30;TEMP=150"
 
 /datum/mold_type/emp/core_defense(obj/structure/mold/structure/core/core)
 	core.visible_message(span_warning("[core] sends out electrical discharges!"))
@@ -214,7 +201,6 @@
 		light_emp_range = ELECTRICAL_DISCHARGE_LIGHT_RANGE,
 		guarantee_emp = TRUE,
 		)
-
 
 /datum/mold_type/emp/bulb_discharge(obj/structure/mold/structure/bulb/bulb)
 	. = ..()
@@ -257,7 +243,6 @@
 		source = source,
 	)
 
-
 /**
  * Toxic mold
  *
@@ -271,7 +256,7 @@
 	structure_light_color = LIGHT_COLOR_LAVENDER
 	examine_text = "It feels damp and smells of rat poison."
 	mob_types = list(/mob/living/basic/spider/giant/hunter)
-	preferred_atmos_conditions = "co2=80;TEMP=296" //BUBBERSTATION CHANGE
+	preferred_atmos_conditions = "co2=80;TEMP=296"
 	resistance_flags = UNACIDABLE | ACID_PROOF
 
 /datum/mold_type/toxic/core_defense(obj/structure/mold/structure/core/core)
@@ -291,7 +276,6 @@
 		reagent_to_add = /datum/reagent/toxin,
 		)
 
-
 /**
  * Radioactive mold
  *
@@ -305,7 +289,7 @@
 	structure_light_color = LIGHT_COLOR_ELECTRIC_GREEN
 	examine_text = "It's glowing a soft green."
 	mob_types = list(/mob/living/basic/mold/centaur)
-	preferred_atmos_conditions = "tritium=2;TEMP=296" //BUBBERSTATION CHANGE
+	preferred_atmos_conditions = "tritium=2;TEMP=296"
 	resistance_flags = ACID_PROOF | FIRE_PROOF
 
 /datum/mold_type/radioactive/core_defense(obj/structure/mold/structure/core/core)
@@ -315,7 +299,7 @@
 		core,
 		range = MAX_MOLD_FOAM_RANGE_CORE,
 		reagent_capacity = TEMP_REAGENT_HOLDER_CAPACITY_SMALL,
-		reagent_to_add = /datum/reagent/uranium, //BUBBERSTATION CHANGE
+		reagent_to_add = /datum/reagent/uranium,
 		)
 
 /datum/mold_type/radioactive/bulb_discharge(obj/structure/mold/structure/bulb/bulb)
@@ -325,7 +309,7 @@
 		bulb,
 		range = MAX_MOLD_FOAM_RANGE_BULB,
 		reagent_capacity = TEMP_REAGENT_HOLDER_CAPACITY_LARGE,
-		reagent_to_add = /datum/reagent/uranium, //BUBBERSTATION CHANGE
+		reagent_to_add = /datum/reagent/uranium,
 		)
 
 /datum/mold_type/radioactive/bonus_conditioner_effects(obj/structure/mold/structure/conditioner/conditioner)
@@ -342,7 +326,6 @@
 
 	if(fire_nuclear_particle)
 		source.fire_nuclear_particle()
-
 
 #undef MAX_MOLD_FOAM_RANGE_BULB
 #undef MAX_MOLD_FOAM_RANGE_CORE

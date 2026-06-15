@@ -43,7 +43,12 @@
 		/obj/item/gun/ballistic/shotgun/riot/sol,
 		/obj/item/gun/ballistic/shotgun/riot/sol,
 		/obj/item/gun/ballistic/shotgun/riot/sol,
+		/obj/item/gun/ballistic/bow/security,
 	)
+
+/obj/effect/spawner/armory_spawn/shotguns/Initialize(mapload)
+	. = ..()
+	new /obj/item/storage/bag/quiver/lesser/security/armory(loc)
 
 /obj/structure/closet/ammunitionlocker/useful/PopulateContents()
 	new /obj/item/storage/box/rubbershot(src)
@@ -63,22 +68,6 @@
 	illustration = null
 	layer = 2.9
 
-/obj/item/storage/box/ammo_box/microfusion
-	name = "microfusion cell container"
-	desc = "A box filled with microfusion cells."
-
-/obj/item/storage/box/ammo_box/microfusion/PopulateContents()
-	new /obj/item/stock_parts/cell/microfusion(src)
-	new /obj/item/stock_parts/cell/microfusion(src)
-	new /obj/item/stock_parts/cell/microfusion(src)
-
-/obj/effect/spawner/armory_spawn/centcom_rifles
-	guns = list(
-		/obj/item/gun/ballistic/automatic/sol_rifle,
-		/obj/item/gun/ballistic/automatic/sol_rifle,
-		/obj/item/gun/ballistic/automatic/sol_rifle/machinegun,
-	)
-
 /obj/effect/spawner/armory_spawn/centcom_lasers
 	guns = list(
 		/obj/item/gun/energy/laser,
@@ -89,7 +78,7 @@
 /obj/effect/spawner/armory_spawn/smg
 	vertical_guns = FALSE
 	guns = list(
-		/obj/item/storage/toolbox/guncase/skyrat/carwo_large_case/sindano,
-		/obj/item/storage/toolbox/guncase/skyrat/carwo_large_case/sindano,
-		/obj/item/storage/toolbox/guncase/skyrat/carwo_large_case/sindano,
+		/obj/item/gun/ballistic/automatic/wt550,
+		/obj/item/gun/ballistic/automatic/wt550,
+		/obj/item/gun/ballistic/automatic/wt550,
 	)

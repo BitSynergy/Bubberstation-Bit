@@ -17,7 +17,7 @@
 #define GOLDENEYE_REQUIRED_KEYS_MAXIMUM 3
 
 /// Population requirement for bomb objectives (ninja c4, locate weakpoint, etc.) objectives to appear
-#define BOMB_POP_REQUIREMENT 80
+#define BOMB_POP_REQUIREMENT 30 //BUBBER EDIT: Original 80
 
 // Borer evolution defines
 // The three primary paths that eventually diverge
@@ -42,4 +42,4 @@
 #define BORER_ALONE_PRODUCTION (1<<4)
 
 // Clock cultist
-#define IS_CLOCK(mob) ((FACTION_CLOCK in mob.faction) || mob?.mind?.has_antag_datum(/datum/antagonist/clock_cultist))
+#define IS_CLOCK(mob) ((mob.has_faction(FACTION_CLOCK)) || mob?.mind?.has_antag_datum(/datum/antagonist/clock_cultist))

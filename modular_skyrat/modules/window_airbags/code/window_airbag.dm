@@ -2,7 +2,7 @@
 
 /obj/structure/window/reinforced/fulltile/Initialize(mapload, direct)
 	. = ..()
-	qdel(GetComponent(/datum/component/simple_rotation))
+	RemoveElement(/datum/element/simple_rotation)
 	AddElement(/datum/element/airbag)
 
 /**
@@ -47,6 +47,8 @@
 	INVOKE_ASYNC(src, PROC_REF(disarm_airbag), clicked_atom, clicker)
 
 /datum/element/airbag/proc/disarm_airbag(atom/movable/clicked_atom, mob/living/clicker)
+	if(!istype(clicker))
+		return
 	clicked_atom.balloon_alert(clicker, "disarming airbag...")
 	if(do_after(clicker, DISARM_TIME, clicked_atom))
 		clicked_atom.balloon_alert(clicker, "airbag disarmed!")

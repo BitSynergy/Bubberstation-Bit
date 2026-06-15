@@ -40,7 +40,7 @@
 /obj/machinery/plumbing/floor_pump/update_appearance(updates)
 	. = ..()
 	layer = tile_placed ? GAS_SCRUBBER_LAYER : BELOW_OBJ_LAYER
-	plane = tile_placed ? FLOOR_PLANE : GAME_PLANE
+	SET_PLANE_IMPLICIT(src, tile_placed ? FLOOR_PLANE : GAME_PLANE)
 
 /obj/machinery/plumbing/floor_pump/update_icon_state()
 	. = ..()
@@ -178,9 +178,9 @@
 	icon_state = "active_input"
 	base_icon_state = "active_input"
 
-/obj/machinery/plumbing/floor_pump/input/Initialize(mapload, bolt, layer)
+/obj/machinery/plumbing/floor_pump/input/Initialize(mapload, layer)
 	. = ..()
-	AddComponent(/datum/component/plumbing/simple_supply, bolt, layer || duct_layer)
+	AddComponent(/datum/component/plumbing/simple_supply, layer)
 
 /obj/machinery/plumbing/floor_pump/input/are_reagents_ready()
 	return reagents.total_volume < reagents.maximum_volume
@@ -235,9 +235,9 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/machinery/plumbing/floor_pump/input/on/waste, 0
 	/// Max pressure on the turf before we stop pumping.
 	var/max_ext_kpa = WARNING_HIGH_PRESSURE
 
-/obj/machinery/plumbing/floor_pump/output/Initialize(mapload, bolt, layer)
+/obj/machinery/plumbing/floor_pump/output/Initialize(mapload, layer)
 	. = ..()
-	AddComponent(/datum/component/plumbing/simple_demand, bolt, layer || duct_layer)
+	AddComponent(/datum/component/plumbing/simple_demand, layer)
 
 /obj/machinery/plumbing/floor_pump/output/examine(mob/user)
 	. = ..()
@@ -294,9 +294,16 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/machinery/plumbing/floor_pump/output/on, 0)
 
 MAPPING_DIRECTIONAL_HELPERS(/obj/machinery/plumbing/floor_pump/output/on/supply, 0)
 
+// Stops at 30 height - perfect for automatically refilling pools and other water fixtures.
+/obj/machinery/plumbing/floor_pump/output/on/supply/waist_deep
+	height_regulator = 30
+
+MAPPING_DIRECTIONAL_HELPERS(/obj/machinery/plumbing/floor_pump/output/on/supply/waist_deep, 0)
+
 /obj/item/construction/plumbing/engineering
 	name = "engineering plumbing constructor"
 	desc = "A type of plumbing constructor designed to rapidly deploy the machines needed for logistics regarding fluids."
+	icon = 'modular_skyrat/modules/aesthetics/tools/tools.dmi'
 	icon_state = "plumberer_engi"
 	var/static/list/engineering_design_types = list(
 		//category 1 Synthesizers i.e devices which creates , reacts & destroys chemicals
@@ -335,9 +342,25 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/machinery/plumbing/floor_pump/output/on/supply,
 
 // Helpers for maps
 /obj/machinery/duct/supply
+	color = COLOR_CYAN
 	duct_color = COLOR_CYAN
 	duct_layer = FOURTH_DUCT_LAYER
+	pixel_x = 5
+	pixel_y = 5
+
+/obj/machinery/duct/supply/Initialize(mapload)
+	pixel_x = 0
+	pixel_y = 0
+	. = ..()
 
 /obj/machinery/duct/waste
+	color = COLOR_BROWN
 	duct_color = COLOR_BROWN
 	duct_layer = SECOND_DUCT_LAYER
+	pixel_x = -5
+	pixel_y = -5
+
+/obj/machinery/duct/waste/Initialize(mapload)
+	pixel_x = 0
+	pixel_y = 0
+	. = ..()

@@ -6,6 +6,7 @@
 	anchored = TRUE
 	plane = FLOOR_PLANE
 	layer = ABOVE_OPEN_TURF_LAYER
+	appearance_flags = TILE_BOUND
 	color = "#DDF"
 
 	//For being on fire
@@ -115,6 +116,9 @@
 	. = ..()
 	if(fire_state)
 		set_fire_state(LIQUID_FIRE_STATE_NONE)
+		// Adding this fixes tiles always re-igniting.
+		// It's probably because check_fire() always ingites if it's possible to burn.
+		SSliquids.processing_fire -= my_turf
 
 /obj/effect/abstract/liquid_turf/proc/process_fire()
 	if(!fire_state)
@@ -123,17 +127,17 @@
 	if(!check_fire())
 		SSliquids.processing_fire -= my_turf
 	//Try spreading
-	if(fire_state == old_state) //If an extinguisher made our fire smaller, dont spread, else it's too hard to put out
-		for(var/t in my_turf.atmos_adjacent_turfs)
-			var/turf/T = t
-			if(T.liquids && !T.liquids.fire_state && T.liquids.check_fire(TRUE))
-				SSliquids.processing_fire[T] = TRUE
+	if(fire_state == old_state) // This check seems to do nothing.  Aledgedly was for extingishing.
+		for(var/turf/adjacent_turf in my_turf.atmos_adjacent_turfs)
+			if(prob(70)) // 70% chance to spread
+				if(adjacent_turf.liquids && !adjacent_turf.liquids.fire_state && adjacent_turf.liquids.check_fire(TRUE))
+					SSliquids.processing_fire[adjacent_turf] = TRUE
 	//Burn our resources
-	var/datum/reagent/R //Faster declaration
+	var/datum/reagent/reagent //Faster declaration
 	var/burn_rate
 	for(var/reagent_type in reagent_list)
-		R = reagent_type
-		burn_rate = initial(R.liquid_fire_burnrate)
+		reagent = reagent_type
+		burn_rate = initial(reagent.liquid_fire_burnrate)
 		if(burn_rate)
 			var/amt = reagent_list[reagent_type]
 			if(burn_rate >= amt)
@@ -143,11 +147,11 @@
 				reagent_list[reagent_type] -= burn_rate
 				total_reagents -= burn_rate
 
+	// This seemingly does nothing.
 	my_turf.hotspot_expose((T20C+50) + (50*fire_state), 125)
-	for(var/A in my_turf.contents)
-		var/atom/AT = A
-		if(!QDELETED(AT))
-			AT.fire_act((T20C+50) + (50*fire_state), 125)
+	for(var/atom/content in my_turf.contents)
+		if(!QDELETED(content))
+			content.fire_act((T20C+50) + (50*fire_state), 125)
 
 	if(reagent_list.len == 0)
 		qdel(src, TRUE)
@@ -224,15 +228,17 @@
 /obj/effect/abstract/liquid_turf/proc/make_state_layer(state, has_top)
 	PRIVATE_PROC(TRUE)
 
-	. = list(make_liquid_overlay("stage[state]_bottom", ABOVE_MOB_LAYER, ABOVE_GAME_PLANE))
+	. = list(make_liquid_overlay("stage[state]_bottom", ABOVE_MOB_LAYER, GAME_PLANE))
 
 	if(!has_top)
 		return
 
-	. += make_liquid_overlay("stage[state]_top", BELOW_OBJ_LAYER, GAME_PLANE)
+	. += make_liquid_overlay("stage[state]_top", TABLE_LAYER + 0.05, GAME_PLANE)
 
 /obj/effect/abstract/liquid_turf/proc/set_new_liquid_state(new_state)
 	liquid_state = new_state
+	if(!isnull(my_turf))
+		my_turf.liquids_change(new_state)
 	update_icon(UPDATE_OVERLAYS)
 
 /obj/effect/abstract/liquid_turf/update_overlays()
@@ -298,7 +304,7 @@
 /obj/effect/abstract/liquid_turf/immutable/take_reagents_flat(flat_amount)
 	return simulate_reagents_flat(flat_amount)
 
-//Returns a reagents holder with all the reagents with a higher volume than the threshold
+//Returns a reagents holder with all the reagents with a higher volume than the threshold, returns null if no reagents exceeded the threshold
 /obj/effect/abstract/liquid_turf/proc/simulate_reagents_threshold(amount_threshold)
 	var/datum/reagents/tempr = new(10000)
 	var/passed_list = list()
@@ -309,6 +315,9 @@
 		passed_list[reagent_type] = amount
 	tempr.add_noreact_reagent_list(passed_list)
 	tempr.chem_temp = temp
+	if(tempr.total_volume == 0)
+		qdel(tempr)
+		return null
 	return tempr
 
 //Returns a flat of our reagents without any effects on the liquids
@@ -380,10 +389,10 @@
 		//Splash
 		if(prob(WATER_HEIGH_DIFFERENCE_SOUND_CHANCE))
 			var/sound_to_play = pick(list(
-				'modular_skyrat/modules/liquids/sound/effects/water_wade1.ogg',
-				'modular_skyrat/modules/liquids/sound/effects/water_wade2.ogg',
-				'modular_skyrat/modules/liquids/sound/effects/water_wade3.ogg',
-				'modular_skyrat/modules/liquids/sound/effects/water_wade4.ogg'
+				'modular_zubbers/sound/effects/water_wade1.ogg',
+				'modular_zubbers/sound/effects/water_wade2.ogg',
+				'modular_zubbers/sound/effects/water_wade3.ogg',
+				'modular_zubbers/sound/effects/water_wade4.ogg',
 				))
 			playsound(my_turf, sound_to_play, 60, 0)
 		var/obj/splashy = new /obj/effect/temp_visual/liquid_splash(my_turf)
@@ -429,10 +438,10 @@
 	if(liquid_state >= LIQUID_STATE_ANKLES)
 		if(prob(30))
 			var/sound_to_play = pick(list(
-				'modular_skyrat/modules/liquids/sound/effects/water_wade1.ogg',
-				'modular_skyrat/modules/liquids/sound/effects/water_wade2.ogg',
-				'modular_skyrat/modules/liquids/sound/effects/water_wade3.ogg',
-				'modular_skyrat/modules/liquids/sound/effects/water_wade4.ogg'
+				'modular_zubbers/sound/effects/water_wade1.ogg',
+				'modular_zubbers/sound/effects/water_wade2.ogg',
+				'modular_zubbers/sound/effects/water_wade3.ogg',
+				'modular_zubbers/sound/effects/water_wade4.ogg',
 				))
 			playsound(T, sound_to_play, 50, 0)
 		if(iscarbon(AM))
@@ -449,7 +458,7 @@
 	SIGNAL_HANDLER
 	var/turf/T = source
 	if(liquid_state >= LIQUID_STATE_ANKLES && T.has_gravity(T))
-		playsound(T, 'modular_skyrat/modules/liquids/sound/effects/splash.ogg', 50, 0)
+		playsound(T, 'modular_zubbers/sound/effects/splash.ogg', 50, 0)
 		if(iscarbon(M))
 			var/mob/living/carbon/falling_carbon = M
 
@@ -463,7 +472,7 @@
 				var/datum/reagents/tempr = take_reagents_flat(CHOKE_REAGENTS_INGEST_ON_FALL_AMOUNT)
 				tempr.trans_to(falling_carbon, tempr.total_volume, methods = INGEST)
 				qdel(tempr)
-				falling_carbon.adjustOxyLoss(5)
+				falling_carbon.adjust_oxy_loss(5)
 				//C.emote("cough")
 				INVOKE_ASYNC(falling_carbon, TYPE_PROC_REF(/mob, emote), "cough")
 				to_chat(falling_carbon, span_userdanger("You fall in and swallow some [reagents_to_text()]!"))
@@ -519,6 +528,9 @@
 //Exposes my turf with simulated reagents
 /obj/effect/abstract/liquid_turf/proc/ExposeMyTurf()
 	var/datum/reagents/tempr = simulate_reagents_threshold(LIQUID_REAGENT_THRESHOLD_TURF_EXPOSURE)
+	// Nothing met the threshold
+	if(isnull(tempr))
+		return
 	tempr.expose(my_turf, TOUCH, tempr.total_volume)
 	qdel(tempr)
 
@@ -622,7 +634,7 @@
 					reagents_string += "and "
 	while(reagents_remaining)
 
-	return lowertext(reagents_string)
+	return LOWER_TEXT(reagents_string)
 
 /obj/effect/temp_visual/liquid_splash
 	icon = 'modular_skyrat/modules/liquids/icons/obj/effects/splash.dmi'
@@ -653,8 +665,8 @@
 	smoothing_flags = NONE
 	icon_state = "ocean"
 	base_icon_state = "ocean"
-	plane = DEFAULT_PLANE //Same as weather, etc.
-	layer = ABOVE_MOB_LAYER
+	layer = FLY_LAYER
+	plane = ABOVE_GAME_PLANE
 	starting_temp = T20C-150
 	no_effects = TRUE
 	vis_flags = NONE
@@ -662,8 +674,9 @@
 /obj/effect/abstract/liquid_turf/immutable/ocean/warm
 	starting_temp = T20C+20
 
-/obj/effect/abstract/liquid_turf/immutable/Initialize(mapload)
+/obj/effect/abstract/liquid_turf/immutable/Initialize(mapload, plane_offset)
 	. = ..()
+	SET_PLANE_W_SCALAR(src, initial(plane), plane_offset)
 	reagent_list = starting_mixture.Copy()
 	total_reagents = 0
 	for(var/key in reagent_list)
@@ -671,5 +684,3 @@
 	temp = starting_temp
 	calculate_height()
 	set_reagent_color_for_liquid()
-
-

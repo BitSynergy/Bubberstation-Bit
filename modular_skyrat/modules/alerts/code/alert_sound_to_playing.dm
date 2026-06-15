@@ -8,12 +8,12 @@
 	for(var/m in players)
 		if(ismob(m) && !isnewplayer(m))
 			var/mob/M = m
-			if(M.client?.prefs.read_preference(/datum/preference/toggle/sound_announcements) && M.can_hear())
+			if(M.client?.prefs.read_preference(/datum/preference/toggle/sound_announcements) && !HAS_TRAIT(M, TRAIT_DEAF))
 				if(override_volume)
 					M.playsound_local(get_turf(M), S, 80, FALSE)
 				else
 					var/area/A = get_area(M)
 					if(is_type_in_typecache(A, quiet_areas)) //These areas don't hear it as loudly
-						M.playsound_local(get_turf(M), S, 10, FALSE)
+						M.playsound_local(get_turf(M), S, 30, FALSE)
 					else
 						M.playsound_local(get_turf(M), S, 70, FALSE)

@@ -1,11 +1,13 @@
 SUBSYSTEM_DEF(lorecaster)
 	name = "Lorecaster"
 	wait = 30 MINUTES
+	/// List of all stories, that have run or not
+	var/list/all_stories
 	/// List of stories yet to have been run
 	var/list/stories
 
 /datum/controller/subsystem/lorecaster/Initialize()
-	GLOB.news_network.create_feed_channel("Nanotrasen News Network", "NNN", "Get the latest stories from the frontier, here! For the not-quite-latest stories, download the \"News Archive\" app to any NTOS-based device today!", locked = TRUE, hardset_channel = 1001)
+	GLOB.news_network.create_feed_channel("Nanotrasen News Network", "NNN", "Get the latest stories from the frontier, here! For the not-quite-latest stories, download the \"News Archive\" app to any NTOS-based device today!", locked = TRUE)
 	var/config_delay = CONFIG_GET(number/lorecaster_delay)
 	if(config_delay)
 		wait = config_delay
@@ -13,10 +15,14 @@ SUBSYSTEM_DEF(lorecaster)
 
 /datum/controller/subsystem/lorecaster/fire(resumed)
 	if(!fexists(NEWS_FILE))
+		can_fire = FALSE
 		return
 
-	if(!length(stories)) // Ran out of stories? Run through 'em again
-		stories = json_load(NEWS_FILE)
+	if(!length(all_stories)) // Ran out of stories? Run through 'em again
+		all_stories = json_load(NEWS_FILE)
+
+	if(!length(stories))
+		stories = all_stories.Copy()
 		return // But skip the cycle this time
 
 	var/picked_story = pick(stories)

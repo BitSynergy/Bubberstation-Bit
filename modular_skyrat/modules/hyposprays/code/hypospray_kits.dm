@@ -18,6 +18,8 @@
 	var/static/list/case_designs
 	var/static/list/case_designs_xl
 	var/is_xl = FALSE
+	/// The original icon file where our overlays reside.
+	var/original_icon = 'modular_skyrat/modules/hyposprays/icons/hypokits.dmi'
 
 	/// Tracks if a hypospray is attached to the case or not.
 	var/obj/item/hypospray/mkii/attached_hypo
@@ -76,6 +78,7 @@
 		"oxy" = image(icon = src.icon, icon_state = "oxy-mini"),
 		"advanced" = image(icon = src.icon, icon_state = "advanced-mini"),
 		"buffs" = image(icon = src.icon, icon_state = "buffs-mini"),
+		"combat" = image(icon = src.icon, icon_state = "combat-mini"),
 		"custom" = image(icon = src.icon, icon_state = "standard-gags-mini"))
 	case_designs_xl = list(
 		"cmo" = image(icon = src.icon, icon_state = "cmo-mini"),
@@ -88,45 +91,42 @@
 	. = ..()
 	if(attached_hypo)
 		if(attached_hypo.greyscale_colors != null) //it's one of the GAGS variants
-			var/mutable_appearance/hypo_overlay = mutable_appearance(initial(icon), attached_hypo.icon_state)
+			var/mutable_appearance/hypo_overlay = mutable_appearance(original_icon, attached_hypo.icon_state)
 			. += hypo_overlay
 			var/list/split_colors = splittext(attached_hypo.greyscale_colors, "#")
-			var/mutable_appearance/hypo_overlay_acc1 = mutable_appearance(initial(icon), "hypo2_accent1")
+			var/mutable_appearance/hypo_overlay_acc1 = mutable_appearance(original_icon, "hypo2_accent1")
 			hypo_overlay_acc1.color = "#[split_colors[2]]"
 			. += hypo_overlay_acc1
-			var/mutable_appearance/hypo_overlay_acc2 = mutable_appearance(initial(icon), "hypo2_accent2")
+			var/mutable_appearance/hypo_overlay_acc2 = mutable_appearance(original_icon, "hypo2_accent2")
 			hypo_overlay_acc2.color = "#[split_colors[3]]"
 			. += hypo_overlay_acc2
 		else
-			var/mutable_appearance/hypo_overlay = mutable_appearance(initial(icon), attached_hypo.icon_state)
+			var/mutable_appearance/hypo_overlay = mutable_appearance(original_icon, attached_hypo.icon_state)
 			. += hypo_overlay
 
-/obj/item/storage/hypospraykit/attackby_secondary(obj/item/weapon, mob/user, params)
-	if(istype(weapon, /obj/item/hypospray/mkii))
-		if(attached_hypo != null)
-			balloon_alert(user, "Mount point full!  Remove [attached_hypo] first!")
-		else
-			weapon.moveToNullspace()
-			attached_hypo = weapon
-			RegisterSignal(weapon, COMSIG_QDELETING, PROC_REF(on_attached_hypo_qdel))
-			balloon_alert(user, "Attached [attached_hypo].")
-			update_appearance()
-			// This stops atom_storage from hogging your right-click and opening the inventory.
-			return SECONDARY_ATTACK_CANCEL_ATTACK_CHAIN
-	return ..()
+/obj/item/storage/hypospraykit/tool_act(mob/living/user, obj/item/tool, list/modifiers)
+	if(!istype(tool, /obj/item/hypospray/mkii) || !LAZYACCESS(modifiers, RIGHT_CLICK))
+		return ..()
+	if(!isnull(attached_hypo))
+		balloon_alert(user, "mount point full!  Remove [attached_hypo] first!")
+		return ITEM_INTERACT_BLOCKING
+	tool.moveToNullspace()
+	attached_hypo = tool
+	RegisterSignal(tool, COMSIG_QDELETING, PROC_REF(on_attached_hypo_qdel))
+	balloon_alert(user, "attached [attached_hypo].")
+	update_appearance()
+	return ITEM_INTERACT_SUCCESS
 
-/obj/item/storage/hypospraykit/alt_click_secondary(mob/user)
+/obj/item/storage/hypospraykit/click_alt_secondary(mob/user)
 	if(attached_hypo != null)
 		if(user.put_in_hands(attached_hypo))
-			balloon_alert(user, "Removed [attached_hypo].")
+			balloon_alert(user, "removed [attached_hypo].")
 			UnregisterSignal(attached_hypo, COMSIG_QDELETING)
 			attached_hypo = null
 			update_appearance()
 			// Ditto here.
-			return SECONDARY_ATTACK_CANCEL_ATTACK_CHAIN
 		else
-			balloon_alert(user, "Couldn't pull the hypo!")
-	return ..()
+			balloon_alert(user, "couldn't pull the hypo!")
 
 /obj/item/storage/hypospraykit/proc/on_attached_hypo_qdel()
 	if(attached_hypo)
@@ -159,18 +159,18 @@
 		var/datum/greyscale_modify_menu/menu = new(src, usr, allowed_configs)
 		menu.ui_interact(usr)
 	else //restore normal icon
-		icon = initial(icon)
+		icon = original_icon
 		greyscale_colors = null
 
 /obj/item/storage/hypospraykit/proc/check_menu(mob/user)
 	if(!istype(user))
 		return FALSE
-	if(user.incapacitated() || !user.is_holding(src))
+	if(user.incapacitated || !user.is_holding(src))
 		return FALSE
 	return TRUE
 
 
-/obj/item/storage/hypospraykit/CtrlShiftClick(mob/user, obj/item/I)
+/obj/item/storage/hypospraykit/click_ctrl_shift(mob/user, obj/item/I)
 	case_menu(user)
 
 //END OF HYPOSPRAY CASE MENU CODE
@@ -232,7 +232,7 @@
 /obj/item/storage/hypospraykit/cmo/combat/PopulateContents()
 	if(empty)
 		return
-	new /obj/item/hypospray/mkii/deluxe/cmo/combat(src)
+	new /obj/item/hypospray/mkii/deluxe/combat(src)
 	new /obj/item/reagent_containers/cup/vial/large/advbrute(src)
 	new /obj/item/reagent_containers/cup/vial/large/advburn(src)
 	new /obj/item/reagent_containers/cup/vial/large/advtox(src)
@@ -240,6 +240,23 @@
 	new /obj/item/reagent_containers/cup/vial/large/advcrit(src)
 	new /obj/item/reagent_containers/cup/vial/large/advomni(src)
 	new /obj/item/reagent_containers/cup/vial/large/numbing(src)
+
+// Paramedic hypokit
+/obj/item/storage/hypospraykit/paramedic
+	name = "paramedic hypospray kit"
+	desc = "A hypospray kit containing an advanced hypospray and a starter set of vials."
+	icon_state = "buffs-mini"
+	current_case = "buffs"
+
+/obj/item/storage/hypospraykit/paramedic/PopulateContents()
+	if(empty)
+		return
+	new /obj/item/hypospray/mkii/piercing(src)
+	new /obj/item/reagent_containers/cup/vial/small/libital(src)
+	new /obj/item/reagent_containers/cup/vial/small/lenturi(src)
+	new /obj/item/reagent_containers/cup/vial/small/seiver(src)
+	new /obj/item/reagent_containers/cup/vial/small/convermol(src)
+	new /obj/item/reagent_containers/cup/vial/small/atropine(src)
 
 /// Boxes of empty hypovials, coming in every style.
 /obj/item/storage/box/vials

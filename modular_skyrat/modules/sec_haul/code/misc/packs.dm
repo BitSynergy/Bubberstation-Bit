@@ -15,3 +15,4 @@
 		/obj/item/vending_refill/wardrobe/comm_wardrobe,
 	)
 	crate_name = "Commandrobe Resupply Crate"
+

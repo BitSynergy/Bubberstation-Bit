@@ -70,7 +70,7 @@
 	melee_damage_upper = 10
 	attack_verb_continuous = "punches"
 	attack_verb_simple = "punch"
-	attack_sound = 'sound/weapons/punch1.ogg'
+	attack_sound = 'sound/items/weapons/punch1.ogg'
 	combat_mode = TRUE
 	loot = list(/obj/effect/gibspawner/human)
 	atmos_requirements = null
@@ -93,7 +93,7 @@
 	melee_damage_upper = 15
 	attack_verb_continuous = "slashes"
 	attack_verb_simple = "slash"
-	attack_sound = 'sound/weapons/bladeslice.ogg'
+	attack_sound = 'sound/items/weapons/bladeslice.ogg'
 
 /mob/living/simple_animal/hostile/cult/mannequin
 	name = "Runed Doll"
@@ -107,8 +107,8 @@
 	melee_damage_upper = 15
 	attack_verb_continuous = "slashes"
 	attack_verb_simple = "slash"
-	attack_sound = 'sound/weapons/bladeslice.ogg'
-	loot = list(/obj/effect/decal/cleanable/robot_debris)
+	attack_sound = 'sound/items/weapons/bladeslice.ogg'
+	loot = list(/obj/effect/decal/cleanable/blood/gibs/robot_debris)
 
 /mob/living/simple_animal/hostile/cult/horror
 	name = "Malformed Cultist"
@@ -122,7 +122,7 @@
 	melee_damage_upper = 15
 	attack_verb_continuous = "slashes"
 	attack_verb_simple = "slash"
-	attack_sound = 'sound/weapons/bladeslice.ogg'
+	attack_sound = 'sound/items/weapons/bladeslice.ogg'
 
 /mob/living/simple_animal/hostile/cult/warrior
 	name = "Cultist Warrior"
@@ -136,7 +136,7 @@
 	melee_damage_upper = 15
 	attack_verb_continuous = "slashes"
 	attack_verb_simple = "slash"
-	attack_sound = 'sound/weapons/bladeslice.ogg'
+	attack_sound = 'sound/items/weapons/bladeslice.ogg'
 
 /mob/living/simple_animal/hostile/cult/spear
 	name = "Cultist Spearmen"
@@ -150,7 +150,7 @@
 	melee_damage_upper = 15
 	attack_verb_continuous = "slashes"
 	attack_verb_simple = "slash"
-	attack_sound = 'sound/weapons/bladeslice.ogg'
+	attack_sound = 'sound/items/weapons/bladeslice.ogg'
 
 /mob/living/simple_animal/hostile/cult/assassin
 	name = "Cultist Assassin"
@@ -164,7 +164,7 @@
 	melee_damage_upper = 15
 	attack_verb_continuous = "slashes"
 	attack_verb_simple = "slash"
-	attack_sound = 'sound/weapons/bladeslice.ogg'
+	attack_sound = 'sound/items/weapons/bladeslice.ogg'
 
 /mob/living/simple_animal/hostile/cult/magic
 	name = "Cult Blood Mage"
@@ -174,7 +174,7 @@
 	icon_living = "cultmage"
 	move_to_delay = 10
 	projectiletype = /obj/projectile/magic/spell/magic_missile/lesser
-	projectilesound = 'sound/magic/ethereal_enter.ogg'
+	projectilesound = 'sound/effects/magic/ethereal_enter.ogg'
 	ranged = TRUE
 	ranged_message = "fires a spell"
 	ranged_cooldown_time = 8
@@ -187,7 +187,7 @@
 	attack_verb_continuous = "punches"
 	combat_mode = TRUE
 	speak_emote = list("chants")
-	attack_sound = 'sound/magic/magic_missile.ogg'
+	attack_sound = 'sound/effects/magic/magic_missile.ogg'
 	aggro_vision_range = 9
 	turns_per_move = 5
 	mob_biotypes = MOB_ORGANIC|MOB_HUMANOID
@@ -213,7 +213,7 @@
 	health = 150
 	move_to_delay = 10
 	projectiletype = /obj/projectile/magic/arcane_barrage
-	projectilesound = 'sound/weapons/barragespellhit.ogg'
+	projectilesound = 'sound/items/weapons/barragespellhit.ogg'
 
 // Looters
 /mob/living/simple_animal/hostile/looter
@@ -231,7 +231,7 @@
 	melee_damage_upper = 18
 	attack_verb_continuous = "pipes"
 	attack_verb_simple = "bludgeon"
-	attack_sound = 'sound/weapons/smash.ogg'
+	attack_sound = 'sound/items/weapons/smash.ogg'
 	atmos_requirements = null
 	unsuitable_atmos_damage = 15
 	check_friendly_fire = 1
@@ -268,7 +268,7 @@
 	melee_damage_upper = 18
 	attack_verb_continuous = "smashes"
 	attack_verb_simple = "smash"
-	attack_sound = 'sound/weapons/bladeslice.ogg'
+	attack_sound = 'sound/items/weapons/bladeslice.ogg'
 
 /mob/living/simple_animal/hostile/looter/ranged
 	name = "Looter Gunman"
@@ -285,7 +285,7 @@
 	loot = list(/obj/effect/spawner/random/maintenance/five)
 	dodging = FALSE
 	faction = list(FACTION_HOSTILE)
-	projectilesound = 'sound/weapons/gun/shotgun/shot.ogg'
+	projectilesound = 'sound/items/weapons/gun/shotgun/shot.ogg'
 
 /mob/living/simple_animal/hostile/looter/ranged/space
 	name = "Looter Shipbreaker"
@@ -293,7 +293,7 @@
 	icon_state = "scavsmg"
 	icon_living = "scavsmg"
 	casingtype = /obj/item/ammo_casing/c9mm
-	projectilesound = 'sound/weapons/gun/pistol/shot.ogg'
+	projectilesound = 'sound/items/weapons/gun/pistol/shot.ogg'
 	loot = list(/obj/effect/spawner/random/maintenance/five)
 	atmos_requirements = null
 	minbodytemp = 0
@@ -308,175 +308,9 @@
 	desc = "A shipbreaker scavenger, carrying a laser gun."
 	icon_state = "scavlaser"
 	icon_living = "scavlaser"
-	projectilesound = 'sound/weapons/laser3.ogg'
+	projectilesound = 'sound/items/weapons/laser3.ogg'
 	loot = list(/obj/effect/spawner/random/maintenance/five)
 	projectiletype = /obj/projectile/beam/laser
-
-// Damaged Borgs
-
-/mob/living/simple_animal/hostile/evilborg
-	name = "Malfunctioning Cyborg"
-	desc = "A small cyborg unit, hacked or malfunctioning. It is likely hostile."
-	icon = 'modular_skyrat/master_files/icons/mob/newmobs.dmi'
-	icon_state = "evilbotold"
-	icon_living = "evilbotold"
-	gender = NEUTER
-	mob_biotypes = MOB_ROBOTIC
-	health = 75
-	maxHealth = 75
-	melee_damage_lower = 10
-	melee_damage_upper = 10
-	attack_verb_continuous = "claws"
-	attack_verb_simple = "claw"
-	attack_sound = 'sound/weapons/bladeslice.ogg'
-	attack_vis_effect = ATTACK_EFFECT_CLAW
-	projectilesound = 'sound/weapons/gun/pistol/shot.ogg'
-	projectiletype = /obj/projectile/hivebotbullet
-	faction = list(FACTION_HOSTILE)
-	check_friendly_fire = 1
-	atmos_requirements = null
-	minbodytemp = 0
-	verb_say = "states"
-	verb_ask = "queries"
-	verb_exclaim = "declares"
-	verb_yell = "alarms"
-	bubble_icon = "machine"
-	speech_span = SPAN_ROBOT
-	del_on_death = 1
-	loot = list(/obj/effect/decal/cleanable/robot_debris)
-
-/mob/living/simple_animal/hostile/evilborg/heavy
-	name = "Malfunctioning Heavy Cyborg"
-	desc = "A large cyborg unit, hacked or malfunctioning. It- oh my god is that a chainsaw?!"
-	icon = 'modular_skyrat/master_files/icons/mob/newmobs.dmi'
-	icon_state = "evilbotheavy"
-	icon_living = "evilbotheavy"
-	health = 125
-	maxHealth = 125
-	melee_damage_lower = 20
-	melee_damage_upper = 20
-	attack_verb_continuous = "saws"
-	attack_verb_simple = "saw"
-	attack_sound = 'sound/weapons/chainsawhit.ogg'
-
-/mob/living/simple_animal/hostile/evilborg/peace
-	name = "Malfunctioning Peacekeeper Cyborg"
-	desc = "A cyborg unit, hacked or malfunctioning. This is a Peacekeeper model."
-	icon = 'modular_skyrat/master_files/icons/mob/newmobs.dmi'
-	icon_state = "evilbotpeace"
-	icon_living = "evilbotpeace"
-	health = 90
-	maxHealth = 90
-	melee_damage_lower = 18
-	melee_damage_upper = 18
-	attack_verb_continuous = "smacks"
-	attack_verb_simple = "smack"
-	attack_sound = 'sound/weapons/cqchit1.ogg'
-
-/mob/living/simple_animal/hostile/evilborg/engi
-	name = "Malfunctioning Engineering Cyborg"
-	desc = "An engineering cyborg unit, hacked or malfunctioning- Oh shit that's a plasma bar."
-	icon = 'modular_skyrat/master_files/icons/mob/newmobs.dmi'
-	icon_state = "evilbotengi"
-	icon_living = "evilbotengi"
-	health = 100
-	maxHealth = 100
-	melee_damage_type = BURN
-	melee_damage_lower = 15
-	melee_damage_upper = 15
-	attack_verb_continuous = "welds"
-	attack_verb_simple = "weld"
-	attack_sound = 'sound/items/welder.ogg'
-
-/mob/living/simple_animal/hostile/evilborg/sec
-	name = "Malfunctioning Security Cyborg"
-	desc = "A security cyborg unit, hacked or malfunctioning. There are two guns attached to it."
-	icon = 'modular_skyrat/master_files/icons/mob/newmobs.dmi'
-	icon_state = "evilbotsec"
-	icon_living = "evilbotsec"
-	casingtype = /obj/item/ammo_casing/c45
-	projectilesound = 'sound/weapons/gun/smg/shot.ogg'
-	health = 75
-	maxHealth = 75
-	ranged = 1
-	melee_damage_lower = 8
-	melee_damage_upper = 8
-	attack_verb_continuous = "gunbutts"
-	attack_verb_simple = "gunbutt"
-	attack_sound = 'sound/weapons/smash.ogg'
-
-/mob/living/simple_animal/hostile/evilborg/roomba
-	name = "Malfunctioning Roomba Cyborg"
-	desc = "A roomba, hacked or malfunctioning- OW MY FOOT!"
-	icon = 'modular_skyrat/master_files/icons/mob/newmobs.dmi'
-	icon_state = "evilbotroomba"
-	icon_living = "evilbotroomba"
-	health = 80
-	maxHealth = 80
-	melee_damage_lower = 12
-	melee_damage_upper = 12
-	attack_verb_continuous = "pokes"
-	attack_verb_simple = "stab"
-	attack_sound = 'sound/weapons/genhit2.ogg'
-
-/mob/living/simple_animal/hostile/evilborg/dog
-	name = "Malfunctioning Canine Cyborg"
-	desc = "A canine-borg, hacked or malfunctioning. This one appears to be a mining variant."
-	icon = 'modular_skyrat/master_files/icons/mob/newmobs64x32.dmi'
-	icon_state = "evilbotmine"
-	icon_living = "evilbotmine"
-	health = 115
-	maxHealth = 115
-	melee_damage_lower = 12
-	melee_damage_upper = 12
-	attack_verb_continuous = "cleaves"
-	attack_verb_simple = "smash"
-	attack_sound = 'sound/weapons/bladeslice.ogg'
-
-/mob/living/simple_animal/hostile/evilborg/dogstrong
-	name = "Corrupt Hound"
-	desc = "A canine-borg, hacked or malfunctioning. This one is large, imposing, and can pack a big punch."
-	icon = 'modular_skyrat/master_files/icons/mob/newmobs64x32.dmi'
-	icon_state = "evilbotelite" // ported from VORE
-	icon_living = "evilbotelite"
-	health = 130
-	maxHealth = 130
-	melee_damage_lower = 18
-	melee_damage_upper = 18
-	attack_verb_continuous = "bites"
-	attack_verb_simple = "bite"
-	attack_sound = 'sound/weapons/bite.ogg'
-
-/mob/living/simple_animal/hostile/evilborg/bigguy
-	name = "Malfunctioning Military robot"
-	desc = "A military robot unit, hacked or malfunctioning. This one looks really tough.."
-	icon = 'modular_skyrat/master_files/icons/mob/newmobs.dmi'
-	icon_state = "sentrybot"
-	icon_living = "sentrybot"
-	casingtype = /obj/item/ammo_casing/c45
-	projectilesound = 'sound/weapons/gun/smg/shot.ogg'
-	health = 250
-	maxHealth = 250
-	ranged = 1
-	melee_damage_lower = 12
-	melee_damage_upper = 12
-	attack_verb_continuous = "gunbutts"
-	attack_verb_simple = "gunbutt"
-	attack_sound = 'sound/weapons/smash.ogg'
-
-/mob/living/simple_animal/hostile/evilborg/protect
-	name = "Malfunctioning Standard Robot"
-	desc = "A civlian model robot, hacked or malfunctioning with mechanical claw arms."
-	icon = 'modular_skyrat/master_files/icons/mob/newmobs.dmi'
-	icon_state = "protectbot"
-	icon_living = "protectbot"
-	health = 100
-	maxHealth = 100
-	melee_damage_lower = 15
-	melee_damage_upper = 15
-	attack_verb_continuous = "claws"
-	attack_verb_simple = "punch"
-	attack_sound = 'sound/weapons/genhit2.ogg'
 
 // Beasts
 
@@ -507,7 +341,7 @@
 	melee_damage_upper = 20
 	attack_verb_continuous = "claws"
 	attack_verb_simple = "pinch"
-	attack_sound = 'sound/weapons/genhit2.ogg'
+	attack_sound = 'sound/items/weapons/genhit2.ogg'
 	speak_emote = list("gnashes")
 	atmos_requirements = null
 	minbodytemp = 0
@@ -542,7 +376,7 @@
 	melee_damage_upper = 18
 	attack_verb_continuous = "bites"
 	attack_verb_simple = "bite"
-	attack_sound = 'sound/weapons/bite.ogg'
+	attack_sound = 'sound/items/weapons/bite.ogg'
 	speak_emote = list("screeches")
 	atmos_requirements = null
 	minbodytemp = 0
@@ -580,7 +414,7 @@
 	melee_damage_upper = 18
 	attack_verb_continuous = "bites"
 	attack_verb_simple = "slash"
-	attack_sound = 'sound/weapons/bite.ogg'
+	attack_sound = 'sound/items/weapons/bite.ogg'
 	speak_emote = list("gurlges")
 	atmos_requirements = null
 	minbodytemp = 0
@@ -619,7 +453,7 @@
 	move_to_delay = 4
 	attack_verb_continuous = "stings"
 	attack_verb_simple = "sting"
-	attack_sound = 'sound/weapons/genhit2.ogg'
+	attack_sound = 'sound/items/weapons/genhit2.ogg'
 	speak_emote = list("buzzes")
 	atmos_requirements = null
 	minbodytemp = 0
@@ -658,7 +492,7 @@
 	melee_damage_upper = 20
 	attack_verb_continuous = "slashes"
 	attack_verb_simple = "slash"
-	attack_sound = 'sound/weapons/bladeslice.ogg'
+	attack_sound = 'sound/items/weapons/bladeslice.ogg'
 	speak_emote = list("growls")
 	atmos_requirements = null
 	minbodytemp = 0
@@ -690,7 +524,7 @@
 	melee_damage_upper = 15
 	attack_verb_continuous = "stings"
 	attack_verb_simple = "sting"
-	attack_sound = 'sound/weapons/genhit2.ogg'
+	attack_sound = 'sound/items/weapons/genhit2.ogg'
 	speak_emote = list("chitters")
 	atmos_requirements = null
 	minbodytemp = 0
@@ -724,7 +558,7 @@
 	melee_damage_upper = 15
 	attack_verb_continuous = "bosses"
 	attack_verb_simple = "boss"
-	attack_sound = 'sound/weapons/cqchit2.ogg'
+	attack_sound = 'sound/items/weapons/cqchit2.ogg'
 	speak_emote = list("squeaks")
 	emote_see = list("squeaks.", "practices CQC.", "cocks the bolt of a tiny CR20.", "plots to steal DAT DISK!", "fiddles with a tiny radio.")
 	speak_chance = 1
@@ -738,37 +572,6 @@
 /mob/living/simple_animal/hostile/syndimouse/Initialize(mapload)
 	. = ..()
 	ADD_TRAIT(src, TRAIT_VENTCRAWLER_ALWAYS, INNATE_TRAIT)
-
-/mob/living/simple_animal/hostile/mannequin
-	name = "living mannequin"
-	desc = "A strange, living, wooden mannequin. Spooky!"
-	icon = 'modular_skyrat/master_files/icons/mob/newmobs.dmi'
-	icon_state = "mannequin"
-	icon_living = "mannequin"
-	mob_biotypes = MOB_UNDEAD
-	speak_chance = 0
-	turns_per_move = 5
-	response_help_continuous = "poke"
-	response_help_simple = "poke"
-	response_disarm_continuous = "gently pushes aside"
-	response_disarm_simple = "gently push aside"
-	speed = 2
-	maxHealth = 50
-	health = 50
-	harm_intent_damage = 3
-	obj_damage = 15
-	melee_damage_lower = 10
-	melee_damage_upper = 10
-	attack_verb_continuous = "punches"
-	attack_verb_simple = "punch"
-	attack_sound = 'sound/weapons/cqchit1.ogg'
-	speak_emote = list("clacks")
-	atmos_requirements = null
-	minbodytemp = 0
-	maxbodytemp = 1500
-	faction = list(FACTION_HOSTILE)
-	pressure_resistance = 200
-	gold_core_spawnable = HOSTILE_SPAWN
 
 /mob/living/simple_animal/hostile/engorge
 	name = "Talon Demon"
@@ -796,7 +599,7 @@
 	melee_damage_upper =10
 	attack_verb_continuous = "claws"
 	attack_verb_simple = "slice"
-	attack_sound = 'sound/weapons/bladeslice.ogg'
+	attack_sound = 'sound/items/weapons/bladeslice.ogg'
 	speak_emote = list("chitters")
 	atmos_requirements = null
 	minbodytemp = 0
@@ -863,7 +666,7 @@
 	melee_damage_upper = 10
 	attack_verb_continuous = "claws"
 	attack_verb_simple = "claw"
-	attack_sound = 'sound/weapons/pierce_slow.ogg'
+	attack_sound = 'sound/items/weapons/pierce_slow.ogg'
 	combat_mode = TRUE
 	loot = list(/obj/effect/spawner/random/maintenance/three = 1)
 	atmos_requirements = null
@@ -886,7 +689,7 @@
 	loot = list(/obj/effect/spawner/random/medical/medkit = 1)
 	attack_verb_continuous = "slashes"
 	attack_verb_simple = "slash"
-	attack_sound = 'sound/weapons/bladeslice.ogg'
+	attack_sound = 'sound/items/weapons/bladeslice.ogg'
 	attack_vis_effect = ATTACK_EFFECT_SLASH
 	status_flags = 0
 
@@ -902,7 +705,7 @@
 	retreat_distance = 5
 	minimum_distance = 5
 	casingtype = /obj/item/ammo_casing/c9mm
-	projectilesound = 'sound/weapons/gun/pistol/shot.ogg'
+	projectilesound = 'sound/items/weapons/gun/pistol/shot.ogg'
 	loot = list(/obj/effect/spawner/random/engineering/material_rare = 2)
 	dodging = FALSE
 	rapid_melee = 1
@@ -914,7 +717,7 @@
 	icon_living = "voxlaser"
 	icon_dead = "voxsuitdead"
 	projectiletype = /obj/projectile/beam/laser
-	projectilesound = 'sound/weapons/laser3.ogg'
+	projectilesound = 'sound/items/weapons/laser3.ogg'
 
 /mob/living/simple_animal/hostile/vox/ranged/space
 	name = "Vox Space Raider"
@@ -926,7 +729,7 @@
 	retreat_distance = 5
 	minimum_distance = 5
 	casingtype = /obj/item/ammo_casing/c9mm
-	projectilesound = 'sound/weapons/gun/pistol/shot.ogg'
+	projectilesound = 'sound/items/weapons/gun/pistol/shot.ogg'
 	loot = list(/obj/effect/spawner/random/maintenance/five = 1)
 	dodging = FALSE
 	rapid_melee = 1
@@ -939,5 +742,14 @@
 	icon_dead = "voxspacedead"
 	loot = list(/obj/effect/spawner/random/engineering/material_rare = 4)
 	projectiletype = /obj/projectile/beam/laser
-	projectilesound = 'sound/weapons/laser3.ogg'
+	projectilesound = 'sound/items/weapons/laser3.ogg'
+
+
+/mob/living/basic/gorilla/pitbull
+	name = "\improper pitbull"
+	desc = "Lover of Blood. Hater of Toddlers. Doesn't look too happy to see you."
+	icon = 'modular_skyrat/master_files/icons/mob/pets.dmi'
+	icon_state = "pitbull"
+	icon_dead = "pitbull_dead"
+	icon_living = "pitbull"
 

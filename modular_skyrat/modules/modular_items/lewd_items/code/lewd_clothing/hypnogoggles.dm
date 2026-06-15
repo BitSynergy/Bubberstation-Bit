@@ -24,7 +24,7 @@
 	victim = user
 	if(!(slot & ITEM_SLOT_EYES))
 		return
-	if(!(iscarbon(victim) && victim.client?.prefs?.read_preference(/datum/preference/toggle/erp/sex_toy)))
+	if(!(iscarbon(victim) && victim.client?.prefs?.read_preference(/datum/preference/toggle/erp/sex_toy) && victim.client?.prefs?.read_preference(/datum/preference/toggle/erp/hypnosis)))
 		return
 	if(codephrase != "")
 		victim.gain_trauma(new /datum/brain_trauma/very_special/induced_hypnosis(codephrase), TRAUMA_RESILIENCE_MAGIC)
@@ -34,18 +34,20 @@
 
 /obj/item/clothing/glasses/hypno/dropped(mob/user)//Removing hypnosis on unequip
 	. = ..()
+	if(!victim) //prevents a runtime where it tries to unequip from a nonexistent victim
+		return
 	if(!(victim.glasses == src))
 		return
 	victim.cure_trauma_type(/datum/brain_trauma/very_special/induced_hypnosis, TRAUMA_RESILIENCE_MAGIC)
 	victim = null
 
 /obj/item/clothing/glasses/hypno/Destroy()
-	. = ..()
 	if(!victim)
-		return
+		return ..()
 	if(!(victim.glasses == src))
-		return
+		return ..()
 	victim.cure_trauma_type(/datum/brain_trauma/very_special/induced_hypnosis, TRAUMA_RESILIENCE_MAGIC)
+	. = ..()
 
 /obj/item/clothing/glasses/hypno/attack_self(mob/user)//Setting up hypnotising phrase
 	. = ..()
@@ -73,7 +75,7 @@
 /obj/item/clothing/glasses/hypno/proc/check_menu(mob/living/user)
 	if(!istype(user))
 		return FALSE
-	if(user.incapacitated())
+	if(user.incapacitated)
 		return FALSE
 	return TRUE
 
@@ -138,12 +140,12 @@
 		return
 	switch(rand(1, 2))
 		if(1)
-			to_chat(owner, span_hypnophrase("<i>...[lowertext(hypnotic_phrase)]...</i>"))
+			to_chat(owner, span_hypnophrase("<i>...[LOWER_TEXT(hypnotic_phrase)]...</i>"))
 		if(2)
 			new /datum/hallucination/chat(owner, TRUE, FALSE, span_hypnophrase("[hypnotic_phrase]"))
 
 /datum/brain_trauma/very_special/induced_hypnosis/handle_hearing(datum/source, list/hearing_args)
-	if(!owner.can_hear() || owner == hearing_args[HEARING_SPEAKER])
+	if((HAS_TRAIT(owner, TRAIT_DEAF)) || owner == hearing_args[HEARING_SPEAKER])
 		return
 
 	hearing_args[HEARING_RAW_MESSAGE] = target_phrase.Replace(hearing_args[HEARING_RAW_MESSAGE], span_hypnophrase("$1"))

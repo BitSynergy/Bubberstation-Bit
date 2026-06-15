@@ -6,3 +6,20 @@
 			Basic knowledge of communication systems not included. Requires power in area deployed."
 	item = /obj/item/survivalcapsule/plap
 	cost = 10
+
+/datum/uplink_item/bundles_tc/bunny
+	name = "Syndicate Bunny Kit"
+	desc = "Straight from the dens of Carota. The Tactical Rabbit Ensemble. \
+	Made for Tactical Rabbit Action, it's been adapted for use by the Syndicate, your welcome. \
+	This kit contains one armor-lined rabbit costume, white combat gloves and one single carrot shiv. (Carrot shiv may be eaten in transit.)"
+	item = /obj/item/storage/box/syndibunny
+	cost = 8
+
+/datum/uplink_item/bundles_tc/tactical_naptime
+	name = "Sleepy Time Pajama Bundle"
+	desc = "Even soldiers need to get a good nights rest. Comes with blood-red pajamas, a blankie, a hot mug of cocoa and a fuzzy friend."
+	item = /obj/item/storage/box/syndie_kit/sleepytime
+	cost = 1
+	uplink_item_flags = NONE
+
+

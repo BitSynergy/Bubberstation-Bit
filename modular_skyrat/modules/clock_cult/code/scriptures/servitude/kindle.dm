@@ -39,7 +39,7 @@
 		hit_mob.visible_message(span_warning("[hit_mob] stares blankly, as a field of energy flows around them."), \
 									   span_userdanger("You feel a slight shock as a wave of energy flows past you."))
 
-		playsound(invoker, 'sound/magic/mm_hit.ogg', 50, TRUE)
+		playsound(invoker, 'sound/effects/magic/mm_hit.ogg', 50, TRUE)
 		return TRUE
 
 	//To make battles more fun, both sides can't bullshit stun hand the other
@@ -58,7 +58,7 @@
 		to_chat(invoker, span_warning("Some force greater than you intervenes! [hit_mob] is protected by Nar'sie!"))
 		to_chat(hit_mob, span_warning("You are protected by your faith to Nar'sie!"))
 
-		playsound(invoker, 'sound/magic/mm_hit.ogg', 50, TRUE)
+		playsound(invoker, 'sound/effects/magic/mm_hit.ogg', 50, TRUE)
 		return TRUE
 
 	//Successful Invokation
@@ -80,14 +80,14 @@
 		carbon_hit.adjust_silence(EFFECT_TIME)
 		carbon_hit.AdjustKnockdown(EFFECT_TIME)
 
-		carbon_hit.adjustStaminaLoss(80)
+		carbon_hit.adjust_stamina_loss(80)
 
 	if(hit_mob.client)
 		var/client_color = hit_mob.client.color
 		hit_mob.client.color = "#BE8700"
 		animate(hit_mob.client, color = client_color, time = 2.5 SECONDS)
 
-	playsound(invoker, 'sound/magic/staff_animation.ogg', 50, TRUE)
+	playsound(invoker, 'sound/effects/magic/staff_animation.ogg', 50, TRUE)
 	return TRUE
 
 #undef EFFECT_TIME

@@ -1,33 +1,93 @@
 // RESEARCH NODES
 
+/datum/techweb_node/cyber/empathy_implant
+	id = TECHWEB_NODE_EMPATHY_IMPLANT
+	display_name = "Empathic Sensor Implant"
+	description = "The result of assuredly-ethical experiments conducted on those with special minds."
+	prereq_ids = list(TECHWEB_NODE_CYBER_IMPLANTS)
+	design_ids = list(
+		"ci_empathic_sensor",
+	)
+	required_experiments = list(/datum/experiment/scanning/people/open_minds)
+	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_4_POINTS)
+	announce_channels = list(RADIO_CHANNEL_SCIENCE, RADIO_CHANNEL_MEDICAL)
+
 /datum/techweb_node/botanygene
-	id = "botanygenes"
+	id = TECHWEB_NODE_BOTANY_ADV
 	display_name = "Experimental Botanical Engineering"
-	description = "Botanical tools"
-	prereq_ids = list("adv_engi", "biotech")
+	description = "Further advancement in plant cultivation techniques and machinery, enabling careful manipulation of plant DNA."
+	prereq_ids = list(TECHWEB_NODE_PARTS_ADV, TECHWEB_NODE_SELECTION)
 	design_ids = list(
 		"diskplantgene",
 		"plantgene",
 	)
-	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = 1000)
-	required_experiments = list(/datum/experiment/scanning/random/plants/wild)
+	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_5_POINTS)
 
-// MEDICAL
-/datum/techweb_node/adv_biotech/New()
+/datum/techweb_node/parts_bluespace/New()
 	. = ..()
 	design_ids += list(
-		"crewmonitor",
+		"bs_experi_scanner"
 	)
-/datum/techweb_node/xenoorgan_biotech/New()
+
+//Research borg tech node
+/datum/techweb_node/borg_research
+	id = TECHWEB_NODE_BORG_RESEARCH
+	display_name = "Research Cyborg Upgrades"
+	description = "They are taking our jobs now!"
+	prereq_ids = list(TECHWEB_NODE_BORG_ENGI, TECHWEB_NODE_BORG_MEDICAL)
+	design_ids = list(
+		"bs_experi_scanner_cyborg",
+		"borg_upgrade_advancedanalyzer",
+		"borg_upgrade_inducer_sci",
+		"borg_upgrade_brped",
+		"borg_upgrade_surgicalprocessor_sci",
+		"borg_upgrade_research_rcd"
+	)
+	announce_channels = list(RADIO_CHANNEL_SCIENCE)
+	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_4_POINTS)
+
+//Mining borg upgrades
+/datum/techweb_node/borg_mining/New()
+	.=..()
+	design_ids += list(
+		"borg_upgrade_advcutter",
+		"borg_upgrade_welding",
+	)
+
+
+/datum/techweb_node/ai_laws/New()
+	. = ..()
+	design_ids += list(
+		"crewsimov",
+		"crewsimovpp",
+		"ntos",
+	)
+
+// MEDICAL
+/datum/techweb_node/xenobiology/New()
 	. = ..()
 	design_ids += list(
 		"limbdesign_hemophage",
 		"limbdesign_tajaran",
 	)
 
+/datum/techweb_node/cyber/cyber_implants/New()
+	. = ..()
+	design_ids += list(
+		"wound_scanner_internal"
+	)
+//ENGINEERING
+/datum/techweb_node/atmos/New()
+	. = ..()
+	design_ids += list(
+		"nitrogen_tank",
+		//"nitrogen_tank_belt", | Uncomment in case nitrogen internal tanks get refactored to no longer be 25L
+		"anesthetic_tank",
+	)
+
 // TOOLS
 
-/datum/techweb_node/basic_mining/New()
+/datum/techweb_node/mining/New()
 	. = ..()
 	design_ids += list(
 		"interdyne_mining_equipment_vendor",
@@ -35,61 +95,85 @@
 
 // Robotics Tech
 
-/datum/techweb_node/cyborg_upg_engiminer/New()
+/datum/techweb_node/borg_engi/New()
 	. = ..()
 	design_ids += list(
-		"borg_upgrade_advcutter",
+		"rld_cyborg"
 	)
+
+/datum/techweb_node/borg_utility/New()
+	design_ids += list(
+		"borg_upgrade_detailer",
+		"rld_cyborg_janitor",
+		"cable_coil_cyborg"
+	)
+	return ..()
+
+/datum/techweb_node/borg_medical/New()
+	design_ids += list(
+		"borg_upgrade_pinpointer",
+	)
+	return ..()
+
+/datum/techweb_node/augmentation/New()
+	. = ..()
+	design_ids += list(
+		"blanksynth",
+		"dominatrixmodule",
+		"obediencemodule",
+		"borg_upgrade_expand",
+		"borg_upgrade_shrink",
+	)
+
+/datum/techweb_node/borg_utility/New()
+	. = ..()
+	design_ids -= list(
+		"borg_upgrade_expand" // Moved to default robotics, always available. It provides no practical benefit so it shouldn't be here
+	)
+
+/datum/techweb_node/borg_mining/New()
+	. = ..()
+	design_ids += list(
+		"pinpointer_vent_cyborg",
+		"adv_xenoarchbag_cyborg",
+		"pka_railgun_cyborg",
+		"pka_repeater_cyborg",
+		"pka_shotgun_cyborg",
+		"pka_pistol_cyborg",
+		"pka_shockwave_cyborg",
+		"pka_m79_cyborg",
+	)
+/datum/techweb_node/mechlaunchpad
+	id = TECHWEB_NODE_MECHLAUNCHPAD
+	display_name = "Mech Logistics Solutions"
+	description = "Advancements in utilizing bluespace technology allow us to rapidly deliver mechs from workshop to destination."
+	prereq_ids = list(TECHWEB_NODE_BLUESPACE_TRAVEL, TECHWEB_NODE_MECH_EQUIPMENT)
+	design_ids = list(
+		"mechlauncher_pad",
+		"mechlauncher_console",
+	)
+	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_2_POINTS)
+	announce_channels = list(RADIO_CHANNEL_SCIENCE)
+
 // Computer Tech
-/datum/techweb_node/computer_board_gaming/New()
+/datum/techweb_node/gaming/New()
 	. = ..()
 	design_ids += list(
 		"minesweeper",
 	)
 
-//Weaponry Research
-
-/datum/techweb_node/magazineresearch
-	id = "storedmunition_tech"
-	display_name = "Military Grade Munition Research"
-	description = "In the wake of the NRI Border Conflict, there was a drive to advances our armament, learn how sol does it."
-	prereq_ids = list("adv_weaponry")
-	design_ids = list(
-		"s12g_buckshot",
-		"s12g_slug",
-		"sol40_riflstandardemag",
-		"solgrenade_extmag",
-	)
-	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = 20000)
-
-/datum/techweb_node/magazineresearch_heavy
-	id = "storedmunition_tech_two"
-	display_name = "Advanced Munition Research"
-	description = "The same technology we used to defeat eldritch god, even you can have it"
-	prereq_ids = list("syndicate_basic")
-	design_ids = list(
-		"sol40_rifldrummag",
-	)
-	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = 45000)  //Unreasonably expensive and locked behind multiple tier of research, you can have abit of powercreep as a treat
-
-/datum/techweb_node/weaponry/New()
-	design_ids += "wt550_ammo_rubber"
-	design_ids += "wt550_ammo_flathead"
-	design_ids += "sol35_shortmag"
-	design_ids += "m45_mag"
-	design_ids += "s12g_hornet"
-	design_ids += "s12g_antitide"
+/datum/techweb_node/riot_supression/New()
 	design_ids += "s12g_rubber"
 	design_ids += "s12g_bslug"
+	design_ids += "s12g_br"
 	design_ids += "s12g_incinslug"
-	design_ids += "s12g_flechette"
-	. = ..()
-
-/datum/techweb_node/adv_weaponry/New()
 	design_ids += "wt550_ammo_normal"
-	design_ids += "sol35_shortextmag"
-	design_ids += "sol40_riflemag"
+	design_ids += "m9mm_mag"
+	design_ids += "m45_mag"
 	design_ids += "solgrenade_mag"
+	design_ids += "ntusp_conversion"
+	design_ids += "ntusp_powerpack"
+	design_ids += "ntmp5_powerpack"
 	. = ..()
 
 /datum/techweb_node/exotic_ammo/New()
@@ -97,46 +181,51 @@
 	. = ..()
 
 /datum/techweb_node/syndicate_basic/New()
-	design_ids -= "mag_autorifle"
-	design_ids -= "mag_autorifle_ap"
-	design_ids -= "mag_autorifle_ic"
 	design_ids += "wt550_ammo_incendiary"
-	design_ids += "s12g_magnum"
-	design_ids += "s12g_express"
+	design_ids += "mod_mind_transfer"
 	. = ..()
 
+// Modsuit tech
+/datum/techweb_node/mod_equip/New()
+	. = ..()
+	design_ids += list("mod_remote_module")
+
 /datum/techweb_node/nerd
-	id = "nerd"
+	id = TECHWEB_NODE_NERD
 	display_name = "Theoretical Physics"
 	description = "They asked me how well I understood theoretical physics. I said I had a theoretical degree in physics."
 	prereq_ids = list(
-		"robotics", //Suit AI
-		"biotech", //Wound analyzer (and morphine production).
-		"mod_engineering" //Suit protection.
+		TECHWEB_NODE_ROBOTICS, //Suit AI
+		TECHWEB_NODE_CHEM_SYNTHESIS, //Wound analyzer (and morphine production).
+		TECHWEB_NODE_MOD_ENGI //Suit protection.
 	)
 	design_ids = list(
 		"nerd_suit",
 		"nerd_glases"
 	)
 	research_costs = list(
-		TECHWEB_POINT_TYPE_GENERIC = 4000
+		TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_3_POINTS
 	)
 
 /datum/techweb_node/advanced_nerd
-	id = "advanced_nerd"
+	id = TECHWEB_NODE_NERD_ADV
 	display_name = "Advanced Theoretical Physics"
 	description = "Scientists aren't supposed to have guns."
 	prereq_ids = list(
-		"alientech", //Memes.
-		"gravity_gun", //Physgun
-		"nerd", //Previous tier
-		"exp_tools" //Crowbar
+		TECHWEB_NODE_ALIENTECH, //Memes.
+		TECHWEB_NODE_ANOMALY_SHELLS, //Physgun
+		TECHWEB_NODE_NERD, //Previous tier
+		TECHWEB_NODE_EXP_TOOLS //Crowbar
 	)
 	design_ids = list(
 		"physgun",
 		"fast_crowbar"
 	)
 	research_costs = list(
-		TECHWEB_POINT_TYPE_GENERIC = 10000
+		TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_4_POINTS
 	)
 
+/datum/techweb_node/mod_equip/New()
+	design_ids += list("mod_protean_servo", "mod_hat_stabilizer",
+	)
+	. = ..()

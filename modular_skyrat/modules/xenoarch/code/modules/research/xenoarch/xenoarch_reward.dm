@@ -3,7 +3,7 @@ GLOBAL_LIST_INIT(tier1_reward, list(
 	/obj/item/stack/sheet/sinew = 1,
 	/obj/item/stack/sheet/animalhide/goliath_hide = 1,
 	/obj/item/stack/sheet/bone = 1,
-	/obj/item/organ/internal/monster_core/regenerative_core/legion = 1,
+	/obj/item/organ/monster_core/regenerative_core/legion = 1,
 ))
 
 GLOBAL_LIST_INIT(tier2_reward, list(
@@ -35,8 +35,8 @@ GLOBAL_LIST_INIT(tech_reward, list(
 	/obj/item/construction/plumbing = 1,
 	/obj/item/mmi/posibrain = 1,
 	/obj/item/storage/portable_chem_mixer = 1,
-	/obj/item/stock_parts/cell/crank = 1,
-	/obj/item/stock_parts/cell/self_charge = 1,
+	/obj/item/stock_parts/power_store/cell/crank = 1,
+	/obj/item/stock_parts/power_store/cell/self_charge = 1,
 ))
 
 GLOBAL_LIST_INIT(weapon_reward, list(
@@ -95,7 +95,7 @@ GLOBAL_LIST_INIT(animal_reward, list(
 	/obj/item/stack/sheet/sinew = 1,
 	/obj/item/stack/sheet/animalhide/goliath_hide = 1,
 	/obj/item/stack/sheet/bone = 1,
-	/obj/item/organ/internal/monster_core/regenerative_core/legion = 1,
+	/obj/item/organ/monster_core/regenerative_core/legion = 1,
 ))
 
 GLOBAL_LIST_INIT(alien_reward, list(

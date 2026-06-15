@@ -62,7 +62,6 @@
 
 	create_reagents(max_reagent_volume)
 	AddComponent(/datum/component/liquids_interaction, TYPE_PROC_REF(/obj/item/towel, attack_on_liquids_turf))
-	AddComponent(/datum/component/surgery_initiator) // Since you can do it with bedsheets, why not with towels too?
 
 	register_context()
 	register_item_context()
@@ -191,7 +190,7 @@
 	if(!choice)
 		return
 
-	change_towel_shape(user, lowertext(choice))
+	change_towel_shape(user, LOWER_TEXT(choice))
 
 
 /obj/item/towel/attackby(obj/item/attacking_item, mob/user, params)
@@ -250,18 +249,13 @@
 
 	// No need to display the different message if they're not wearing it.
 	if(!worn)
-		return
+		return CLICK_ACTION_SUCCESS
 
 	to_chat(user, span_notice(shape == TOWEL_FULL ? "You raise \the [src] over your [shape]." : "You lower \the [src] down to your [shape]."))
 	return CLICK_ACTION_SUCCESS
 
 
-/obj/item/towel/CtrlClick(mob/user)
-	. = ..()
-
-	if(. == FALSE)
-		return
-
+/obj/item/towel/item_ctrl_click(mob/user)
 	if(!wet && shape == TOWEL_FOLDED) // You can't fold a wet towel, so you can't get a folded towel that's also wet. And you can't fold what's already folded, obviously.
 		to_chat(user, span_warning("You can't fold a towel that's already folded!"))
 		return
@@ -527,3 +521,16 @@
 	user.changeNext_move(CLICK_CD_MELEE)
 	return TRUE
 
+#undef TOWEL_WRING_AMOUNT
+#undef TOWEL_WRING_LOSS_FACTOR
+#undef TOWEL_CLOTH_AMOUNT
+#undef TOWEL_RIGHTHAND_ICON
+#undef TOWEL_LEFTHAND_ICON
+#undef TOWEL_WORN_ICON_DIGI
+#undef TOWEL_WORN_ICON
+#undef TOWEL_OBJ_ICON
+#undef TOWEL_USED
+#undef TOWEL_HEAD
+#undef TOWEL_WAIST
+#undef TOWEL_FULL
+#undef TOWEL_FOLDED

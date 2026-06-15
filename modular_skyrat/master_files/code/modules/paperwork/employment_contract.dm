@@ -37,7 +37,7 @@
 	<br><br>In case of lack of necessary skills to perform required tasks before the employment, the <i><u>employee</u></i> agrees to perform a skillchip installment and/or \
 	memory upload with qualifications/skills programs necessary to perform their duties, and a skillchip removal and/or memory wipe after their contract's over. The following procedures' \
 	medical fees, as well as the skillchip and/or memory altering procedures cost will be deducted from the <i><u>employee</u></i>'s payment at the end of the contract.\
-	<br><br>To note for the aforementioned, any ongoing or pending criminal investigations, if originated from the Sol Federation, are to be halted for the duration of work contract, \
+	<br><br>To note for the aforementioned, any ongoing or pending criminal investigations, if originated from the Terran Government, are to be halted for the duration of work contract, \
 	with any possible crimes occuring within the <i><u>employer</u></i>'s facilities punished by the contracted or corporate paramilitary and security forces.\
 	<br>Finally, the <i><u>employee</u></i> understands that the <i><u>employer</u></i> is not bound by the same contract principles as them and may terminate the contract at any time, \
 	for any reason, and without warning if need be. The <i><u>employee</u></i> agrees to approach any and all employment disputes through the assigned Head of Personnel \
@@ -53,5 +53,8 @@
 	<font size=1>Under Corporate Law section 201 subsection B.3. Defacement, publication, or theft of this document is punishable by demerit or immediate contractual termination. \
 	Central Command Representives are not responsible for possible loss of life, extermination, or bluespace occurances related to any sort of actions ordered to commit to."
 	)
+
 /obj/structure/filingcabinet/employment/addFile(mob/living/carbon/human/employee)
+	if(!employee || !employee.mind)
+		return
 	new /obj/item/paper/work_contract(src, employee.mind.name)

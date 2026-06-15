@@ -2,8 +2,9 @@
 //SUITS
 /obj/item/clothing/suit/hooded/wintercoat/colourable
 	name = "custom winter coat"
-	icon_state = "winter_coat"
-	icon = null
+	icon = 'icons/map_icons/clothing/suit/_suit.dmi'
+	icon_state = "/obj/item/clothing/suit/hooded/wintercoat/colourable"
+	post_init_icon_state = "winter_coat"
 	worn_icon_state = null
 	hoodtype = /obj/item/clothing/head/hooded/winterhood/colourable
 	greyscale_config = /datum/greyscale_config/winter_coat
@@ -49,7 +50,9 @@
 
 /obj/item/clothing/neck/cloak/colourable
 	name = "colourable cloak"
-	icon_state = "gags_cloak"
+	icon = 'icons/map_icons/clothing/neck.dmi'
+	icon_state = "/obj/item/clothing/neck/cloak/colourable"
+	post_init_icon_state = "gags_cloak"
 	greyscale_config = /datum/greyscale_config/cloak
 	greyscale_config_worn = /datum/greyscale_config/cloak/worn
 	greyscale_colors = "#917A57#4e412e#4e412e"
@@ -57,19 +60,22 @@
 
 /obj/item/clothing/neck/cloak/colourable/veil
 	name = "colourable veil"
-	icon_state = "gags_veil"
+	icon_state = "/obj/item/clothing/neck/cloak/colourable/veil"
+	post_init_icon_state = "gags_veil"
 	greyscale_config = /datum/greyscale_config/cloak/veil
 	greyscale_config_worn = /datum/greyscale_config/cloak/veil/worn
 
 /obj/item/clothing/neck/cloak/colourable/boat
 	name = "colourable boatcloak"
-	icon_state = "gags_boat"
+	icon_state = "/obj/item/clothing/neck/cloak/colourable/boat"
+	post_init_icon_state = "gags_boat"
 	greyscale_config = /datum/greyscale_config/cloak/boat
 	greyscale_config_worn = /datum/greyscale_config/cloak/boat/worn
 
 /obj/item/clothing/neck/cloak/colourable/shroud
 	name = "colourable shroud"
-	icon_state = "gags_shroud"
+	icon_state = "/obj/item/clothing/neck/cloak/colourable/shroud"
+	post_init_icon_state = "gags_shroud"
 	greyscale_config = /datum/greyscale_config/cloak/shroud
 	greyscale_config_worn = /datum/greyscale_config/cloak/shroud/worn
 
@@ -119,7 +125,7 @@
 
 /obj/item/canvas/drawingtablet/ui_action_click(mob/user, action)
 	if(istype(action, /datum/action/item_action/dtselectcolor))
-		currentcolor = input(user, "", "Choose Color", currentcolor) as color|null
+		currentcolor = tgui_color_picker(user, "", "Choose Color", currentcolor)
 	else if(istype(action, /datum/action/item_action/dtcolormenu))
 		var/list/selects = colors.Copy()
 		selects["Save"] = "Save"
@@ -141,17 +147,23 @@
 			else
 				currentcolor = colors[selection]
 	else if(istype(action, /datum/action/item_action/dtcleargrid))
-		var/yesnomaybe = tgui_alert("Are you sure you wanna clear the canvas?", "", list("Yes", "No", "Maybe"))
+		var/yesnomaybe = tgui_alert(user, "Are you sure you wanna clear the canvas?", "", list("Yes", "No", "Maybe"))
 		if(QDELETED(src) || !user.can_perform_action(src))
 			return
 		switch(yesnomaybe)
 			if("Yes")
-				reset_grid()
+				workspace = new(width,
+					height,
+					color_mode = SPRITE_EDITOR_COLOR_MODE_RGB,
+					config_flags = NONE,
+					tool_flags = SPRITE_EDITOR_TOOL_PENCIL | SPRITE_EDITOR_TOOL_BUCKET,
+					initial_layer_color = "[canvas_color]ff" // To avoid needing to handle strings of mixed lengths, sprite editor workspaces always use the alpha channel
+				)
 				SStgui.update_uis(src)
 			if("No")
 				return
 			if("Maybe")
-				playsound(src, 'sound/machines/buzz-sigh.ogg', 50, FALSE)
+				playsound(src, 'sound/machines/buzz/buzz-sigh.ogg', 50, FALSE)
 				audible_message(span_warning("The [src] buzzes!"))
 				return
 
@@ -213,21 +225,9 @@
 	icon_state = "black_turtleneck"
 	worn_icon = 'modular_skyrat/master_files/icons/donator/mob/clothing/uniform.dmi'
 	supports_variations_flags = NONE
-	armor_type = /datum/armor/clothing_under/none
+	armor_type = /datum/armor/clothing_under
 	can_adjust = FALSE //There wasnt an adjustable sprite anyways
 	has_sensor = HAS_SENSORS	//Actually has sensors, to balance the new lack of armor
-
-/datum/armor/clothing_under/none
-
-/obj/item/clothing/shoes/jackboots/heel
-	name = "high-heeled jackboots"
-	desc = "Almost like regular jackboots... why are they on a high heel?"
-	icon = 'modular_skyrat/master_files/icons/donator/obj/clothing/shoes.dmi'
-	worn_icon = 'modular_skyrat/master_files/icons/donator/mob/clothing/feet.dmi'
-	icon_state = "heel-jackboots"
-	supports_variations_flags = NONE
-	uses_advanced_reskins = FALSE
-	unique_reskin = NONE
 
 // Donation reward for Bloodrite
 /obj/item/clothing/shoes/clown_shoes/britches
@@ -265,19 +265,21 @@
 	resistance_flags = FIRE_PROOF
 
 /******CALIGRA DONATIONS******/
+// NOTE: Caligram is being renamed to Blacktide Mercenary Fleet. I'll be reflavoring them to that, with the Molerats/Dustworld stuff coming in its own unique PR later
+
 // Donation reward for Farsighted Nightlight
 /obj/item/clothing/mask/gas/nightlight
-	name = "\improper FIR-36 half-face rebreather"
-	desc = "A close-fitting respirator designed by Forestfel Intersystem Industries and originally meant for Ixian Tajarans, the FIR-36 Rebreather is commonly used by Military and Civilian Personnel alike. It reeks of Militarism."
+	name = "\improper BT-36 respirator"
+	desc = "A combat respirator designed by Blacktide for their original contingent of humanoid recruits. Sleek and black."
 	icon = 'modular_skyrat/master_files/icons/donator/obj/clothing/masks.dmi'
 	worn_icon = 'modular_skyrat/master_files/icons/donator/mob/clothing/mask.dmi'
 	icon_state = "fir36"
 	actions_types = list(/datum/action/item_action/adjust)
 	clothing_flags = BLOCK_GAS_SMOKE_EFFECT | MASKINTERNALS //same flags as actual sec hailer gas mask
-	flags_inv = HIDESNOUT // | HIDEFACE // bubber edit, makes no sense to block the whole face if it's blocking only half of it, right? // BUBBER TODO: Modularity
+	flags_inv = HIDESNOUT
 	flags_cover = NONE
 	visor_flags = BLOCK_GAS_SMOKE_EFFECT | MASKINTERNALS
-	visor_flags_inv = HIDESNOUT // | HIDEFACE // bubber edit // BUBBER TODO: Modularity
+	visor_flags_inv = HIDESNOUT
 	w_class = WEIGHT_CLASS_SMALL
 	tint = 0
 	interaction_flags_click = NEED_DEXTERITY
@@ -297,42 +299,91 @@
 
 // Donation reward for Farsighted Nightlight
 /obj/item/clothing/mask/gas/nightlight/fir22
-	name = "\improper FIR-22 full-face rebreather"
-	desc = "A full-face respirator designed by Forestfel Intersystem Industries and originally meant for Ixian Tajarans, the FIR-22 Rebreather is a snout-covering variant often seen used by Tajaran Military Personnel. It reeks of militarism."
+	name = "\improper BT-22 extended respirator"
+	desc = "A variant on the BT-36 respirator with an extended visor, developed to fit on Blacktide recruits with longer snouts. Just as sleek and black as its older brother."
 	icon_state = "fir22"
 
 // Donation reward for Raxraus
 /obj/item/clothing/head/caligram_cap_tan
-	name = "\improper Caligram tan softcap"
-	desc = "A Caligram's Fleet-branded hat in a '/surprisingly/' tasteful shade of brown."
+	name = "\improper Blacktide softcap"
+	desc = "A softcap, made for Blacktide for operating in all environments, comes in tan and a tasteful blue variant."
 	icon = 'modular_skyrat/master_files/icons/donator/obj/clothing/hats.dmi'
 	worn_icon = 'modular_skyrat/master_files/icons/donator/mob/clothing/head.dmi'
 	icon_state = "caligram_cap_tan"
 
+/obj/item/clothing/head/caligram_cap_tan/Initialize(mapload)
+	. = ..()
+	AddComponent(/datum/component/reskinable_item, /datum/atom_skin/caligram_cap)
+
+/datum/atom_skin/caligram_cap
+	abstract_type = /datum/atom_skin/caligram_cap
+
+/datum/atom_skin/caligram_cap/tan
+	preview_name = "Tan Variant"
+	new_icon_state = "caligram_cap_tan"
+
+/datum/atom_skin/caligram_cap/blue
+	preview_name = "Blue Variant"
+	new_icon_state = "caligram_cap_blue"
+
 // Donation reward for Raxraus
 /obj/item/clothing/under/jumpsuit/caligram_fatigues_tan
-	name = "\improper Caligram tan fatigues"
-	desc = "A set of tan and brown work fatigues bearing a Caligram's Fleet insigna on an armband. Lacks the typical Tajaran extravagance."
+	name = "\improper Blacktide fatigues"
+	desc = "A set of fatigues developed by Blacktide for their operators, designed for all environments. Comes in a brown and a tasteful blue variant."
 	icon = 'modular_skyrat/master_files/icons/donator/obj/clothing/uniform.dmi'
 	worn_icon = 'modular_skyrat/master_files/icons/donator/mob/clothing/uniform.dmi'
 	worn_icon_digi = 'modular_skyrat/master_files/icons/donator/mob/clothing/uniform_digi.dmi'
 	icon_state = "caligram_fatigues_tan"
 	worn_icon_state = "caligram_fatigues_tan"
 
+/obj/item/clothing/under/jumpsuit/caligram_fatigues_tan/Initialize(mapload)
+	. = ..()
+	AddComponent(/datum/component/reskinable_item, /datum/atom_skin/caligram_fatigues)
+
+/datum/atom_skin/caligram_fatigues
+	abstract_type = /datum/atom_skin/caligram_fatigues
+
+/datum/atom_skin/caligram_fatigues/tan
+	preview_name = "Tan Variant"
+	new_icon_state = "caligram_fatigues_tan"
+
+/datum/atom_skin/caligram_fatigues/blue
+	preview_name = "Blue Variant"
+	new_icon_state = "caligram_fatigues_blue"
+
 // Donation reward for Raxraus
 /obj/item/clothing/suit/jacket/caligram_parka_tan
-	name = "\improper Caligram tan parka"
-	desc = "A tan parka with a fancy black belt and '/Caligram's Fleet/' stitched onto its armband."
+	name = "\improper Blacktide coat"
+	desc = "A coat with a black belt and '/Blacktide Mercenary Corps/' stitched onto the armband. Comes in tan, blue, and patchless blue variants."
 	icon = 'modular_skyrat/master_files/icons/donator/obj/clothing/suits.dmi'
 	worn_icon = 'modular_skyrat/master_files/icons/donator/mob/clothing/suit.dmi'
 	icon_state = "caligram_parka_tan"
 	body_parts_covered = CHEST|GROIN|ARMS
 	cold_protection = CHEST|GROIN|LEGS|ARMS|HANDS
 
+/obj/item/clothing/suit/jacket/caligram_parka_tan/Initialize(mapload)
+	. = ..()
+	AddComponent(/datum/component/reskinable_item, /datum/atom_skin/caligram_parka)
+
+/datum/atom_skin/caligram_parka
+	abstract_type = /datum/atom_skin/caligram_parka
+
+/datum/atom_skin/caligram_parka/tan
+	preview_name = "Tan Variant"
+	new_icon_state = "caligram_parka_tan"
+
+/datum/atom_skin/caligram_parka/blue
+	preview_name = "Blue Variant"
+	new_icon_state = "caligram_parka_blue"
+
+/datum/atom_skin/caligram_parka/blue_patchless
+	preview_name = "Blue Patchless Variant"
+	new_icon_state = "caligram_parka_patchless_blue"
+
 // Donation reward for Raxraus
 /obj/item/clothing/suit/armor/vest/caligram_parka_vest_tan
-	name = "\improper Caligram armored tan parka"
-	desc = "A tan parka with a fancy black belt, a lightly armored vest and '/Caligram's Fleet/' stitched onto its armband."
+	name = "\improper Blacktide armored coat"
+	desc = "A coat with a black belt, a lightly armored vest and '/Blacktide Mercenary Corps/' stitched onto its armband. Comes in tan and blue variants."
 	icon = 'modular_skyrat/master_files/icons/donator/obj/clothing/suits.dmi'
 	worn_icon = 'modular_skyrat/master_files/icons/donator/mob/clothing/suit.dmi'
 	icon_state = "caligram_parka_vest_tan"
@@ -340,6 +391,20 @@
 	body_parts_covered = CHEST|GROIN|ARMS
 	cold_protection = CHEST|GROIN|LEGS|ARMS|HANDS
 
+/obj/item/clothing/suit/armor/vest/caligram_parka_vest_tan/Initialize(mapload)
+	. = ..()
+	AddComponent(/datum/component/reskinable_item, /datum/atom_skin/caligram_parka_vest)
+
+/datum/atom_skin/caligram_parka_vest
+	abstract_type = /datum/atom_skin/caligram_parka_vest
+
+/datum/atom_skin/caligram_parka_vest/tan
+	preview_name = "Tan Variant"
+	new_icon_state = "caligram_parka_vest_tan"
+
+/datum/atom_skin/caligram_parka_vest/blue
+	preview_name = "Blue Variant"
+	new_icon_state = "caligram_parka_vest_blue"
 
 // Donation reward for ChillyLobster
 /obj/item/clothing/suit/jacket/brasspriest
@@ -367,11 +432,13 @@
 	icon_state = "wetsuit"
 	icon = 'modular_skyrat/master_files/icons/donator/obj/clothing/uniform.dmi'
 	worn_icon = 'modular_skyrat/master_files/icons/donator/mob/clothing/uniform.dmi'
+	worn_icon_digi = 'modular_skyrat/master_files/icons/donator/mob/clothing/uniform_digi.dmi'
+	worn_icon_teshari = 'modular_skyrat/master_files/icons/donator/mob/clothing/uniform_teshari.dmi'
 	armor_type = /datum/armor/clothing_under/wetsuit
 	body_parts_covered = CHEST|GROIN|LEGS|FEET|ARMS|HANDS
 	can_adjust = FALSE
 	female_sprite_flags = NO_FEMALE_UNIFORM
-	supports_variations_flags = CLOTHING_DIGITIGRADE_VARIATION_NO_NEW_ICON
+	supports_variations_flags = CLOTHING_DIGITIGRADE_VARIATION
 
 // Donation reward for TheOOZ
 /obj/item/clothing/mask/animal/wolf
@@ -479,7 +546,7 @@
 	var/goggles = FALSE
 
 /obj/item/clothing/head/avipilot/proc/adjust_goggles(mob/living/carbon/user)
-	if(user?.incapacitated())
+	if(user?.incapacitated)
 		return
 	if(goggles)
 		icon_state = "avipilotup"
@@ -538,7 +605,6 @@
 	icon_state = "silver_dress_boots"
 	worn_icon = 'modular_skyrat/master_files/icons/donator/mob/clothing/feet.dmi'
 	supports_variations_flags = NONE
-	uses_advanced_reskins = FALSE
 
 
 /****************LEGACY REWARDS***************/
@@ -560,6 +626,7 @@
 	icon = 'modular_skyrat/master_files/icons/donator/obj/custom.dmi'
 	worn_icon = 'modular_skyrat/master_files/icons/donator/mob/clothing/custom_w.dmi'
 	alternate_worn_layer = UNDER_SUIT_LAYER
+	kink_collar = TRUE
 	/// What's the name on the tag, if any?
 	var/tagname = null
 	/// What treat item spawns inside the collar?
@@ -598,23 +665,20 @@
 	return mutable_appearance('modular_skyrat/master_files/icons/donator/obj/custom.dmi', "darksheath-darksabre")
 
 // Donation reward for inferno707
-/obj/item/storage/belt/sabre/darksabre
+/obj/item/storage/belt/sheath/sabre/darksabre
 	name = "ornate sheathe"
 	desc = "An ornate and rather sinister looking sabre sheathe."
 	icon = 'modular_skyrat/master_files/icons/donator/obj/custom.dmi'
 	worn_icon = 'modular_skyrat/master_files/icons/donator/mob/clothing/custom_w.dmi'
-	icon_state = "darksheath"
-	worn_icon_state = "darksheath"
+	icon_state = "sheath"
+	worn_icon_state = "sheath"
+	stored_blade = /obj/item/toy/darksabre
 
-/obj/item/storage/belt/sabre/darksabre/Initialize(mapload)
+/obj/item/storage/belt/sheath/sabre/darksabre/Initialize(mapload)
 	. = ..()
 	atom_storage.set_holdable(list(
 		/obj/item/toy/darksabre
 		))
-
-/obj/item/storage/belt/sabre/darksabre/PopulateContents()
-	new /obj/item/toy/darksabre(src)
-	update_icon()
 
 // Donation reward for inferno707
 /obj/item/clothing/suit/armor/vest/darkcarapace
@@ -706,7 +770,9 @@
 	icon = 'modular_skyrat/master_files/icons/donator/obj/clothing/uniform.dmi'
 	icon_state = "lannese"
 	worn_icon = 'modular_skyrat/master_files/icons/donator/mob/clothing/uniform.dmi'
-	supports_variations_flags = NONE
+	worn_icon_digi = 'modular_skyrat/master_files/icons/donator/mob/clothing/uniform_digi.dmi'
+	worn_icon_teshari = 'modular_skyrat/master_files/icons/donator/mob/clothing/uniform_teshari.dmi'
+	supports_variations_flags = CLOTHING_DIGITIGRADE_VARIATION
 	inhand_icon_state = "firefighter"
 	can_adjust = TRUE
 	female_sprite_flags = FEMALE_UNIFORM_TOP_ONLY
@@ -716,6 +782,8 @@
 	desc = "An alien cultural garment for women, coming from a distant planet named Cantalan. Shiny vambraces included!"
 	icon_state = "lannese_vambrace"
 	worn_icon = 'modular_skyrat/master_files/icons/donator/mob/clothing/uniform.dmi'
+	worn_icon_digi = 'modular_skyrat/master_files/icons/donator/mob/clothing/uniform_digi.dmi'
+	worn_icon_teshari = 'modular_skyrat/master_files/icons/donator/mob/clothing/uniform_teshari.dmi'
 	body_parts_covered = CHEST|GROIN|LEGS|ARMS|FEET
 
 // Donation reward for Hacker T.Dog
@@ -786,6 +854,7 @@
 	greyscale_colors = null
 	desc = " "
 	icon_state = "mikuleggings"
+	post_init_icon_state = null
 	icon = 'modular_skyrat/master_files/icons/donator/obj/clothing/shoes.dmi'
 	worn_icon = 'modular_skyrat/master_files/icons/donator/mob/clothing/feet.dmi'
 	worn_icon_state = "mikuleggings"
@@ -797,6 +866,7 @@
 	icon = 'modular_skyrat/master_files/icons/donator/obj/clothing/hats.dmi'
 	worn_icon = 'modular_skyrat/master_files/icons/donator/mob/clothing/head.dmi'
 	icon_state = "emissionhelm"
+	visor_icon = "emissionhelm-envisor"
 
 // Donation reward for CandleJax
 /obj/item/clothing/head/helmet/space/plasmaman/candlejax2
@@ -805,6 +875,7 @@
 	icon = 'modular_skyrat/master_files/icons/donator/obj/clothing/hats.dmi'
 	worn_icon = 'modular_skyrat/master_files/icons/donator/mob/clothing/head.dmi'
 	icon_state = "anahead"
+	visor_icon = "anahead-envisor"
 
 // Donation reward for CandleJax
 /obj/item/clothing/under/plasmaman/candlejax
@@ -812,7 +883,10 @@
 	desc = "A modified envirosuit featuring a reserved color scheme."
 	icon = 'modular_skyrat/master_files/icons/donator/obj/clothing/uniform.dmi'
 	worn_icon = 'modular_skyrat/master_files/icons/donator/mob/clothing/uniform.dmi'
+	worn_icon_digi = 'modular_skyrat/master_files/icons/donator/mob/clothing/uniform_digi.dmi'
+	worn_icon_teshari = 'modular_skyrat/master_files/icons/donator/mob/clothing/uniform_teshari.dmi'
 	icon_state = "emissionsuit"
+	supports_variations_flags = CLOTHING_DIGITIGRADE_VARIATION
 
 // Donation reward for CandleJax
 /obj/item/clothing/under/plasmaman/candlejax2
@@ -820,7 +894,10 @@
 	desc = "An Azulean-made Enviro-Suit. Fitted to the Azulean form, it has surplus containment fabric designed to give the solidified mass of plasma that was once a tail some breathing room."
 	icon = 'modular_skyrat/master_files/icons/donator/obj/clothing/uniform.dmi'
 	worn_icon = 'modular_skyrat/master_files/icons/donator/mob/clothing/uniform.dmi'
+	worn_icon_digi = 'modular_skyrat/master_files/icons/donator/mob/clothing/uniform_digi.dmi'
+	worn_icon_teshari = 'modular_skyrat/master_files/icons/donator/mob/clothing/uniform_teshari.dmi'
 	icon_state = "ana_envirosuit"
+	supports_variations_flags = CLOTHING_DIGITIGRADE_VARIATION
 
 // Donation reward for CandleJax
 /obj/item/clothing/under/plasmaman/jax2
@@ -828,17 +905,14 @@
 	desc = "A hazard suit fitted with bio-resistant fibers. Utilizes self-sterilizing pumps fitted in the back."
 	icon = 'modular_skyrat/master_files/icons/donator/obj/clothing/uniform.dmi'
 	worn_icon = 'modular_skyrat/master_files/icons/donator/mob/clothing/uniform.dmi'
+	worn_icon_digi = 'modular_skyrat/master_files/icons/donator/mob/clothing/uniform_digi.dmi'
+	worn_icon_teshari = 'modular_skyrat/master_files/icons/donator/mob/clothing/uniform_teshari.dmi'
 	icon_state = "plasmaman_jax"
 
 // Donation reward for Raxraus
-/obj/item/clothing/shoes/combat/rax
+/obj/item/clothing/shoes/jackboots/peacekeeper/armadyne/rax
 	name = "tactical boots"
 	desc = "Tactical and sleek. This model seems to resemble Armadyne's."
-	icon = 'modular_skyrat/master_files/icons/obj/clothing/shoes.dmi'
-	worn_icon = 'modular_skyrat/master_files/icons/mob/clothing/feet.dmi'
-	worn_icon_digi = 'modular_skyrat/master_files/icons/mob/clothing/feet_digi.dmi'
-	icon_state = "armadyne_boots"
-	worn_icon_state = "armadyne_boots"
 
 // Donation reward for Raxraus
 /obj/item/clothing/suit/armor/vest/warden/rax
@@ -996,9 +1070,7 @@
 
 /// We need to do a bit of code duplication here to ensure that we do the right kind of ui_action_click(), while keeping it modular.
 /datum/action/item_action/toggle_steampunk_goggles_welding_protection/Trigger(trigger_flags)
-	if(!IsAvailable())
-		return FALSE
-	if(SEND_SIGNAL(src, COMSIG_ACTION_TRIGGER, src) & COMPONENT_ACTION_BLOCK_TRIGGER)
+	if(!..())
 		return FALSE
 	if(!target || !istype(target, /obj/item/clothing/glasses/welding/steampunk_goggles))
 		return FALSE
@@ -1041,7 +1113,10 @@
 	desc = "A tailor-made Ensign's uniform, various medals and chains hang down from it."
 	icon = 'modular_skyrat/master_files/icons/donator/obj/clothing/uniform.dmi'
 	worn_icon = 'modular_skyrat/master_files/icons/donator/mob/clothing/uniform.dmi'
+	worn_icon_digi = 'modular_skyrat/master_files/icons/donator/mob/clothing/uniform_digi.dmi'
+	worn_icon_teshari = 'modular_skyrat/master_files/icons/donator/mob/clothing/uniform_teshari.dmi'
 	icon_state = "CCofficer"
+	supports_variations_flags = CLOTHING_DIGITIGRADE_VARIATION
 
 // Donation reward for Cherno_00
 /obj/item/clothing/head/costume/ushanka/frosty
@@ -1052,6 +1127,9 @@
 	icon_state = "fushankadown"
 	upsprite = "fushankaup"
 	downsprite = "fushankadown"
+	post_init_icon_state = null
+	greyscale_config = null
+	greyscale_config_worn = null
 
 // Donation reward for M97screwsyourparents
 /obj/item/clothing/neck/cross
@@ -1127,8 +1205,6 @@
 		"snuggle",
 		"cuddle",
 		"kiss",
-		//"feed Dan Kelly", /bubber edit on request/
-		//"hoard Shinzo Shore", /bubber edit on request/
 		"spoil friends",
 		"hold hands",
 		"have this license",
@@ -1166,7 +1242,6 @@
 /obj/item/poster/korpstech
 	name = "Korps Genetics poster"
 	poster_type = /obj/structure/sign/poster/contraband/korpstech
-	icon = 'modular_skyrat/modules/aesthetics/posters/contraband.dmi'
 	icon_state = "rolled_poster"
 
 /obj/structure/sign/poster/contraband/korpstech
@@ -1248,7 +1323,7 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/structure/sign/poster/contraband/korpstech, 32)
 	icon = 'modular_skyrat/master_files/icons/donator/obj/clothing/uniform.dmi'
 	icon_state = "hosaltred"
 	worn_icon = 'modular_skyrat/master_files/icons/donator/mob/clothing/uniform.dmi'
-	worn_icon_digi = null
+	worn_icon_digi = 'modular_skyrat/master_files/icons/donator/mob/clothing/uniform_digi.dmi'
 
 /obj/item/clothing/glasses/hud/security/sunglasses/gars/giga/roselia
 	name = "red-tinted giga HUD gar glasses"
@@ -1356,10 +1431,10 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/structure/sign/poster/contraband/korpstech, 32)
 /obj/item/coin/donator/marsoc
 	name = "MARSOC Challenge Coin"
 	desc = "This is a challenge coin given to all MARSOC members upon honorable separation from the Corps. \
-			The coin has the insignia of the Marine Special Operations Command on one side, and the Sol Federation Marine Corps logo on the other. \
+			The coin has the insignia of the Marine Special Operations Command on one side, and the Terran Government Marine Corps logo on the other. \
 			This one has an engraving on the Marine Corps logo side, etched in a circle around it: \
 			\"To Staff Sargent Henry Rockwell, for his exemplary service to the Special Operations community and his outstanding moral fiber \
-			and shining example to the core values of the Sol Federation Marine Corps.\""
+			and shining example to the core values of the Terran Government Marine Corps.\""
 	icon = 'modular_skyrat/master_files/icons/donator/obj/custom.dmi'
 	sideslist = list("MARSOC", "SFMC")
 
@@ -1369,7 +1444,10 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/structure/sign/poster/contraband/korpstech, 32)
 	desc = "The brighter variant of the tacticool clotheswear, for when you want to look even cooler than usual and still operate at the same time."
 	icon = 'modular_skyrat/master_files/icons/donator/obj/clothing/uniform.dmi'
 	worn_icon = 'modular_skyrat/master_files/icons/donator/mob/clothing/uniform.dmi'
+	worn_icon_digi = 'modular_skyrat/master_files/icons/donator/mob/clothing/uniform_digi.dmi'
+	worn_icon_teshari = 'modular_skyrat/master_files/icons/donator/mob/clothing/uniform_teshari.dmi'
 	icon_state = "tactichill"
+	supports_variations_flags = CLOTHING_DIGITIGRADE_VARIATION
 
 // Donation reward for thedragmeme
 /obj/item/clothing/shoes/fancy_heels/drag
@@ -1377,7 +1455,7 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/structure/sign/poster/contraband/korpstech, 32)
 
 /obj/item/clothing/shoes/fancy_heels/drag/Initialize(mapload)
 	. = ..()
-	AddComponent(/datum/component/squeak, list('modular_skyrat/modules/modular_items/lewd_items/sounds/highheel1.ogg' = 1, 'modular_skyrat/modules/modular_items/lewd_items/sounds/highheel2.ogg' = 1), 70)
+	AddComponent(/datum/component/squeak, list('modular_zubbers/sound/effects/footstep/highheel1.ogg' = 1, 'modular_zubbers/sound/effects/footstep/highheel2.ogg' = 1, 'modular_zubbers/sound/effects/footstep/highheel3.ogg' = 1, 'modular_zubbers/sound/effects/footstep/highheel4.ogg' = 1), 70)
 
 // Donation reward for Razurath
 
@@ -1387,7 +1465,9 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/structure/sign/poster/contraband/korpstech, 32)
 	icon = 'modular_skyrat/master_files/icons/donator/obj/clothing/uniform.dmi'
 	icon_state = "bimpcap"
 	worn_icon = 'modular_skyrat/master_files/icons/donator/mob/clothing/uniform.dmi'
-	supports_variations_flags = CLOTHING_DIGITIGRADE_VARIATION_NO_NEW_ICON
+	worn_icon_digi = 'modular_skyrat/master_files/icons/donator/mob/clothing/uniform_digi.dmi'
+	worn_icon_teshari = 'modular_skyrat/master_files/icons/donator/mob/clothing/uniform_teshari.dmi'
+	supports_variations_flags = CLOTHING_DIGITIGRADE_VARIATION
 
 // Donation reward for Nikohyena
 /obj/item/clothing/glasses/gold_aviators
@@ -1412,6 +1492,7 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/structure/sign/poster/contraband/korpstech, 32)
 	icon_state = "short_coat"
 	icon = 'modular_skyrat/master_files/icons/donator/obj/clothing/suits.dmi'
 	worn_icon = 'modular_skyrat/master_files/icons/donator/mob/clothing/suit.dmi'
+	supports_variations_flags = CLOTHING_DIGITIGRADE_VARIATION_NO_NEW_ICON
 
 // Donation reward for Thedragmeme
 /obj/item/clothing/neck/flower_collar
@@ -1420,6 +1501,7 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/structure/sign/poster/contraband/korpstech, 32)
 	icon = 'modular_skyrat/master_files/icons/donator/obj/clothing/necklaces.dmi'
 	worn_icon = 'modular_skyrat/master_files/icons/donator/mob/clothing/neck.dmi'
 	icon_state = "flower_collar"
+	kink_collar = TRUE
 
 // Donation reward for Sigmar Alkahest
 /obj/item/clothing/under/costume/skyrat/kimono/sigmar
@@ -1428,6 +1510,10 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/structure/sign/poster/contraband/korpstech, 32)
 	icon_state = "kimono-gold"
 	icon = 'modular_skyrat/master_files/icons/donator/obj/clothing/uniform.dmi'
 	worn_icon = 'modular_skyrat/master_files/icons/donator/mob/clothing/uniform.dmi'
+	worn_icon_digi = 'modular_skyrat/master_files/icons/donator/mob/clothing/uniform_digi.dmi'
+	worn_icon_teshari = 'modular_skyrat/master_files/icons/donator/mob/clothing/uniform_teshari.dmi'
+	gets_cropped_on_taurs = FALSE
+	supports_variations_flags = CLOTHING_DIGITIGRADE_VARIATION
 
 // Donation reward for Sigmar Alkahest
 /obj/item/clothing/head/hooded/sigmarcoat
@@ -1448,9 +1534,9 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/structure/sign/poster/contraband/korpstech, 32)
 	hoodtype = /obj/item/clothing/head/hooded/sigmarcoat
 	supports_variations_flags = NONE
 
-// Donation reward for Sonicgotnuked
+// Donation reward for The Sharkenning
 
-/obj/item/clothing/gloves/ring/hypno/nuke
+/obj/item/clothing/gloves/ring/hypno/sharkenning
 	name = "suspiciously glossy ring"
 	desc = "This ring oozes with an assertive edge as sharp light bends along the smooth, black bronze. Like the finger that wears it, an exceptional amount of polish repels nearly all the light that glances along its surface. If you look closer, a slight golden hue indicates the precious metals inside the alloy."
 	icon = 'modular_skyrat/master_files/icons/donator/obj/clothing/gloves.dmi'
@@ -1461,7 +1547,7 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/structure/sign/poster/contraband/korpstech, 32)
 	righthand_file = null
 	spans = list("glossy")
 
-/obj/item/clothing/ears/kinky_headphones/nuke
+/obj/item/clothing/ears/kinky_headphones/sharkenning
 	name = "suspiciously glossy headphones"
 	desc = "Black metalic headphones with a glossy finish. The soft rubber cushions are comftorable and form fitting"
 	icon_state = "kinkphones_black_off"
@@ -1496,9 +1582,10 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/structure/sign/poster/contraband/korpstech, 32)
 	icon = 'modular_skyrat/master_files/icons/donator/obj/clothing/suits.dmi'
 	worn_icon = 'modular_skyrat/master_files/icons/donator/mob/clothing/suit.dmi'
 	icon_state = "razurath_coat"
+	supports_variations_flags = CLOTHING_DIGITIGRADE_VARIATION_NO_NEW_ICON
 
 // Donation reward for MaSvedish
-/obj/item/clothing/mask/holocigarette/masvedishcigar
+/obj/item/holocigarette/masvedishcigar
 	name = "holocigar"
 	desc = "A soft buzzing device that, using holodeck technology, replicates a slow burn cigar. Now with less-shock technology. It has a small inscription of 'MG' on the golden label."
 	icon = 'modular_skyrat/master_files/icons/donator/obj/clothing/masks.dmi'
@@ -1591,35 +1678,19 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/structure/sign/poster/contraband/korpstech, 32)
 	icon_state = "digicoat_interdyne"
 
 /obj/item/clothing/suit/armor/hos/elofy
-	name = "solar admiral coat"
-	desc = "A traditional naval officer uniform of the late 63rd Expeditionary Fleet. This faithful recreation bears the admiral's crest of the Luna Wolves Legion. It is uniquely tailored to the form of a certain wolf girl."
+	name = "anime admiral coat"
+	desc = "This coat is a near perfect replica of the one worn by Admiral Yi Sun-Sin, main character from \"Heroes of the Galactic Conflict\", \
+		an animated war drama set between the Free Planetary Trade Union and the Second Galactic Empire. \
+		It proved to be a sensational piece among those who appreciate animated cartoons and period war dramas, \
+		but hasn't had much spread outside of the Terran Government."
 	icon = 'modular_skyrat/master_files/icons/donator/obj/clothing/suits.dmi'
 	worn_icon = 'modular_skyrat/master_files/icons/donator/mob/clothing/suit.dmi'
-	icon_state = "coat_blackblue"
+	icon_state = "coat_blackred"
 	inhand_icon_state = "hostrench"
 	blood_overlay_type = "coat"
 	body_parts_covered = CHEST|GROIN|LEGS|ARMS
 	cold_protection = CHEST|GROIN|LEGS|ARMS
 	supports_variations_flags = NONE
-	uses_advanced_reskins = TRUE
-	unique_reskin = list(
-		"Black-Blue" = list(
-			RESKIN_ICON_STATE = "coat_blackblue",
-			RESKIN_WORN_ICON_STATE = "coat_blackblue"
-		),
-		"Black-Red" = list(
-			RESKIN_ICON_STATE = "coat_blackred",
-			RESKIN_WORN_ICON_STATE = "coat_blackred"
-		),
-		"White-Red" = list(
-			RESKIN_ICON_STATE = "coat_whitered",
-			RESKIN_WORN_ICON_STATE = "coat_whitered"
-		),
-		"White-Blue" = list(
-			RESKIN_ICON_STATE = "coat_whiteblue",
-			RESKIN_WORN_ICON_STATE = "coat_whiteblue"
-		)
-	)
 
 /obj/item/clothing/suit/armor/hos/elofy/examine_more(mob/user)
 	. = ..()
@@ -1627,65 +1698,42 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/structure/sign/poster/contraband/korpstech, 32)
 
 
 /obj/item/clothing/head/hats/hos/elofy
-	name = "solar admiral hat"
+	name = "anime admiral hat"
+	desc = "This hat is a near perfect replica of the one worn by Admiral Yi Sun-Sin, main character from \"Heroes of the Galactic Conflict\", \
+		an animated war drama set between the Free Planetary Trade Union and the Second Galactic Empire. \
+		It proved to be a sensational piece among those who appreciate animated cartoons and period war dramas, \
+		but hasn't had much spread outside of the Terran Government."
 	icon ='modular_skyrat/master_files/icons/donator/obj/clothing/hats.dmi'
 	worn_icon = 'modular_skyrat/master_files/icons/donator/mob/clothing/head.dmi'
 	icon_state = "hat_black"
-	uses_advanced_reskins = TRUE
-	unique_reskin = list(
-		"White" = list(
-			RESKIN_ICON_STATE = "hat_white",
-			RESKIN_WORN_ICON_STATE = "hat_white"
-		),
-		"Black" = list(
-			RESKIN_ICON_STATE = "hat_black",
-			RESKIN_WORN_ICON_STATE = "hat_black"
-		)
-	)
-
 
 /obj/item/clothing/gloves/elofy
-	name = "solar admiral gloves"
+	name = "anime admiral gloves"
+	desc = "These gloves are a near perfect replica of those worn by Admiral Yi Sun-Sin, main character from \"Heroes of the Galactic Conflict\", \
+		an animated war drama set between the Free Planetary Trade Union and the Second Galactic Empire. \
+		It proved to be a sensational piece among those who appreciate animated cartoons and period war dramas, \
+		but hasn't had much spread outside of the Terran Government."
 	icon = 'modular_skyrat/master_files/icons/donator/obj/clothing/gloves.dmi'
 	worn_icon = 'modular_skyrat/master_files/icons/donator/mob/clothing/hands.dmi'
 	icon_state = "gloves_black"
-	uses_advanced_reskins = TRUE
-	unique_reskin = list(
-		"White" = list(
-			RESKIN_ICON_STATE = "gloves_white",
-			RESKIN_WORN_ICON_STATE = "gloves_white"
-		),
-		"Black" = list(
-			RESKIN_ICON_STATE = "gloves_black",
-			RESKIN_WORN_ICON_STATE = "gloves_black"
-		)
-	)
 
 /obj/item/clothing/shoes/jackboots/elofy
-	name = "solar admiral boots"
+	name = "anime admiral boots"
+	desc = "These boots are a near perfect replica of those worn by Admiral Yi Sun-Sin, main character from \"Heroes of the Galactic Conflict\", \
+		an animated war drama set between the Free Planetary Trade Union and the Second Galactic Empire. \
+		It proved to be a sensational piece among those who appreciate animated cartoons and period war dramas, \
+		but hasn't had much spread outside of the Terran Government."
 	icon = 'modular_skyrat/master_files/icons/donator/obj/clothing/shoes.dmi'
 	worn_icon = 'modular_skyrat/master_files/icons/donator/mob/clothing/feet.dmi'
-	icon_state = "boots_blackblue"
-	uses_advanced_reskins = TRUE
-	unique_reskin = list(
-		"Black-Red" = list(
-			RESKIN_ICON_STATE = "boots_blackred",
-			RESKIN_WORN_ICON_STATE = "boots_blackred"
-		),
-		"White-Red" = list(
-			RESKIN_ICON_STATE = "boots_whitered",
-			RESKIN_WORN_ICON_STATE = "boots_whitered"
-		),
-		"White-Blue" = list(
-			RESKIN_ICON_STATE = "boots_whiteblue",
-			RESKIN_WORN_ICON_STATE = "boots_whiteblue"
-		)
-	)
+	icon_state = "boots_blackred"
 
 // Donation reward for grasshand
 /obj/item/clothing/under/rank/civilian/chaplain/divine_archer/noble
 	name = "noble gambeson"
 	desc = "These clothes make you feel a little closer to space."
+	worn_icon_digi = 'modular_zubbers/icons/mob/clothing/under/civilian_digi.dmi'
+	worn_icon_teshari = 'modular_zubbers/icons/mob/clothing/under/civilian_teshari.dmi'
+	supports_variations_flags = CLOTHING_DIGITIGRADE_VARIATION
 
 /obj/item/clothing/shoes/jackboots/noble
 	name = "noble boots"
@@ -1750,7 +1798,7 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/structure/sign/poster/contraband/korpstech, 32)
 		message = span_warning("[src]'s delicate fabric is shredded by [washer]! How terrible!")
 		sound_effect_path = 'sound/effects/cloth_rip.ogg'
 		sound_effect_volume = 30
-		for (var/zone as anything in cover_flags2body_zones(body_parts_covered))
+		for (var/zone in cover_flags2body_zones(body_parts_covered))
 			take_damage_zone(zone, limb_integrity * 1.1, BRUTE) // fucking shreds it
 
 	var/turf/our_turf = get_turf(src)
@@ -1776,34 +1824,10 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/structure/sign/poster/contraband/korpstech, 32)
 /obj/item/clothing/head/anubite
 	name = "\improper Anubite headpiece"
 	desc = "A dark coloured headpiece with golden accents. Its features seem reminiscent of the god Anubis."
-	icon = 'modular_skyrat/master_files/icons/donator/mob/clothing/head.dmi'
+	icon = 'modular_skyrat/master_files/icons/donator/obj/clothing/hats.dmi'
 	icon_state = "anubite_headpiece"
-	worn_icon = 'modular_skyrat/master_files/icons/donator/obj/clothing/hats.dmi'
+	worn_icon = 'modular_skyrat/master_files/icons/donator/mob/clothing/head.dmi'
 	worn_y_offset = 4
-
-//  Donator reward Smol42
-
-/obj/item/clothing/neck/trenchcoat
-	name = "Graceful Trenchcoat"
-	icon = 'modular_skyrat/master_files/icons/donator/obj/clothing/cloaks.dmi'
-	icon_state = "trenchcoat"
-	worn_icon = 'modular_skyrat/master_files/icons/donator/mob/clothing/neck.dmi'
-	body_parts_covered = CHEST|GROIN|LEGS|ARMS
-	uses_advanced_reskins = TRUE
-	unique_reskin = list(
-		"White" = list(
-			RESKIN_ICON_STATE = "trenchcoat_white",
-			RESKIN_WORN_ICON_STATE = "trenchcoat_white"
-		),
-		"Tin variant" = list(
-			RESKIN_ICON_STATE = "trenchcoat_tin",
-			RESKIN_WORN_ICON_STATE = "trenchcoat_tin"
-		),
-		"Blue variant" = list(
-			RESKIN_ICON_STATE = "trenchcoat_blue",
-			RESKIN_WORN_ICON_STATE = "trenchcoat_blue"
-		)
-	)
 
 //Donation reward for Jasohavents
 /obj/item/clothing/under/rank/cargo/qm/skirt/old
@@ -1856,3 +1880,5 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/structure/sign/poster/contraband/korpstech, 32)
 	name = "implant case - 'Toaster'"
 	desc = "A glass case containing a toaster implant. Sweet."
 	imp_type = /obj/item/implant/toaster
+
+#undef TOASTER_IMPLANT_COOLDOWN

@@ -1,5 +1,5 @@
 /obj/item/seeds/vaporsac
-	name = "pack of vaporsac seeds"
+	name = "vaporsac seed pack"
 	desc = "These seeds grow into vaporsac plants. Normally vaporsac plants spread by floating through the air and exploding, but this strand of vaporsac thankfully does not."
 	icon = 'modular_skyrat/modules/xenoarch/icons/seeds.dmi'
 	icon_state = "vaporsac"
@@ -24,5 +24,7 @@
 	filling_color = "#FF4500"
 	bite_consumption_mod = 0.5
 	foodtypes = FRUIT
-	juice_typepath = /datum/reagent/nitrous_oxide
 	tastes = list("sleep" = 1)
+
+/obj/item/food/grown/vaporsac/juice_typepath()
+	return /datum/reagent/nitrous_oxide

@@ -9,7 +9,7 @@
 
 	if(!internal_cell)
 		return FALSE
-	if(internal_cell.use(amount))
+	if(!amount || internal_cell.use(amount))
 		return TRUE
 	if(!check_programs)
 		return FALSE
@@ -43,7 +43,6 @@
 ///Charge depends on whether the PC is on, and what programs are running/idle on it.
 /obj/item/modular_computer/proc/handle_power(seconds_per_tick)
 	var/power_usage = screen_on ? base_active_power_usage : base_idle_power_usage
-
 	if(light_on)
 		power_usage *= FLASHLIGHT_DRAIN_MULTIPLIER
 	if(active_program)

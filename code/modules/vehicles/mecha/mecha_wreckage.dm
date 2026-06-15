@@ -6,7 +6,7 @@
 /obj/structure/mecha_wreckage
 	name = "exosuit wreckage"
 	desc = "Remains of some unfortunate mecha. Completely irreparable, but perhaps something can be salvaged."
-	icon = 'icons/mob/mecha.dmi'
+	icon = 'icons/mob/rideables/mecha.dmi'
 	density = TRUE
 	anchored = FALSE
 	opacity = FALSE
@@ -42,6 +42,11 @@
 	if(AI)
 		QDEL_NULL(AI)
 	QDEL_LIST(crowbar_salvage)
+	src.visible_message(span_danger("[src]'s superstructure folds in on itself, collapsing into a heap of unsalvageable scrap!"))
+	playsound(src, 'sound/effects/meteorimpact.ogg', 100, TRUE)
+	for(var/mob/living/witness in range(2, src))
+		shake_camera(witness, 2, 1)
+	new /obj/effect/decal/cleanable/blood/gibs/robot_debris(get_turf(src))
 	return ..()
 
 /obj/structure/mecha_wreckage/examine(mob/user)
@@ -224,7 +229,7 @@
 
 /obj/structure/mecha_wreckage/savannah_ivanov
 	name = "\improper Savannah-Ivanov wreckage"
-	icon = 'icons/mob/coop_mech.dmi'
+	icon = 'icons/mob/rideables/coop_mech.dmi'
 	icon_state = "savannah_ivanov-broken"
 	welder_salvage = list(/obj/item/stack/sheet/mineral/silver, /obj/item/stack/sheet/iron, /obj/item/stack/rods)
 	parts = list(

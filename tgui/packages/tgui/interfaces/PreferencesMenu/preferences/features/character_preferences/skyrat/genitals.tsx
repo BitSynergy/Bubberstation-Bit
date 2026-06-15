@@ -1,15 +1,15 @@
 // THIS IS A SKYRAT UI FILE
 import {
   CheckboxInput,
-  Feature,
-  FeatureChoiced,
-  FeatureChoicedServerData,
+  type Feature,
+  type FeatureChoiced,
+  type FeatureChoicedServerData,
   FeatureNumberInput,
-  FeatureNumeric,
-  FeatureToggle,
+  type FeatureNumeric,
+  type FeatureToggle,
   FeatureTriBoolInput,
   FeatureTriColorInput,
-  FeatureValueProps,
+  type FeatureValueProps,
 } from '../../base';
 import { FeatureDropdownInput } from '../../dropdowns';
 
@@ -54,11 +54,21 @@ export const penis_sheath: Feature<string> = {
 
 export const penis_length: FeatureNumeric = {
   name: 'Penis Length',
+  description:
+    'Value is measured in inches.\
+     This value is limited to 20 for characters with a body size <= 1, \
+     or without the oversized trait. The maximum allowed value scales up\
+     based on the body size of a character, up to a max of 36.',
   component: FeatureNumberInput,
 };
 
 export const penis_girth: FeatureNumeric = {
   name: 'Penis Girth',
+  description:
+    'Value is circumference, measured in inches.\
+    This value is limited to 15 for characters with a body size <= 1, \
+    or without the oversized trait. The maximum allowed value scales up\
+    based on the body size of a character, up to a max of 20.',
   component: FeatureNumberInput,
 };
 
@@ -191,6 +201,97 @@ export const breasts_size: Feature<string> = {
 export const feature_anus: Feature<string> = {
   name: 'Anus Choice',
   component: FeatureDropdownInput,
+};
+
+export const feature_butt: Feature<string> = {
+  name: 'Butt Choice',
+  component: (
+    props: FeatureValueProps<string, string, FeatureChoicedServerData>,
+  ) => {
+    return <FeatureDropdownInput buttons {...props} />;
+  },
+};
+
+export const butt_skin_tone: FeatureToggle = {
+  name: 'Butt uses Skin Tone',
+  component: CheckboxInput,
+};
+
+export const butt_skin_color: FeatureToggle = {
+  name: 'Butt uses Skin Color',
+  component: CheckboxInput,
+};
+
+export const butt_color: Feature<string[]> = {
+  name: 'Butt Color',
+  component: FeatureTriColorInput,
+};
+
+export const butt_emissive: Feature<boolean[]> = {
+  name: 'Butt Emissives',
+  description: 'Emissive parts glow in the dark.',
+  component: FeatureTriBoolInput,
+};
+
+export const butt_size: FeatureNumeric = {
+  name: 'Butt Size',
+  component: FeatureNumberInput,
+};
+
+export const anus_skin_tone: FeatureToggle = {
+  name: 'Anus uses Skin Tone',
+  component: CheckboxInput,
+};
+
+export const anus_skin_color: FeatureToggle = {
+  name: 'Anus uses Skin Color',
+  component: CheckboxInput,
+};
+
+export const anus_color: Feature<string[]> = {
+  name: 'Anus Color',
+  component: FeatureTriColorInput,
+};
+
+export const anus_emissive: Feature<boolean[]> = {
+  name: 'Anus Emissives',
+  description: 'Emissive parts glow in the dark.',
+  component: FeatureTriBoolInput,
+};
+
+export const feature_belly: Feature<string> = {
+  name: 'Belly Choice',
+  component: (
+    props: FeatureValueProps<string, string, FeatureChoicedServerData>,
+  ) => {
+    return <FeatureDropdownInput buttons {...props} />;
+  },
+};
+
+export const belly_size: FeatureNumeric = {
+  name: 'Belly Size',
+  component: FeatureNumberInput,
+};
+
+export const belly_skin_tone: FeatureToggle = {
+  name: 'Belly uses Skin Tone',
+  component: CheckboxInput,
+};
+
+export const belly_skin_color: FeatureToggle = {
+  name: 'Belly uses Skin Color',
+  component: CheckboxInput,
+};
+
+export const belly_color: Feature<string[]> = {
+  name: 'Belly Color',
+  component: FeatureTriColorInput,
+};
+
+export const belly_emissive: Feature<boolean[]> = {
+  name: 'Belly Emissives',
+  description: 'Emissive parts glow in the dark.',
+  component: FeatureTriBoolInput,
 };
 
 export const body_size: FeatureNumeric = {

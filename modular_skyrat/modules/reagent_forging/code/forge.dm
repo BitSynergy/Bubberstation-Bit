@@ -46,6 +46,7 @@
 
 	anchored = TRUE
 	density = TRUE
+	custom_materials = list(/datum/material/iron = SHEET_MATERIAL_AMOUNT * 10)
 
 	/// What the current internal temperature of the forge is
 	var/forge_temperature = 0
@@ -78,6 +79,7 @@
 		"Sword" = /obj/item/forging/incomplete/sword,
 		"Katana" = /obj/item/forging/incomplete/katana,
 		"Dagger" = /obj/item/forging/incomplete/dagger,
+		"Rapier" = /obj/item/forging/incomplete/rapier,
 		"Staff" = /obj/item/forging/incomplete/staff,
 		"Spear" = /obj/item/forging/incomplete/spear,
 		"Axe" = /obj/item/forging/incomplete/axe,
@@ -397,10 +399,10 @@
 			minimum_target_temperature = 25 // This won't matter except in a few cases here, but we still need to cover those few cases
 			forge_level = FORGE_LEVEL_LEGENDARY
 
-	playsound(src, 'sound/weapons/parry.ogg', 50, TRUE) // Play a feedback sound to really let players know we just did an upgrade
+	playsound(src, 'sound/items/weapons/parry.ogg', 50, TRUE) // Play a feedback sound to really let players know we just did an upgrade
 
 //this will allow click dragging certain items
-/obj/structure/reagent_forge/MouseDrop_T(obj/attacking_item, mob/living/user)
+/obj/structure/reagent_forge/mouse_drop_receive(atom/attacking_item, mob/user, params)
 	. = ..()
 	if(!isliving(user))
 		return
@@ -570,11 +572,9 @@
 
 /// Handles weapon reagent imbuing
 /obj/structure/reagent_forge/proc/handle_weapon_imbue(obj/attacking_item, mob/living/user)
-	//BUBBER EDIT START - Makes imbuing need skill again
 	if(user.mind.get_skill_level(/datum/skill/smithing) < SKILL_LEVEL_MASTER)
 		to_chat(user, span_danger("You need more experience to understand the fine workings of imbuing!"))
 		return
-	//BUBBER EDIT END
 	//This code will refuse all non-ashwalkers & non-icecats from imbuing
 	if(!ishuman(user))
 		to_chat(user, span_danger("It is impossible for you to imbue!")) //maybe remove (ashwalkers & icecats only) after some time
@@ -607,19 +607,21 @@
 		attacking_weapon.name = "[weapon_reagent.name] [attacking_weapon.name]"
 
 	attacking_weapon.color = mix_color_from_reagents(attacking_weapon.reagents.reagent_list)
+	if(attacking_weapon.armour_penetration < 10)
+		attacking_weapon.armour_penetration = 0
+	else
+		attacking_weapon.armour_penetration -= 10
 	balloon_alert_to_viewers("imbued [attacking_weapon]")
 	user.mind.adjust_experience(/datum/skill/smithing, 60)
-	playsound(src, 'sound/magic/demon_consume.ogg', 50, TRUE)
+	playsound(src, 'sound/effects/magic/demon_consume.ogg', 50, TRUE)
 	in_use = FALSE
 	return TRUE
 
 /// Handles clothing imbuing, extremely similar to weapon imbuing but not in the same proc because of how uhh... goofy the way this has to be done is
 /obj/structure/reagent_forge/proc/handle_clothing_imbue(obj/attacking_item, mob/living/user)
-	//BUBBER EDIT START - Makes imbuing need skill again
 	if(user.mind.get_skill_level(/datum/skill/smithing) < SKILL_LEVEL_MASTER)
 		to_chat(user, span_danger("You need more experience to understand the fine workings of imbuing!"))
 		return
-	//BUBBER EDIT END
 	//This code will refuse all non-ashwalkers & non-icecats from imbuing
 	if(!ishuman(user))
 		to_chat(user, span_danger("It is impossible for you to imbue!")) //maybe remove (ashwalkers & icecats only) after some time
@@ -654,7 +656,7 @@
 	attacking_clothing.color = mix_color_from_reagents(attacking_clothing.reagents.reagent_list)
 	balloon_alert_to_viewers("imbued [attacking_clothing]")
 	user.mind.adjust_experience(/datum/skill/smithing, 60)
-	playsound(src, 'sound/magic/demon_consume.ogg', 50, TRUE)
+	playsound(src, 'sound/effects/magic/demon_consume.ogg', 50, TRUE)
 	in_use = FALSE
 	return TRUE
 
@@ -818,10 +820,10 @@
 		var/list/material_list = list()
 
 		if(search_stack.material_type)
-			material_list[GET_MATERIAL_REF(search_stack.material_type)] = SHEET_MATERIAL_AMOUNT
+			material_list[SSmaterials.get_material(search_stack.material_type)] = SHEET_MATERIAL_AMOUNT
 
 		else
-			for(var/material as anything in search_stack.custom_materials)
+			for(var/material in search_stack.custom_materials)
 				material_list[material] = SHEET_MATERIAL_AMOUNT
 
 		if(!search_stack.use(1))

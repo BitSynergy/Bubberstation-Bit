@@ -8,13 +8,13 @@
 	icon_state = "c38_panther"
 	accepted_magazine_type = /obj/item/ammo_box/magazine/internal/cylinder
 
-/obj/item/ammo_casing/a357/peacemaker
+/obj/item/ammo_casing/c357/peacemaker
 	name = ".357 Peacemaker bullet casing"
 	desc = "A .357 Peacemaker bullet casing."
 	caliber = CALIBER_357
-	projectile_type = /obj/projectile/bullet/a357/peacemaker
+	projectile_type = /obj/projectile/bullet/c357/peacemaker
 
-/obj/projectile/bullet/a357/peacemaker
+/obj/projectile/bullet/c357/peacemaker
 	name = ".357 Peacemaker bullet"
 	damage = 25
 	wound_bonus = 0
@@ -25,24 +25,24 @@
 	ricochet_incidence_leeway = 80
 	ricochet_decay_chance = 1
 
-/datum/design/a357/peacemaker
+/datum/design/c357/peacemaker
 	name = "Speed Loader (.357 Peacemaker)"
 	id = "a357PM"
 	build_type = AUTOLATHE
 	materials = list(
 		/datum/material/iron = SHEET_MATERIAL_AMOUNT * 2,
 	)
-	build_path = /obj/item/ammo_box/a357/peacemaker
+	build_path = /obj/item/ammo_box/speedloader/c357/peacemaker
 	category = list(
 		RND_CATEGORY_HACKED,
 		RND_CATEGORY_WEAPONS + RND_SUBCATEGORY_WEAPONS_AMMO,
 	)
 
-/obj/item/ammo_box/a357/peacemaker
+/obj/item/ammo_box/speedloader/c357/peacemaker
 	name = "speed loader (.357 Peacemaker)"
 	desc = "Designed to quickly reload revolvers."
 	icon_state = "357"
-	ammo_type = /obj/item/ammo_casing/a357/peacemaker
+	ammo_type = /obj/item/ammo_casing/c357/peacemaker
 	max_ammo = 7
 	multiple_sprites = AMMO_BOX_PER_BULLET
 	item_flags = NO_MAT_REDEMPTION
@@ -105,16 +105,27 @@
 /obj/item/gun/ballistic/automatic/pistol/robohand/unrestricted
 	unrestricted = TRUE
 
-//The gun cannot shoot if you do not have a cyborg arm.
-/obj/item/gun/ballistic/automatic/pistol/robohand/afterattack(atom/target, mob/living/user, flag, params)
-	//This is where we are checking if the user has a cybernetic arm to USE the gun. ROBOHAND HAS A ROBO HAND
-	if(!unrestricted)
-		var/mob/living/carbon/human/human_user = user
-		var/obj/item/bodypart/selected_hand = human_user.get_active_hand()
-		if(IS_ORGANIC_LIMB(selected_hand))
-			to_chat(user, span_warning("You can't seem to figure out how to use [src], perhaps you need to check the manual?"))
-			return
-	. = ..()
+/obj/item/gun/ballistic/automatic/pistol/robohand/ranged_interact_with_atom(atom/interacting_with, mob/living/user, list/modifiers)
+	if(can_use(user) == ITEM_INTERACT_SUCCESS)
+		return ..()
+	return ITEM_INTERACT_BLOCKING
+
+/obj/item/gun/ballistic/automatic/pistol/robohand/ranged_interact_with_atom_secondary(atom/interacting_with, mob/living/user, list/modifiers)
+	if(can_use(user) == ITEM_INTERACT_SUCCESS)
+		return ..()
+	return ITEM_INTERACT_BLOCKING
+
+/// Checks if we have the roboarm to use the robo gun. Well, unless it's unrestricted
+/obj/item/gun/ballistic/automatic/pistol/robohand/proc/can_use(mob/living/carbon/human/user)
+	if(unrestricted)
+		return ITEM_INTERACT_SUCCESS
+	if(!istype(user))
+		return ITEM_INTERACT_BLOCKING
+	var/obj/item/bodypart/selected_hand = user.get_active_hand()
+	if(IS_ORGANIC_LIMB(selected_hand))
+		to_chat(user, span_warning("You can't seem to figure out how to use [src], perhaps you need to check the manual?"))
+		return ITEM_INTERACT_BLOCKING
+	return ITEM_INTERACT_SUCCESS
 
 /obj/item/gun/ballistic/automatic/pistol/robohand/insert_magazine(mob/user, obj/item/ammo_box/magazine/inserted_mag, display_message)
 	if(!istype(inserted_mag, accepted_magazine_type))
@@ -182,10 +193,20 @@
 /obj/projectile/bullet/c14mm
 	name = "14mm bullet"
 	damage = 60
-	embedding = list(embed_chance = 90, fall_chance = 3, jostle_chance = 4, ignore_throwspeed_threshold = TRUE, pain_stam_pct = 0.4, pain_mult = 5, jostle_pain_mult = 9, rip_time = 10)
+	embed_type = /datum/embedding/c14mm
 	dismemberment = 50
 	pierces = 1
 	projectile_piercing = PASSCLOSEDTURF|PASSGRILLE|PASSGLASS
+
+/datum/embedding/c14mm
+	embed_chance = 90
+	fall_chance = 3
+	jostle_chance = 4
+	ignore_throwspeed_threshold = TRUE
+	pain_stam_pct = 0.4
+	pain_mult = 5
+	jostle_pain_mult = 9
+	rip_time = 10
 
 //nullrod katana
 /obj/item/katana/weak/curator //This has the same stats as the curator's claymore
@@ -193,3 +214,5 @@
 	force = 15
 	block_chance = 30
 	armour_penetration = 5
+
+#undef CALIBRE_14MM

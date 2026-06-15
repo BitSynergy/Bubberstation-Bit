@@ -1,5 +1,9 @@
 // THIS IS A SKYRAT UI FILE
-import { CheckboxInput, FeatureChoiced, FeatureToggle } from '../../base';
+import {
+  CheckboxInput,
+  type FeatureChoiced,
+  type FeatureToggle,
+} from '../../base';
 import { FeatureDropdownInput } from '../../dropdowns';
 
 export const master_erp_pref: FeatureToggle = {
@@ -35,7 +39,7 @@ export const aphro_pref: FeatureToggle = {
   name: 'Aphrodisiacs',
   category: 'ERP',
   description:
-    'Toggles whether you wish to recieve the effects of aphrodisiacs',
+    'Toggles whether you wish to receive the effects of aphrodisiacs',
   component: CheckboxInput,
 };
 
@@ -53,19 +57,22 @@ export const sextoy_sounds_pref: FeatureToggle = {
   component: CheckboxInput,
 };
 
-export const vore_pred_pref: FeatureToggle = {
-  name: 'Vore - Pred',
+export const vore_enable_pref: FeatureToggle = {
+  name: 'Enable Mechanical Vore',
   category: 'ERP',
-  description: 'Toggles if you are able to use vore mechanics on others.',
+  description: 'Toggles if you are able to use vore mechanics.',
   component: CheckboxInput,
 };
 
-export const vore_prey_pref: FeatureToggle = {
-  name: 'Vore - Prey',
+// BUBBER EDIT START: MECHANICAL HYPNOSIS PREF
+export const hypnosis_pref: FeatureToggle = {
+  name: 'Hypnosis',
   category: 'ERP',
-  description: 'Toggles if others are able to use vore mechanics on you',
+  description:
+    'Determines if you wish to allow hypnosis/hypnosis chemicals in a lewd manner.',
   component: CheckboxInput,
 };
+// BUBBER EDIT END
 
 export const breast_enlargement_pref: FeatureToggle = {
   name: 'Breast enlargement',

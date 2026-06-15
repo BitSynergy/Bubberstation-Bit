@@ -1,11 +1,8 @@
 .JobIcon {
-  align-items: center;
-  background: black;
-  display: flex;
+  background: var(--color-black);
+  width: 20px;
   height: 20px;
-  justify-content: center;
-  margin-right: -1px;
-  padding-left: 2px;
+  padding: var(--space-xxs) var(--space-xxs) 0;
   overflow: hidden;
 }
 

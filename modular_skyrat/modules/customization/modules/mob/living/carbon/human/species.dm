@@ -21,8 +21,6 @@ GLOBAL_LIST_EMPTY(customizable_races)
 	var/markings_alpha = 255
 	///If a species can always be picked in prefs for the purposes of customizing it for ghost roles or events
 	var/always_customizable = FALSE
-	/// If a species requires the player to be a Veteran to be able to pick it.
-	var/veteran_only = FALSE
 	///Flavor text of the species displayed on character creation screeen
 	var/flavor_text = "No description."
 	///Path to BODYSHAPE_CUSTOM species worn icons. An assoc list of ITEM_SLOT_X => /icon
@@ -36,7 +34,7 @@ GLOBAL_LIST_EMPTY(customizable_races)
 /datum/species/proc/get_default_mutant_bodyparts()
 	return list()
 
-/datum/species/proc/handle_mutant_bodyparts(mob/living/carbon/human/owner, forced_colour, force_update = FALSE)
+/datum/species/proc/handle_mutant_bodyparts(mob/living/carbon/human/source, forced_colour)
 	return
 
 /datum/species/dullahan
@@ -64,7 +62,7 @@ GLOBAL_LIST_EMPTY(customizable_races)
 /datum/species/mush
 	mutant_bodyparts = list()
 
-/datum/species/vampire
+/datum/species/human/vampire
 	mutant_bodyparts = list()
 
 /datum/species/plasmaman
@@ -110,7 +108,7 @@ GLOBAL_LIST_EMPTY(customizable_races)
 		if(default_bodypart_data[key][MUTANTPART_CAN_RANDOMIZE])
 			SP = random_accessory_of_key_for_species(key, src)
 		else
-			SP = GLOB.sprite_accessories[key][bodyparts_to_add[key][MUTANTPART_NAME]]
+			SP = SSaccessories.sprite_accessories[key][bodyparts_to_add[key][MUTANTPART_NAME]]
 			if(!SP)
 				CRASH("Cant find accessory of [key] key, [bodyparts_to_add[key]] name, for species [id]")
 		var/list/color_list = SP.get_default_color(features, src)
@@ -124,105 +122,38 @@ GLOBAL_LIST_EMPTY(customizable_races)
 /datum/species/proc/get_random_body_markings(list/features) //Needs features to base the colour off of
 	return list()
 
-/datum/species/proc/handle_body(mob/living/carbon/human/species_human)
-	species_human.remove_overlay(BODY_LAYER)
-	var/height_offset = species_human.get_top_offset() // From high changed by varying limb height
-	var/list/standing = list()
-
-	var/obj/item/bodypart/head/noggin = species_human.get_bodypart(BODY_ZONE_HEAD)
-
-	if(noggin && !(HAS_TRAIT(species_human, TRAIT_HUSK)))
-		if(noggin.head_flags & HEAD_EYESPRITES)
-			var/obj/item/organ/internal/eyes/eye_organ = species_human.get_organ_slot(ORGAN_SLOT_EYES)
-
-			if(eye_organ)
-				eye_organ.refresh(call_update = FALSE)
-				standing += eye_organ.generate_body_overlay(species_human)
-
-	//Underwear, Undershirts & Socks
-	if(!HAS_TRAIT(species_human, TRAIT_NO_UNDERWEAR))
-		if(species_human.underwear && !(species_human.underwear_visibility & UNDERWEAR_HIDE_UNDIES))
-			var/datum/sprite_accessory/underwear/underwear = GLOB.underwear_list[species_human.underwear]
-			var/mutable_appearance/underwear_overlay
-			var/female_sprite_flags = FEMALE_UNIFORM_FULL // the default gender shaping
-			if(underwear)
-				var/icon_state = underwear.icon_state
-				if(underwear.has_digitigrade && (species_human.bodyshape & BODYSHAPE_DIGITIGRADE))
-					icon_state += "_d"
-					female_sprite_flags = FEMALE_UNIFORM_TOP_ONLY // for digi gender shaping
-				if(species_human.dna.species.sexes && species_human.physique == FEMALE && (underwear.gender == MALE))
-					underwear_overlay = wear_female_version(icon_state, underwear.icon, BODY_LAYER, female_sprite_flags)
-				else
-					underwear_overlay = mutable_appearance(underwear.icon, icon_state, -BODY_LAYER)
-				if(!underwear.use_static)
-					underwear_overlay.color = species_human.underwear_color
-				underwear_overlay.pixel_y += height_offset
-				standing += underwear_overlay
-
-		if(species_human.bra && !(species_human.underwear_visibility & UNDERWEAR_HIDE_BRA))
-			var/datum/sprite_accessory/bra/bra = GLOB.bra_list[species_human.bra]
-
-			if(bra)
-				var/mutable_appearance/bra_overlay
-				var/icon_state = bra.icon_state
-				bra_overlay = mutable_appearance(bra.icon, icon_state, -BODY_LAYER)
-				if(!bra.use_static)
-					bra_overlay.color = species_human.bra_color
-				bra_overlay.pixel_y += height_offset
-				standing += bra_overlay
-
-		if(species_human.undershirt && !(species_human.underwear_visibility & UNDERWEAR_HIDE_SHIRT))
-			var/datum/sprite_accessory/undershirt/undershirt = GLOB.undershirt_list[species_human.undershirt]
-			if(undershirt)
-				var/mutable_appearance/undershirt_overlay
-				if(species_human.dna.species.sexes && species_human.physique == FEMALE)
-					undershirt_overlay = wear_female_version(undershirt.icon_state, undershirt.icon, BODY_LAYER)
-				else
-					undershirt_overlay = mutable_appearance(undershirt.icon, undershirt.icon_state, -BODY_LAYER)
-				if(!undershirt.use_static)
-					undershirt_overlay.color = species_human.undershirt_color
-				undershirt_overlay.pixel_y += height_offset
-				standing += undershirt_overlay
-
-		if(species_human.socks && species_human.num_legs >= 2 && !(mutant_bodyparts["taur"]) && !(species_human.underwear_visibility & UNDERWEAR_HIDE_SOCKS))
-			var/datum/sprite_accessory/socks/socks = GLOB.socks_list[species_human.socks]
-			if(socks)
-				var/mutable_appearance/socks_overlay
-				var/icon_state = socks.icon_state
-				if((species_human.bodyshape & BODYSHAPE_DIGITIGRADE))
-					icon_state += "_d"
-				socks_overlay = mutable_appearance(socks.icon, icon_state, -BODY_LAYER)
-				if(!socks.use_static)
-					socks_overlay.color = species_human.socks_color
-				standing += socks_overlay
-
-	if(standing.len)
-		species_human.overlays_standing[BODY_LAYER] = standing
-
-	species_human.apply_overlay(BODY_LAYER)
-	handle_mutant_bodyparts(species_human)
-
 /datum/species/spec_stun(mob/living/carbon/human/target, amount)
 	if(istype(target))
 		target.unwag_tail()
 	return ..()
 
-/datum/species/regenerate_organs(mob/living/carbon/target, datum/species/old_species, replace_current = TRUE, list/excluded_zones, visual_only = FALSE)
+/datum/species/regenerate_organs(mob/living/carbon/target, datum/species/old_species, replace_current = TRUE, list/excluded_zones, visual_only = FALSE, replace_missing = TRUE)
 	. = ..()
 
 	var/robot_organs = HAS_TRAIT(target, TRAIT_ROBOTIC_DNA_ORGANS)
 
 	for(var/key in target.dna.mutant_bodyparts)
-		if(!islist(target.dna.mutant_bodyparts[key]) || !(target.dna.mutant_bodyparts[key][MUTANT_INDEX_NAME] in GLOB.sprite_accessories[key]))
+		if(!islist(target.dna.mutant_bodyparts[key]) || !(target.dna.mutant_bodyparts[key][MUTANT_INDEX_NAME] in SSaccessories.sprite_accessories[key]))
 			continue
 
-		var/datum/sprite_accessory/mutant_accessory = GLOB.sprite_accessories[key][target.dna.mutant_bodyparts[key][MUTANT_INDEX_NAME]]
+		var/datum/sprite_accessory/mutant_accessory = SSaccessories.sprite_accessories[key][target.dna.mutant_bodyparts[key][MUTANT_INDEX_NAME]]
 
 		if(mutant_accessory?.factual && mutant_accessory.organ_type)
 			var/obj/item/organ/current_organ = target.get_organ_by_type(mutant_accessory.organ_type)
 
 			if(!current_organ || replace_current)
-				var/obj/item/organ/replacement = SSwardrobe.provide_type(mutant_accessory.organ_type)
+				var/organ_slot = mutant_accessory.organ_type::slot
+				var/obj/item/organ/current_organ_in_slot = target.get_organ_slot(organ_slot)
+				var/obj/item/organ/replacement
+
+				// If the current organ in that slot should override the replacement because it's a special organ for this species,
+				// force it to be the replacement organ.
+				if(current_organ_in_slot?.overrides_sprite_datum_organ_type && istype(current_organ_in_slot, get_mutant_organ_type_for_slot(organ_slot)))
+					replacement = SSwardrobe.provide_type(current_organ_in_slot.type)
+
+				else
+					replacement = SSwardrobe.provide_type(mutant_accessory.organ_type)
+
 				replacement.sprite_accessory_flags = mutant_accessory.flags_for_organ
 				replacement.relevant_layers = mutant_accessory.relevent_layers
 

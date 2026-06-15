@@ -14,7 +14,7 @@
 	id = "organic_gauze"
 	build_type = BIOGENERATOR
 	materials = list(/datum/material/biomass = 50)
-	build_path = /obj/item/stack/medical/gauze/sterilized
+	build_path = /obj/item/stack/medical/wrap/gauze/sterilized
 	category = list(
 		RND_CATEGORY_INITIAL,
 		RND_CATEGORY_DEFOREST_MEDICAL,
@@ -58,7 +58,7 @@
 	id = "organic_printer_amollin_pill"
 	build_type = BIOGENERATOR
 	materials = list(/datum/material/biomass = 25)
-	build_path = /obj/item/reagent_containers/pill/amollin
+	build_path = /obj/item/reagent_containers/applicator/pill/amollin
 	category = list(
 		RND_CATEGORY_INITIAL,
 		RND_CATEGORY_DEFOREST_MEDICAL,
@@ -80,7 +80,7 @@
 	id = "organic_repair_patch"
 	build_type = BIOGENERATOR
 	materials = list(/datum/material/biomass = 100)
-	build_path = /obj/item/reagent_containers/pill/robotic_patch/synth_repair
+	build_path = /obj/item/reagent_containers/applicator/pill/robotic_patch/synth_repair
 	category = list(
 		RND_CATEGORY_INITIAL,
 		RND_CATEGORY_DEFOREST_MEDICAL,
@@ -91,7 +91,7 @@
 	id = "organic_repair_foam"
 	build_type = BIOGENERATOR
 	materials = list(/datum/material/biomass = 100)
-	build_path = /obj/item/stack/sticky_tape/surgical
+	build_path = /obj/item/stack/medical/wound_recovery/robofoam
 	category = list(
 		RND_CATEGORY_INITIAL,
 		RND_CATEGORY_DEFOREST_MEDICAL,
@@ -113,7 +113,7 @@
 	id = "organic_surgical_tape"
 	build_type = BIOGENERATOR
 	materials = list(/datum/material/biomass = 100)
-	build_path = /obj/item/stack/sticky_tape/surgical
+	build_path = /obj/item/stack/medical/wrap/sticky_tape/surgical
 	category = list(
 		RND_CATEGORY_INITIAL,
 		RND_CATEGORY_DEFOREST_MEDICAL,

@@ -26,7 +26,7 @@
 
 	update_icon_state()
 
-	clamps_overlay = mutable_appearance('modular_skyrat/modules/modular_items/lewd_items/icons/mob/lewd_items/lewd_items.dmi', "[initial(icon_state)]_[breast_type]_[breast_size]", ABOVE_ALL_MOB_LAYER + 0.1) //two arguments. Yes, all mob layer. Fuck person who was working on genitals, they're working wrong.ABOVE_NORMAL_TURF_LAYER
+	clamps_overlay = mutable_appearance('modular_skyrat/modules/modular_items/lewd_items/icons/mob/lewd_items/lewd_items.dmi', "[initial(icon_state)]_[breast_type]_[breast_size]", -BODY_FRONT_UNDER_CLOTHES) //two arguments. Yes, all mob layer. Fuck person who was working on genitals, they're working wrong.ABOVE_NORMAL_TURF_LAYER
 
 	update_icon()
 	update_appearance()
@@ -40,7 +40,7 @@
 	. = ..()
 	if(!istype(user))
 		return
-	var/obj/item/organ/external/genital/breasts/user_breast = user.get_organ_slot(ORGAN_SLOT_BREASTS)
+	var/obj/item/organ/genital/breasts/user_breast = user.get_organ_slot(ORGAN_SLOT_BREASTS)
 
 	if(src == user.nipples)
 		if(user_breast)
@@ -52,7 +52,7 @@
 
 	update_icon_state()
 
-	clamps_overlay = mutable_appearance('modular_skyrat/modules/modular_items/lewd_items/icons/mob/lewd_items/lewd_items.dmi', "[initial(icon_state)]_[breast_type]_[breast_size]", ABOVE_ALL_MOB_LAYER + 0.1) //two arguments
+	clamps_overlay = mutable_appearance('modular_skyrat/modules/modular_items/lewd_items/icons/mob/lewd_items/lewd_items.dmi', "[initial(icon_state)]_[breast_type]_[breast_size]", -BODY_FRONT_UNDER_CLOTHES) //two arguments
 
 	update_icon()
 	update_appearance()
@@ -70,7 +70,7 @@
 /obj/item/clothing/sextoy/nipple_clamps/process(seconds_per_tick)
 	. = ..()
 	var/mob/living/carbon/human/target = loc
-	var/obj/item/organ/external/genital/breasts/target_breast = target.get_organ_slot(ORGAN_SLOT_BREASTS)
+	var/obj/item/organ/genital/breasts/target_breast = target.get_organ_slot(ORGAN_SLOT_BREASTS)
 	if(!target || !target_breast)
 		return
 	target.adjust_arousal(1 * seconds_per_tick)

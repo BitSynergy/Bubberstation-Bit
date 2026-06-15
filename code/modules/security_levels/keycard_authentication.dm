@@ -9,9 +9,9 @@ GLOBAL_DATUM_INIT(keycard_events, /datum/events, new)
 #define ACCESS_GRANTING_COOLDOWN (30 SECONDS)
 
 /obj/machinery/keycard_auth
-	name = "Keycard Authentication Device"
-	desc = "This device is used to trigger station functions, which require more than one ID card to authenticate, or to give the Janitor access to a department."
-	icon = 'icons/obj/machines/wallmounts.dmi'
+	name = "keycard authentication device"
+	desc = "This device is used to trigger station functions which require more than one ID card to authenticate, or to give the Janitor access to a department."
+	icon = 'icons/obj/machines/keycard_auth_table.dmi'
 	icon_state = "auth_off"
 	power_channel = AREA_USAGE_ENVIRON
 	req_access = list(ACCESS_KEYCARD_AUTH)
@@ -25,11 +25,11 @@ GLOBAL_DATUM_INIT(keycard_events, /datum/events, new)
 
 	COOLDOWN_DECLARE(access_grant_cooldown)
 
-MAPPING_DIRECTIONAL_HELPERS(/obj/machinery/keycard_auth, 26)
-
 /obj/machinery/keycard_auth/Initialize(mapload)
 	. = ..()
 	activated = GLOB.keycard_events.addEvent("triggerEvent", CALLBACK(src, PROC_REF(triggerEvent)))
+	if(mapload)
+		find_and_mount_on_atom()
 
 /obj/machinery/keycard_auth/Destroy()
 	GLOB.keycard_events.clearEvent("triggerEvent", activated)
@@ -66,7 +66,7 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/machinery/keycard_auth, 26)
 		return UI_CLOSE
 	return ..()
 
-/obj/machinery/keycard_auth/ui_act(action, params)
+/obj/machinery/keycard_auth/ui_act(action, list/params, datum/tgui/ui, datum/ui_state/state)
 	. = ..()
 	if(. || waiting || !allowed(usr))
 		return
@@ -178,8 +178,14 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/machinery/keycard_auth, 26)
 			toggle_eng_override()
 		//SKYRAT EDIT END
 
+/// Subtype which is stuck to a wall
+/obj/machinery/keycard_auth/wall_mounted
+	icon = 'icons/obj/machines/wallmounts.dmi'
+
+MAPPING_DIRECTIONAL_HELPERS(/obj/machinery/keycard_auth/wall_mounted, 26)
+
 GLOBAL_VAR_INIT(emergency_access, FALSE)
-/proc/make_maint_all_access()
+/proc/make_maint_all_access(silent = FALSE) // BUBBER EDIT CHANGE - Silent Emergency Access
 	for(var/area/station/maintenance/area in GLOB.areas)
 		for (var/list/zlevel_turfs as anything in area.get_zlevel_turf_lists())
 			for(var/turf/area_turf as anything in zlevel_turfs)
@@ -187,11 +193,12 @@ GLOBAL_VAR_INIT(emergency_access, FALSE)
 					airlock.emergency = TRUE
 					airlock.update_icon(ALL, 0)
 
-	minor_announce("Access restrictions on maintenance and external airlocks have been lifted.", "Attention! Station-wide emergency declared!",1)
+	if(!silent) // BUBBER EDIT ADDITION - Silent Emergency Access
+		minor_announce("Access restrictions on maintenance and external airlocks have been lifted.", "Attention! Station-wide emergency declared!",1)
 	GLOB.emergency_access = TRUE
 	SSblackbox.record_feedback("nested tally", "keycard_auths", 1, list("emergency maintenance access", "enabled"))
 
-/proc/revoke_maint_all_access()
+/proc/revoke_maint_all_access(silent = FALSE) // BUBBER EDIT CHANGE - Silent Emergency Access
 	for(var/area/station/maintenance/area in GLOB.areas)
 		for (var/list/zlevel_turfs as anything in area.get_zlevel_turf_lists())
 			for(var/turf/area_turf as anything in zlevel_turfs)
@@ -199,7 +206,8 @@ GLOBAL_VAR_INIT(emergency_access, FALSE)
 					airlock.emergency = FALSE
 					airlock.update_icon(ALL, 0)
 
-	minor_announce("Access restrictions in maintenance areas have been restored.", "Attention! Station-wide emergency rescinded:")
+	if(!silent) // BUBBER EDIT ADDITION - Silent Emergency Access
+		minor_announce("Access restrictions in maintenance areas have been restored.", "Attention! Station-wide emergency rescinded:")
 	GLOB.emergency_access = FALSE
 	SSblackbox.record_feedback("nested tally", "keycard_auths", 1, list("emergency maintenance access", "disabled"))
 

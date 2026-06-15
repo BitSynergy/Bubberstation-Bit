@@ -6,8 +6,20 @@
 /// Two mobs one is facing a person, but the other is perpendicular
 #define FACING_INIT_FACING_TARGET_TARGET_FACING_PERPENDICULAR 3 //Do I win the most informative but also most stupid define award?
 
-/proc/random_blood_type()
-	return pick(4;"O-", 36;"O+", 3;"A-", 28;"A+", 1;"B-", 20;"B+", 1;"AB-", 5;"AB+")
+/// Returns one of the human blood types at random, weighted by their rarity
+/proc/random_human_blood_type()
+	RETURN_TYPE(/datum/blood_type)
+	return get_blood_type(pick_weight(
+		list(
+			BLOOD_TYPE_O_MINUS = 4,
+			BLOOD_TYPE_O_PLUS = 36,
+			BLOOD_TYPE_A_MINUS = 3,
+			BLOOD_TYPE_A_PLUS = 28,
+			BLOOD_TYPE_B_MINUS= 1,
+			BLOOD_TYPE_B_PLUS = 20,
+			BLOOD_TYPE_AB_MINUS = 1,
+			BLOOD_TYPE_AB_PLUS = 5,
+		)))
 
 /proc/random_eye_color()
 	switch(pick(20;"brown",20;"hazel",20;"grey",15;"blue",15;"green",1;"amber",1;"albino"))
@@ -28,32 +40,46 @@
 		else
 			return COLOR_BLACK
 
+/proc/random_hair_color()
+	var/static/list/natural_hair_colors = list(
+		"#111111", "#362925", "#3B3831", "#41250C", "#412922",
+		"#544C49", "#583322", "#593029", "#703b30", "#714721",
+		"#744729", "#74482a", "#7b746e", "#855832", "#863019",
+		"#8c4734", "#9F550E", "#A29A96", "#A4381C", "#B17B41",
+		"#C0BAB7", "#EFE5E4", "#F7F3F1", "#FFF2D6", "#a15537",
+		"#a17e61", "#b38b67", "#ba673c", "#c89f73", "#d9b380",
+		"#dbc9b8", "#e1621d", "#e17d17", "#e1af93", "#f1cc8f",
+		"#fbe7a1",
+	)
+
+	return pick(natural_hair_colors)
+
 /proc/random_underwear(gender)
-	if(!GLOB.underwear_list.len)
-		init_sprite_accessory_subtypes(/datum/sprite_accessory/underwear, GLOB.underwear_list, GLOB.underwear_m, GLOB.underwear_f)
+	if(length(SSaccessories.underwear_list) == 0)
+		CRASH("No underwear to choose from!")
 	switch(gender)
 		if(MALE)
-			return pick(GLOB.underwear_m)
+			return pick(SSaccessories.underwear_m)
 		if(FEMALE)
-			return pick(GLOB.underwear_f)
+			return pick(SSaccessories.underwear_f)
 		else
-			return pick(GLOB.underwear_list)
+			return pick(SSaccessories.underwear_list)
 
 /proc/random_undershirt(gender)
-	if(!GLOB.undershirt_list.len)
-		init_sprite_accessory_subtypes(/datum/sprite_accessory/undershirt, GLOB.undershirt_list, GLOB.undershirt_m, GLOB.undershirt_f)
+	if(length(SSaccessories.undershirt_list) == 0)
+		CRASH("No undershirts to choose from!")
 	switch(gender)
 		if(MALE)
-			return pick(GLOB.undershirt_m)
+			return pick(SSaccessories.undershirt_m)
 		if(FEMALE)
-			return pick(GLOB.undershirt_f)
+			return pick(SSaccessories.undershirt_f)
 		else
-			return pick(GLOB.undershirt_list)
+			return pick(SSaccessories.undershirt_list)
 
 /proc/random_socks()
-	if(!GLOB.socks_list.len)
-		init_sprite_accessory_subtypes(/datum/sprite_accessory/socks, GLOB.socks_list)
-	return pick(GLOB.socks_list)
+	if(length(SSaccessories.socks_list) == 0)
+		CRASH("No socks to choose from!")
+	return pick(SSaccessories.socks_list)
 
 /proc/random_backpack()
 	return pick(GLOB.backpacklist)
@@ -89,8 +115,8 @@
 		init_sprite_accessory_subtypes(/datum/sprite_accessory/moth_antennae, GLOB.moth_antennae_list)
 	if(!GLOB.moth_markings_list.len)
 		init_sprite_accessory_subtypes(/datum/sprite_accessory/moth_markings, GLOB.moth_markings_list)
-	if(!GLOB.pod_hair_list.len)
-		init_sprite_accessory_subtypes(/datum/sprite_accessory/pod_hair, GLOB.pod_hair_list)
+	if(!SSaccessories.pod_hair_list.len)
+		init_sprite_accessory_subtypes(/datum/sprite_accessory/pod_hair, SSaccessories.pod_hair_list)
 
 	//For now we will always return none for tail_human and ears. | "For now" he says.
 	return(list(
@@ -111,7 +137,7 @@
 		"moth_antennae" = pick(GLOB.moth_antennae_list),
 		"moth_markings" = pick(GLOB.moth_markings_list),
 		"tail_monkey" = "Monkey",
-		"pod_hair" = pick(GLOB.pod_hair_list),
+		"pod_hair" = pick(SSaccessories.pod_hair_list),
 	))
 */
 //SKYRAT EDIT REMOVAL END
@@ -119,61 +145,20 @@
 /proc/random_hairstyle(gender)
 	switch(gender)
 		if(MALE)
-			return pick(GLOB.hairstyles_male_list)
+			return pick(SSaccessories.hairstyles_male_list)
 		if(FEMALE)
-			return pick(GLOB.hairstyles_female_list)
+			return pick(SSaccessories.hairstyles_female_list)
 		else
-			return pick(GLOB.hairstyles_list)
+			return pick(SSaccessories.hairstyles_list)
 
 /proc/random_facial_hairstyle(gender)
 	switch(gender)
 		if(MALE)
-			return pick(GLOB.facial_hairstyles_male_list)
+			return pick(SSaccessories.facial_hairstyles_male_list)
 		if(FEMALE)
-			return pick(GLOB.facial_hairstyles_female_list)
+			return pick(SSaccessories.facial_hairstyles_female_list)
 		else
-			return pick(GLOB.facial_hairstyles_list)
-
-/proc/random_unique_name(gender, attempts_to_find_unique_name=10)
-	for(var/i in 1 to attempts_to_find_unique_name)
-		if(gender == FEMALE)
-			. = capitalize(pick(GLOB.first_names_female)) + " " + capitalize(pick(GLOB.last_names))
-		else
-			. = capitalize(pick(GLOB.first_names_male)) + " " + capitalize(pick(GLOB.last_names))
-
-		if(!findname(.))
-			break
-
-/proc/random_unique_lizard_name(gender, attempts_to_find_unique_name=10)
-	for(var/i in 1 to attempts_to_find_unique_name)
-		. = capitalize(lizard_name(gender))
-
-		if(!findname(.))
-			break
-
-/proc/random_unique_plasmaman_name(attempts_to_find_unique_name=10)
-	for(var/i in 1 to attempts_to_find_unique_name)
-		. = capitalize(plasmaman_name())
-
-		if(!findname(.))
-			break
-
-/proc/random_unique_ethereal_name(attempts_to_find_unique_name=10)
-	for(var/i in 1 to attempts_to_find_unique_name)
-		. = capitalize(ethereal_name())
-
-		if(!findname(.))
-			break
-
-/proc/random_unique_moth_name(attempts_to_find_unique_name=10)
-	for(var/i in 1 to attempts_to_find_unique_name)
-		. = capitalize(pick(GLOB.moth_first)) + " " + capitalize(pick(GLOB.moth_last))
-
-		if(!findname(.))
-			break
-
-/proc/random_skin_tone()
-	return pick(GLOB.skin_tones)
+			return pick(SSaccessories.facial_hairstyles_list)
 
 GLOBAL_LIST_INIT(skin_tones, sort_list(list(
 	"albino",
@@ -212,9 +197,6 @@ GLOBAL_LIST_INIT(skin_tone_names, list(
 	"mixed3" = "Coffee",
 	"mixed4" = "Macadamia",
 ))
-
-/// An assoc list of species IDs to type paths
-GLOBAL_LIST_EMPTY(species_list)
 
 /proc/age2agedescription(age)
 	switch(age)
@@ -269,8 +251,14 @@ GLOBAL_LIST_EMPTY(species_list)
  * @param {number} max_interact_count - The maximum amount of interactions allowed.
  *
  * @param {boolean} hidden - By default, any action 1 second or longer shows a cog over the user while it is in progress. If hidden is set to TRUE, the cog will not be shown.
+ *
+ * @param {icon} icon - The icon file of the cog. Default: 'icons/effects/progressbar.dmi'
+ *
+ * @param {iconstate} iconstate - The icon state of the cog. Default: "Cog"
+ *
+ * @param {mob} bar_override - Mob which should see the bar instead of the user
  */
-/proc/do_after(mob/user, delay, atom/target, timed_action_flags = NONE, progress = TRUE, datum/callback/extra_checks, interaction_key, max_interact_count = 1, hidden = FALSE)
+/proc/do_after(mob/user, delay, atom/target, timed_action_flags = NONE, progress = TRUE, datum/callback/extra_checks, interaction_key, max_interact_count = 1, hidden = FALSE, icon = 'icons/effects/progressbar.dmi', iconstate = "cog", mob/bar_override = null)
 	if(!user)
 		return FALSE
 	if(!isnum(delay))
@@ -288,10 +276,14 @@ GLOBAL_LIST_EMPTY(species_list)
 	var/atom/target_loc = target?.loc
 
 	var/drifting = FALSE
-	if(GLOB.move_manager.processing_on(user, SSspacedrift))
+	if(!isnull(user.drift_handler))
 		drifting = TRUE
 
 	var/holding = user.get_active_held_item()
+
+#ifdef UNIT_TESTS
+	timed_action_flags &= ~IGNORE_SLOWDOWNS //it shouldn't stop unit test dummies from being fast as hell
+#endif
 
 	if(!(timed_action_flags & IGNORE_SLOWDOWNS))
 		delay *= user.cached_multiplicative_actions_slowdown
@@ -300,11 +292,11 @@ GLOBAL_LIST_EMPTY(species_list)
 	var/datum/cogbar/cog
 
 	if(progress)
-		if(user.client)
-			progbar = new(user, delay, target || user)
+		if(user.client || bar_override?.client)
+			progbar = new(bar_override || user, delay, target || user)
 
 		if(!hidden && delay >= 1 SECONDS)
-			cog = new(user)
+			cog = new(bar_override || user, icon, iconstate)
 
 	SEND_SIGNAL(user, COMSIG_DO_AFTER_BEGAN)
 
@@ -317,7 +309,7 @@ GLOBAL_LIST_EMPTY(species_list)
 		if(!QDELETED(progbar))
 			progbar.update(world.time - starttime)
 
-		if(drifting && !GLOB.move_manager.processing_on(user, SSspacedrift))
+		if(drifting && isnull(user.drift_handler))
 			drifting = FALSE
 			user_loc = user.loc
 
@@ -325,6 +317,7 @@ GLOBAL_LIST_EMPTY(species_list)
 			|| (!(timed_action_flags & IGNORE_USER_LOC_CHANGE) && !drifting && user.loc != user_loc) \
 			|| (!(timed_action_flags & IGNORE_HELD_ITEM) && user.get_active_held_item() != holding) \
 			|| (!(timed_action_flags & IGNORE_INCAPACITATED) && HAS_TRAIT(user, TRAIT_INCAPACITATED)) \
+			|| ((timed_action_flags & DO_AFTER_CHECK_NEXT_MOVE) && world.time < user.next_move) \
 			|| (extra_checks && !extra_checks.Invoke()))
 			. = FALSE
 			break
@@ -420,10 +413,15 @@ GLOBAL_LIST_EMPTY(species_list)
 
 	return spawned_mobs
 
+#define SEE_DEADCHAT_ADMIN (1<<0)
+#define SEE_DEADCHAT_NORMAL (1<<1)
 // Displays a message in deadchat, sent by source. source is not linkified, message is, to avoid stuff like character names to be linkified.
 // Automatically gives the class deadsay to the whole message (message + source)
-/proc/deadchat_broadcast(message, source=null, mob/follow_target=null, turf/turf_target=null, speaker_key=null, message_type=DEADCHAT_REGULAR, admin_only=FALSE)
+/proc/deadchat_broadcast(message, source=null, mob/follow_target=null, turf/turf_target=null, speaker_key=null, message_type=DEADCHAT_REGULAR, admin_only=FALSE, original_message)
 	message = span_deadsay("[source][span_linkify(message)]")
+
+	if(admin_only)
+		message += span_deadsay(" (This is viewable to admins only).")
 
 	for(var/mob/M in GLOB.player_list)
 		var/chat_toggles = TOGGLES_DEFAULT_CHAT
@@ -435,17 +433,15 @@ GLOBAL_LIST_EMPTY(species_list)
 			toggles = prefs.toggles
 			ignoring = prefs.ignoring
 		if(admin_only)
-			if (!M.client?.holder)
-				return
-			else
-				message += span_deadsay(" (This is viewable to admins only).")
-		var/override = FALSE
+			if(!M.client?.holder)
+				continue
+		var/override = NONE
 		if(M.client?.holder && (chat_toggles & CHAT_DEAD))
-			override = TRUE
+			override = SEE_DEADCHAT_ADMIN
 		if(HAS_TRAIT(M, TRAIT_SIXTHSENSE) && message_type == DEADCHAT_REGULAR)
-			override = TRUE
+			override = SEE_DEADCHAT_NORMAL
 		if(SSticker.current_state == GAME_STATE_FINISHED)
-			override = TRUE
+			override = SEE_DEADCHAT_NORMAL
 		if(isnewplayer(M) && !override)
 			continue
 		if(M.stat != DEAD && !override)
@@ -469,6 +465,7 @@ GLOBAL_LIST_EMPTY(species_list)
 
 		if(isobserver(M))
 			var/rendered_message = message
+			override = SEE_DEADCHAT_NORMAL
 
 			if(follow_target)
 				var/F
@@ -484,6 +481,12 @@ GLOBAL_LIST_EMPTY(species_list)
 			to_chat(M, rendered_message, avoid_highlighting = speaker_key == M.key)
 		else
 			to_chat(M, message, avoid_highlighting = speaker_key == M.key)
+
+		// Ghost runechat
+		if(original_message && ((override & SEE_DEADCHAT_NORMAL) || M.see_invisible >= follow_target.invisibility) && (!SSlag_switch.measures[DISABLE_DEAD_RUNECHAT] || HAS_TRAIT(M, TRAIT_BYPASS_MEASURES)) && M.runechat_prefs_check(M))
+			M.create_chat_message(follow_target, /datum/language/common, original_message, list(SPAN_ITALICS))
+#undef SEE_DEADCHAT_ADMIN
+#undef SEE_DEADCHAT_NORMAL
 
 //Used in chemical_mob_spawn. Generates a random mob based on a given gold_core_spawnable value.
 /proc/create_random_mob(spawn_location, mob_class = HOSTILE_SPAWN)
@@ -568,19 +571,31 @@ GLOBAL_LIST_EMPTY(species_list)
 		. += borg
 
 //Returns a list of AI's
-/proc/active_ais(check_mind=FALSE, z = null)
+/proc/active_ais(check_mind = FALSE, z = null, skip_syndicate = FALSE, only_syndicate = FALSE, priority = FALSE) // Bubber Edit: Adds priority aug.
 	. = list()
 	for(var/mob/living/silicon/ai/ai as anything in GLOB.ai_list)
 		if(ai.stat == DEAD)
 			continue
 		if(ai.control_disabled)
 			continue
-		if(check_mind)
-			if(!ai.mind)
-				continue
-		if(z && !(z == ai.z) && (!is_station_level(z) || !is_station_level(ai.z))) //if a Z level was specified, AND the AI is not on the same level, AND either is off the station...
+		var/syndie_ai = istype(ai, /mob/living/silicon/ai/weak_syndie)
+		if(skip_syndicate && syndie_ai)
 			continue
-		. += ai
+		if(only_syndicate && !syndie_ai)
+			continue
+		if(check_mind && !ai.mind)
+			continue
+		if(!isnull(z) && z != ai.z && (!is_station_level(z) || !is_station_level(ai.z))) //if a Z level was specified, AND the AI is not on the same level, AND either is off the station...
+			continue
+		/// BUBBER EDIT START - Adds priority Aug
+		if(!priority)
+			. += ai
+		else
+			if(IS_MALF_AI(ai))	// malf ai first.
+				. += ai
+				break
+			. += ai
+		/// BUBBER EDIT END
 
 //Find an active ai with the least borgs. VERBOSE PROCNAME HUH!
 /proc/select_active_ai_with_fewest_borgs(z)
@@ -601,8 +616,8 @@ GLOBAL_LIST_EMPTY(species_list)
 			. = pick(borgs)
 	return .
 
-/proc/select_active_ai(mob/user, z = null)
-	var/list/ais = active_ais(FALSE, z)
+/proc/select_active_ai(mob/user, z = null, skip_syndicate, only_syndicate)
+	var/list/ais = active_ais(FALSE, z, skip_syndicate, only_syndicate)
 	if(ais.len)
 		if(user)
 			. = input(user,"AI signals detected:", "AI Selection", ais[1]) in sort_list(ais)
@@ -616,8 +631,8 @@ GLOBAL_LIST_EMPTY(species_list)
  * When passed the difference between two temperatures returns the amount of change to temperature to apply.
  * The change rate should be kept at a low value tween 0.16 and 0.02 for optimal results.
  * vars:
- * * temp_diff (required) The differance between two temperatures
- * * change_rate (optional)(Default: 0.06) The rate of range multiplyer
+ * * temp_diff (required) The difference between two temperatures
+ * * change_rate (optional)(Default: 0.06) The rate of range multiplier
  */
 /proc/get_temp_change_amount(temp_diff, change_rate = 0.06)
 	if(temp_diff < 0)
@@ -636,7 +651,7 @@ GLOBAL_LIST_EMPTY(species_list)
 	var/list/sortmob = sort_names(GLOB.mob_list)
 	for(var/mob/living/silicon/ai/mob_to_sort in sortmob)
 		moblist += mob_to_sort
-	for(var/mob/camera/mob_to_sort in sortmob)
+	for(var/mob/eye/mob_to_sort in sortmob)
 		moblist += mob_to_sort
 	for(var/mob/living/silicon/pai/mob_to_sort in sortmob)
 		moblist += mob_to_sort
@@ -670,8 +685,11 @@ GLOBAL_LIST_EMPTY(species_list)
 /proc/get_mob_by_ckey(key)
 	if(!key)
 		return
-	var/list/mobs = sort_mobs()
-	for(var/mob/mob in mobs)
+	var/mob/persistent_mob = GLOB.persistent_clients_by_ckey[key]?.mob
+	if(persistent_mob)
+		return persistent_mob
+	// hopefully the above will always handle it, but any time a coder thinks "no way this will happen", murphy's law guarantees it somehow will
+	for(var/mob/mob as anything in GLOB.mob_list)
 		if(mob.ckey == key)
 			return mob
 
@@ -709,7 +727,7 @@ GLOBAL_LIST_EMPTY(species_list)
 		else
 			return zone
 
-///Takes a zone and returns it's "parent" zone, if it has one.
+///Takes a zone and returns its "parent" zone, if it has one.
 /proc/deprecise_zone(precise_zone)
 	switch(precise_zone)
 		if(BODY_ZONE_PRECISE_GROIN)
@@ -728,6 +746,47 @@ GLOBAL_LIST_EMPTY(species_list)
 			return BODY_ZONE_R_LEG
 		else
 			return precise_zone
+
+///Returns a list of strings for a given slot flag.
+/proc/parse_slot_flags(slot_flags)
+	var/list/slot_strings = list()
+	if(slot_flags & ITEM_SLOT_BACK)
+		slot_strings += "back"
+	if(slot_flags & ITEM_SLOT_MASK)
+		slot_strings += "mask"
+	if(slot_flags & ITEM_SLOT_NECK)
+		slot_strings += "neck"
+	if(slot_flags & ITEM_SLOT_HANDCUFFED)
+		slot_strings += "handcuff"
+	if(slot_flags & ITEM_SLOT_LEGCUFFED)
+		slot_strings += "legcuff"
+	if(slot_flags & ITEM_SLOT_BELT)
+		slot_strings += "belt"
+	if(slot_flags & ITEM_SLOT_ID)
+		slot_strings += "id"
+	if(slot_flags & ITEM_SLOT_EARS)
+		slot_strings += "ear"
+	if(slot_flags & ITEM_SLOT_EYES)
+		slot_strings += "glasses"
+	if(slot_flags & ITEM_SLOT_GLOVES)
+		slot_strings += "glove"
+	if(slot_flags & ITEM_SLOT_HEAD)
+		slot_strings += "head"
+	if(slot_flags & ITEM_SLOT_FEET)
+		slot_strings += "shoe"
+	if(slot_flags & ITEM_SLOT_OCLOTHING)
+		slot_strings += "oversuit"
+	if(slot_flags & ITEM_SLOT_ICLOTHING)
+		slot_strings += "undersuit"
+	if(slot_flags & ITEM_SLOT_SUITSTORE)
+		slot_strings += "suit storage"
+	if(slot_flags & (ITEM_SLOT_LPOCKET|ITEM_SLOT_RPOCKET))
+		slot_strings += "pocket"
+	if(slot_flags & ITEM_SLOT_HANDS)
+		slot_strings += "hand"
+	if(slot_flags & ITEM_SLOT_DEX_STORAGE)
+		slot_strings += "dextrous storage"
+	return slot_strings
 
 ///Returns the direction that the initiator and the target are facing
 /proc/check_target_facings(mob/living/initiator, mob/living/target)
@@ -752,7 +811,7 @@ GLOBAL_LIST_EMPTY(species_list)
 		mob_occupant = occupant
 
 	else if(isorgan(occupant))
-		var/obj/item/organ/internal/brain/brain = occupant
+		var/obj/item/organ/brain/brain = occupant
 		mob_occupant = brain.brainmob
 
 	return mob_occupant
@@ -773,7 +832,10 @@ GLOBAL_LIST_EMPTY(species_list)
 			newname = requesting_client?.prefs?.read_preference(preference_type)
 		else
 			var/datum/preference/preference = GLOB.preference_entries[preference_type]
-			newname = preference.create_informed_default_value(requesting_client.prefs)
+			if (requesting_client?.prefs)
+				newname = preference.create_informed_default_value(requesting_client.prefs)
+			else
+				newname = preference.create_default_value()
 
 		for(var/mob/living/checked_mob in GLOB.player_list)
 			if(checked_mob == src)
@@ -854,3 +916,20 @@ GLOBAL_DATUM_INIT(dview_mob, /mob/dview, new)
 	else
 		. = invoked_callback.Invoke()
 	usr = temp
+
+/**
+ * Iterates over all mobs that can see the passed movable and adds specific mood events to them based on their personalities.
+ *
+ * * source: String source for the mood event
+ * * personality_to_mood: A list mapping personality types to mood event types. Example: list(/datum/personality/chill = /datum/mood_event/chill_guy)
+ * * range: The range in which to check for viewers. Default is view range.
+ * * additional args may be supplied to pass into the mood event constructor.
+ */
+/proc/add_personality_mood_to_viewers(atom/movable/source, mood_key, list/personality_to_mood, range, ...)
+	for(var/mob/living/nearby in viewers(range, source))
+		if(nearby.stat >= UNCONSCIOUS || nearby.is_blind())
+			continue
+		for(var/personality in personality_to_mood)
+			if(HAS_PERSONALITY(nearby, personality))
+				nearby.add_mood_event(arglist( list("[mood_key]_[personality]", personality_to_mood[personality]) + args.Copy(4) ))
+				break

@@ -142,6 +142,7 @@
 	. = ..()
 
 	RegisterSignal(owner, COMSIG_LIVING_POST_FULLY_HEAL, PROC_REF(victim_ahealed))
+	RegisterSignal(owner, COMSIG_LIVING_HEALTHSCAN, PROC_REF(append_analyzer_info))
 
 	update_variables()
 	START_PROCESSING(SSprocessing, src)
@@ -154,6 +155,7 @@
 		REMOVE_TRAIT(owner, TRAIT_DNR, TRAUMA_TRAIT)
 
 	UnregisterSignal(owner, COMSIG_LIVING_POST_FULLY_HEAL)
+	UnregisterSignal(owner, COMSIG_LIVING_HEALTHSCAN)
 
 	return ..()
 
@@ -179,7 +181,7 @@
 		last_time_degraded_on_death = world.time
 
 /datum/brain_trauma/severe/death_consequences/process(seconds_per_tick)
-	if (owner.status_flags & GODMODE)
+	if (HAS_TRAIT(owner, TRAIT_GODMODE))
 		return
 
 	var/is_dead = (owner.stat == DEAD)
@@ -210,7 +212,7 @@
 		if (base_degradation_reduction_per_second_while_alive < 0) // if you wanna die slowly while alive, go ahead bud
 			increase -= base_degradation_reduction_per_second_while_alive
 
-	if (HAS_TRAIT(owner, TRAIT_STASIS))
+	if (HAS_TRAIT(owner, TRAIT_STASIS) || owner.has_reagent(/datum/reagent/cryostylane, needs_metabolizing = FALSE)) // Cryostylane gives a stasis-like effect, so I'm throwing this here.
 		increase *= stasis_passive_degradation_multiplier
 
 	return increase
@@ -330,17 +332,14 @@
 
 	// The constantly decreasing degradation will constantly lower the minimum stamina damage, and thus, if we DONT check a range of staminaloss,
 	// we will always consider it "above" our minimum, and thus never delay stamina regen.
-	var/owner_staminaloss = owner.getStaminaLoss()
+	var/owner_staminaloss = owner.get_stamina_loss()
 	if (minimum_stamina_damage <= 0)
 		return
-	if (owner_staminaloss > (minimum_stamina_damage + 1))
-		return
-	else if ((owner_staminaloss >= (minimum_stamina_damage - 1)) && (owner_staminaloss <= (minimum_stamina_damage + 1)))
-		owner.stam_regen_start_time = world.time + STAMINA_REGEN_BLOCK_TIME
+	if (owner_staminaloss > minimum_stamina_damage)
 		return
 
-	var/final_adjustment = (minimum_stamina_damage - owner_staminaloss)
-	owner.adjustStaminaLoss(final_adjustment) // we adjust instead of set for things like stamina regen timer
+	var/final_adjustment = max((minimum_stamina_damage - owner_staminaloss), 0)
+	owner.adjust_stamina_loss(final_adjustment) // we adjust instead of set for things like stamina regen timer
 
 /**
  * Sends a flavorful to_chat to the target, picking from degradation_messages[current_degradation_level]. Can fail to send one if no message is found.
@@ -366,7 +365,7 @@
 /// befitting for a death such as this.
 /datum/brain_trauma/severe/death_consequences/proc/and_so_your_story_ends()
 	ADD_TRAIT(owner, TRAIT_DNR, TRAUMA_TRAIT) // you're gone bro
-	owner.AddElement(/datum/element/dnr) // BUBBER EDIT - More DNR FA_ICON_XING
+	owner.AddElement(/datum/element/dnr)
 	final_death_delivered = TRUE
 
 	// this is a sufficiently dramatic event for some dramatic to_chats
@@ -379,7 +378,7 @@
 		self_message = span_revendanger("The metaphorical \"tether\" binding you to your body finally gives way. You try holding on, but you soon find yourself \
 		falling into a deep, dark abyss...")
 		log_message = "has been permanently ghosted by their resonance instability quirk."
-		owner.ghostize(can_reenter_corpse = FALSE) // BUBBER EDIT - More DNR FA_ICON_XING
+		owner.ghostize(can_reenter_corpse = FALSE)
 	else
 		if (force_death_if_permakilled) // kill them - a violent and painful end
 			visible_message = span_revenwarning("[owner] suddenly lets out a harrowing gasp and falls to one knee, clutching their head! The remainder of their \
@@ -409,13 +408,13 @@
 
 /// Returns a short-ish string containing an href to [get_specific_data].
 /datum/brain_trauma/severe/death_consequences/proc/get_health_analyzer_link_text(mob/user)
-	var/message = span_bolddanger("\nSubject suffers from death degradation disorder.")
+	var/message = span_bolddanger("Subject suffers from death degradation disorder.")
 	if (final_death_delivered)
 		message += span_purple("<i>\nNeural patterns are equivalent to the consciousness zero-point. Subject has likely succumbed.</i>")
 		return message
 
 	message += span_danger("\nCurrent degradation/max: [span_blue("<b>[current_degradation]</b>")]/<b>[max_degradation]</b>.")
-	message += span_notice("\n<a href='?src=[REF(src)];[DEATH_CONSEQUENCES_SHOW_HEALTH_ANALYZER_DATA]=1'>View degradation specifics?</a>")
+	message += span_notice("\n<a href='byond://?src=[REF(src)];[DEATH_CONSEQUENCES_SHOW_HEALTH_ANALYZER_DATA]=1'>View degradation specifics?</a>")
 	if (permakill_if_at_max_degradation)
 		message += span_revenwarning("\n\n<b><i>SUBJECT WILL BE PERMANENTLY KILLED IF DEGRADATION REACHES MAXIMUM!</i></b>")
 
@@ -423,6 +422,8 @@
 		if (isnull(time_til_scan_expires[user]))
 			RegisterSignal(user, COMSIG_QDELETING, PROC_REF(scanning_user_qdeleting))
 		time_til_scan_expires[user] = (world.time + time_to_view_extra_data_after_scan)
+
+	message += "\n"
 
 	return message
 
@@ -437,9 +438,14 @@
 
 	if (href_list[DEATH_CONSEQUENCES_SHOW_HEALTH_ANALYZER_DATA])
 		if (world.time <= time_til_scan_expires[usr])
-			to_chat(usr, examine_block(get_specific_data()), trailing_newline = FALSE, type = MESSAGE_TYPE_INFO)
+			to_chat(usr, boxed_message(get_specific_data()), trailing_newline = FALSE, type = MESSAGE_TYPE_INFO)
 		else
 			to_chat(usr, span_warning("Your scan has expired! Try scanning again!"))
+
+/datum/brain_trauma/severe/death_consequences/proc/append_analyzer_info(datum/signal_source, list/scan_results, advanced, mob/user, mode)
+	SIGNAL_HANDLER
+
+	scan_results += get_health_analyzer_link_text(user)
 
 /// Returns a large string intended to show specifics of how this degradation work.
 /datum/brain_trauma/severe/death_consequences/proc/get_specific_data()
@@ -464,8 +470,8 @@
 		message += span_danger("\nRezadone of purity at or above <i>[DEATH_CONSEQUENCES_REZADONE_MINIMUM_PURITY]</i>% will reduce degradation by [span_blue("[rezadone_degradation_decrease]")] per second when metabolized.")
 	if (eigenstasium_degradation_decrease)
 		message += span_danger("\nEigenstasium will reduce degradation by [span_blue("[eigenstasium_degradation_decrease]")] per second when present.")
-
-	message += span_danger("\nAll degradation reduction can be [span_blue("expedited")] by [span_blue("resting, sleeping, or being buckled to something comfortable")].")
+	if (base_degradation_reduction_per_second_while_alive > 0 || rezadone_degradation_decrease > 0 && eigenstasium_degradation_decrease > 0)
+		message += span_danger("\nAll degradation reduction can be [span_blue("expedited")] by [span_blue("resting, sleeping, or being buckled to something comfortable")].")
 
 	if (permakill_if_at_max_degradation)
 		message += span_revenwarning("\n\n<b><i>SUBJECT WILL BE PERMANENTLY KILLED IF DEGRADATION REACHES MAXIMUM!</i></b>")
@@ -493,7 +499,7 @@
 	if ((heal_flags & (ADMIN_HEAL_ALL)) == ADMIN_HEAL_ALL) // but only god can actually revive you
 		final_death_delivered = FALSE
 		REMOVE_TRAIT(owner, TRAIT_DNR, TRAUMA_TRAIT)
-		owner.RemoveElement(/datum/element/dnr) // BUBBER EDIT - More DNR FA_ICON_XING
+		owner.RemoveElement(/datum/element/dnr)
 
 /// Resets all our variables to our victim's preferences, if they have any. Used for the initial setup, then any time our victim manually refreshes variables.
 /datum/brain_trauma/severe/death_consequences/proc/update_variables(client/source = owner.client)
@@ -506,8 +512,8 @@
 	if (isnull(source))
 		return // sanity
 
-	var/ckey = lowertext(owner.mind?.key)
-	if (isnull(ckey) || ckey != source.ckey)
+	var/ckey = LOWER_TEXT(owner.mind?.key)
+	if (isnull(ckey))
 		return // sanity
 
 	var/datum/preferences/victim_prefs = source.prefs
@@ -520,6 +526,9 @@
 	base_degradation_reduction_per_second_while_alive = victim_prefs.read_preference(/datum/preference/numeric/death_consequences/living_degradation_recovery_per_second)
 	base_degradation_per_second_while_dead = victim_prefs.read_preference(/datum/preference/numeric/death_consequences/dead_degradation_per_second)
 	base_degradation_on_death = victim_prefs.read_preference(/datum/preference/numeric/death_consequences/degradation_on_death)
+
+	stasis_passive_degradation_multiplier = victim_prefs.read_preference(/datum/preference/numeric/death_consequences/stasis_dead_degradation_mult)
+	formaldehyde_death_degradation_mult = victim_prefs.read_preference(/datum/preference/numeric/death_consequences/formeldahyde_dead_degradation_mult)
 
 	var/min_crit_threshold_percent = victim_prefs.read_preference(/datum/preference/numeric/death_consequences/crit_threshold_reduction_min_percent_of_max)
 	crit_threshold_min_degradation = (max_degradation * (min_crit_threshold_percent / 100))

@@ -18,7 +18,6 @@
 	item_flags = NONE
 	obj_flags = UNIQUE_RENAME
 	weapon_weight = WEAPON_HEAVY
-	can_bayonet = TRUE
 	max_mod_capacity = 15 // A crumb of mod capacity as a treat
 	recoil = 3 //railgun go brrrrr
 	gun_flags = NOT_A_REAL_GUN
@@ -38,9 +37,6 @@
 	item_flags = NONE
 	obj_flags = UNIQUE_RENAME
 	weapon_weight = WEAPON_LIGHT
-	can_bayonet = TRUE
-	knife_x_offset = 20
-	knife_y_offset = 12
 	max_mod_capacity = 75
 
 /obj/item/gun/energy/recharge/kinetic_accelerator/shotgun
@@ -48,7 +44,8 @@
 	desc = "During the crusher design pizza party, one member of the Mining Research and Development team brought out a real riot shotgun, and killed three \
 	other research members with one blast. The MR&D Director immedietly thought of a genuis idea, creating the proto-kinetic shotgun moments later, which he \
 	immedietly used to execute the research member who brought the real shotgun. The proto-kinetic shotgun trades off some mod capacity and cooldown in favor \
-	of firing three shots at once with reduce range and power. The total damage of all three shots is higher than a regular PKA but the individual shots are weaker."
+	of firing three shots at once with reduce range and power. The total damage of all three shots is higher than a regular PKA but the individual shots are weaker. \
+	Looks like you need both hands to use it effectively."
 	icon = 'modular_zubbers/icons/obj/guns/guns.dmi'
 	icon_state = "kineticshotgun"
 	base_icon_state = "kineticshotgun"
@@ -57,11 +54,9 @@
 	ammo_type = list(/obj/item/ammo_casing/energy/kinetic/shotgun)
 	item_flags = NONE
 	obj_flags = UNIQUE_RENAME
-	weapon_weight = WEAPON_LIGHT
-	can_bayonet = TRUE
-	knife_x_offset = 20
-	knife_y_offset = 12
-	max_mod_capacity = 75
+	weapon_weight = WEAPON_HEAVY
+	max_mod_capacity = 60
+	disabled_modkits = list(/obj/item/borg/upgrade/modkit/cooldown/aoe/) // Should cover all AOE variants
 
 /obj/item/gun/energy/recharge/kinetic_accelerator/glock
 	name = "proto-kinetic pistol"
@@ -78,7 +73,6 @@
 	item_flags = NONE
 	obj_flags = UNIQUE_RENAME
 	weapon_weight = WEAPON_LIGHT
-	can_bayonet = TRUE
 	max_mod_capacity = 200
 
 /obj/item/gun/energy/recharge/kinetic_accelerator/shockwave
@@ -95,8 +89,12 @@
 	item_flags = NONE
 	obj_flags = UNIQUE_RENAME
 	weapon_weight = WEAPON_LIGHT
-	can_bayonet = TRUE
 	max_mod_capacity = 75
+	disabled_modkits = list(/obj/item/borg/upgrade/modkit/cooldown/aoe/) // Should cover all AOE variants
+
+/obj/item/gun/energy/recharge/kinetic_accelerator/shockwave/process_fire(atom/target, mob/living/user, message = TRUE, params = null, zone_override = "", bonus_spread = 0)
+	target = get_edge_target_turf(user, user.dir)
+	return ..()
 
 /obj/item/gun/energy/recharge/kinetic_accelerator/m79
 	name = "proto-kinetic grenade launcher"
@@ -113,9 +111,11 @@
 	obj_flags = UNIQUE_RENAME
 	w_class = WEIGHT_CLASS_HUGE
 	weapon_weight = WEAPON_HEAVY
-	can_bayonet = FALSE
 	max_mod_capacity = 0
 	disablemodification = TRUE
+
+/obj/item/gun/energy/recharge/kinetic_accelerator/m79/add_bayonet_point()
+	return
 
 //Accelerator Casing
 //Fixed maths to use new standards
@@ -123,13 +123,13 @@
 	projectile_type = /obj/projectile/kinetic/railgun
 	select_name = "kinetic"
 	e_cost = LASER_SHOTS(1, STANDARD_CELL_CHARGE * 0.5)
-	fire_sound = 'sound/weapons/beam_sniper.ogg'
+	fire_sound = 'sound/items/weapons/beam_sniper.ogg'
 
 /obj/item/ammo_casing/energy/kinetic/repeater
 	projectile_type = /obj/projectile/kinetic/repeater
 	select_name = "kinetic"
 	e_cost = LASER_SHOTS(1, STANDARD_CELL_CHARGE * 0.15) //about three shots
-	fire_sound = 'sound/weapons/kinetic_accel.ogg'
+	fire_sound = 'sound/items/weapons/kinetic_accel.ogg'
 
 /obj/item/ammo_casing/energy/kinetic/shotgun
 	projectile_type = /obj/projectile/kinetic/shotgun
@@ -137,13 +137,13 @@
 	e_cost = LASER_SHOTS(1, STANDARD_CELL_CHARGE * 0.5)
 	pellets = 3
 	variance = 50
-	fire_sound = 'sound/weapons/kinetic_accel.ogg'
+	fire_sound = 'sound/items/weapons/kinetic_accel.ogg'
 
 /obj/item/ammo_casing/energy/kinetic/glock
 	projectile_type = /obj/projectile/kinetic/glock
 	select_name = "kinetic"
 	e_cost = LASER_SHOTS(1, STANDARD_CELL_CHARGE * 0.5)
-	fire_sound = 'sound/weapons/kinetic_accel.ogg'
+	fire_sound = 'sound/items/weapons/kinetic_accel.ogg'
 
 /obj/item/ammo_casing/energy/kinetic/shockwave
 	projectile_type = /obj/projectile/kinetic/shockwave
@@ -151,30 +151,30 @@
 	e_cost = LASER_SHOTS(1, STANDARD_CELL_CHARGE * 0.5)
 	pellets = 8
 	variance = 360
-	fire_sound = 'sound/weapons/gun/general/cannon.ogg'
+	fire_sound = 'sound/items/weapons/gun/general/cannon.ogg'
 
 /obj/item/ammo_casing/energy/kinetic/m79
-	projectile_type = /obj/projectile/bullet/mining_bomb //uses the mining bomb projectile from the mining modsuit
+	projectile_type = /obj/projectile/bullet/mining_missile //uses the mining bomb projectile from the mining modsuit
 	select_name = "kinetic"
 	e_cost = LASER_SHOTS(1, STANDARD_CELL_CHARGE * 0.5)
-	fire_sound = 'sound/weapons/gun/general/grenade_launch.ogg'
+	fire_sound = 'sound/items/weapons/gun/general/grenade_launch.ogg'
 
 //Accelerator Projectiles
 /obj/projectile/kinetic/railgun
 	name = "hyper kinetic force"
 	icon_state = null
-	damage = 100
+	damage = 100 // Slightly less than a crusher marked hit (110 methinks), but ranged and really fast moving, big movement slowdown and bulky.
 	damage_type = BRUTE
 	armor_flag = BOMB
 	range = 6
 	pressure_decrease = 0.10 //Pressured enviorments are a no go for the railgun
-	speed = 0.1 //NYOOM
+	speed = 10 //NYOOM
 	projectile_piercing = PASSMOB
 
 /obj/projectile/kinetic/repeater
 	name = "rapid kinetic force"
 	icon_state = null
-	damage = 20
+	damage = 20 // Half damage, burst fire and a bit more range.
 	damage_type = BRUTE
 	armor_flag = BOMB
 	range = 4
@@ -183,16 +183,20 @@
 /obj/projectile/kinetic/shotgun
 	name = "split kinetic force"
 	icon_state = null
-	damage = 20
+	damage = 20 // 3 projectiles, 60 base damage. Theoretically more if all shots hit.
 	damage_type = BRUTE
 	armor_flag = BOMB
 	range = 3
 	log_override = TRUE
 
+/obj/item/borg/upgrade/modkit/indoors/modify_projectile(obj/projectile/kinetic/shotgun/K)
+	..()
+	K.pressure_decrease = min(K.pressure_decrease, 0.5)
+
 /obj/projectile/kinetic/glock
 	name = "light kinetic force"
 	icon_state = null
-	damage = 10
+	damage = 10 // Low dmg, high modularity. Can be made great, especially when dual wielded.
 	damage_type = BRUTE
 	armor_flag = BOMB
 	range = 3
@@ -201,7 +205,7 @@
 /obj/projectile/kinetic/shockwave
 	name = "concussive kinetic force"
 	icon_state = null
-	damage = 40
+	damage = 40 // 8 projectiles in a 360 around you. Good for CC and rock clearing.
 	damage_type = BRUTE
 	armor_flag = BOMB
 	range = 1
@@ -220,17 +224,17 @@
 							/area/icemoon/surface/outdoors/unexplored/rivers/no_monsters,
 							/area/icemoon/underground/unexplored/rivers/deep/shoreline,
 							/area/icemoon/underground/explored,
+							/area/moonstation/surface,
 							/area/moonstation/surface/unexplored,
 							/area/moonstation/underground,
 							/area/moonstation/underground/unexplored,
-							/area/lavaland/underground/unexplored,
-							/area/lavaland/underground/unexplored/danger,
 							/area/lavaland/surface/outdoors,
 							/area/lavaland/surface/outdoors/unexplored/danger,
 							/area/lavaland/surface/outdoors/unexplored,
 							/area/lavaland/surface/outdoors/explored,
 							/area/ocean/generated,
-							/area/ruin/)
+							/area/ruin/
+						)
 
 /obj/item/firing_pin/wastes/pin_auth(mob/living/user)
 	if(!istype(user))

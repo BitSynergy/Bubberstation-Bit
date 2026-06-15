@@ -1,5 +1,5 @@
 /obj/item/seeds/jurlmah
-	name = "pack of jurlmah seeds"
+	name = "jurlmah seed pack"
 	desc = "These seeds grow into jurlmah plants. Often used as makeshift cryo-treatment in areas where a dedicated cryotube setup is impossible."
 	icon = 'modular_skyrat/modules/xenoarch/icons/seeds.dmi'
 	icon_state = "jurlmah"
@@ -24,5 +24,7 @@
 	filling_color = "#FF4500"
 	bite_consumption_mod = 0.5
 	foodtypes = FRUIT
-	juice_typepath = /datum/reagent/medicine/cryoxadone
 	tastes = list("snow" = 1)
+
+/obj/item/food/grown/jurlmah/juice_typepath()
+	return /datum/reagent/medicine/cryoxadone

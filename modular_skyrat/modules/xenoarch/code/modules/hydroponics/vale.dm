@@ -1,5 +1,5 @@
 /obj/item/seeds/vale
-	name = "pack of vale seeds"
+	name = "vale seed pack"
 	desc = "These seeds grow into vale plants. Once sold as a luxury for their unique aesthetics, after the trees suddenly combusted they were taken off of the market."
 	icon = 'modular_skyrat/modules/xenoarch/icons/seeds.dmi'
 	icon_state = "vale"
@@ -24,5 +24,7 @@
 	filling_color = "#FF4500"
 	bite_consumption_mod = 0.5
 	foodtypes = FRUIT
-	juice_typepath = /datum/reagent/toxin/plasma
 	tastes = list("plasma" = 1)
+
+/obj/item/food/grown/vale/juice_typepath()
+	return /datum/reagent/toxin/plasma

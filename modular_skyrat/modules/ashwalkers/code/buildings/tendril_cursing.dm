@@ -4,7 +4,7 @@
 
 /obj/structure/spawner/lavaland/attackby(obj/item/attacking_item, mob/user, params)
 	if(istype(attacking_item, /obj/item/cursed_dagger))
-		playsound(get_turf(src), 'sound/magic/demon_attack1.ogg', 50, TRUE)
+		playsound(get_turf(src), 'sound/effects/magic/demon_attack1.ogg', 50, TRUE)
 		cursed = !cursed
 		if(cursed)
 			src.add_atom_colour("#41007e", TEMPORARY_COLOUR_PRIORITY)
@@ -13,7 +13,7 @@
 		balloon_alert_to_viewers("a curse has been [cursed ? "placed..." : "lifted..."]")
 		if(isliving(user))
 			var/mob/living/living_user = user
-			living_user.adjustFireLoss(100)
+			living_user.adjust_fire_loss(100)
 		to_chat(user, span_warning("The knife sears your hand!"))
 		return
 	return ..()

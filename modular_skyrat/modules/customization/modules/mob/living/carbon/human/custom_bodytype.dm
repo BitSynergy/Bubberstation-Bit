@@ -1,7 +1,7 @@
 /**
  * Modularly returns one of worn_icon_vox, worn_icon_teshari, etc.
  * Arguments:
- * * item_slot: The slot we're updating. One of LOADOUT_ITEM_HEAD, etc.
+ * * item_slot: The slot we're updating. One of OFFSET_HEAD, etc.
  * * item is the item we're checking.
  */
 /datum/species/proc/get_custom_worn_icon(item_slot, obj/item/item)
@@ -10,7 +10,7 @@
 /**
  * Modularly set one of worn_icon_vox, worn_icon_teshari, etc.
  * Arguments:
- * * item_slot: The slot we're updating. One of LOADOUT_ITEM_HEAD, etc.
+ * * item_slot: The slot we're updating. One of OFFSET_HEAD, etc.
  * * item is the item we're updating.
  * * icon is the icon we're setting to the var.
  */
@@ -21,7 +21,7 @@
  * Modularly get the species' fallback greyscale config.
  * Only used if you use generate_custom_worn_icon_fallback()
  * Arguments:
- * * item_slot: The slot we're updating. One of LOADOUT_ITEM_HEAD, etc.
+ * * item_slot: The slot we're updating. One of OFFSET_HEAD, etc.
  * * item: The item being rendered.
  */
 /datum/species/proc/get_custom_worn_config_fallback(item_slot, obj/item/item)
@@ -55,7 +55,7 @@
  * Allow for custom clothing icon generation. Only called if the species is BODYSHAPE_CUSTOM
  * If null is returned, use default human icon.
  * Arguments:
- * * item_slot: The slot we're updating. One of LOADOUT_ITEM_HEAD, etc.
+ * * item_slot: The slot we're updating. One of OFFSET_HEAD, etc.
  * * item: The item being rendered.
  * * human_owner: The human wearing the item.
  */
@@ -120,7 +120,8 @@
 		var/list/color_list = list()
 
 		for(var/i in 1 to expected_num_colors)
-			if(length(item.species_clothing_color_coords) < i)
+			if(isnull(item.species_clothing_color_coords) || \
+			length(item.species_clothing_color_coords) < i)
 				color_list += COLOR_DARK
 				continue
 			var/coord = item.species_clothing_color_coords[i]
@@ -129,7 +130,7 @@
 		fallback_greyscale_colors = color_list.Join("")
 
 	// Finally, render with GAGs
-	var/icon/final_icon = SSgreyscale.GetColoredIconByType(get_custom_worn_config_fallback(item_slot, item), fallback_greyscale_colors)
+	var/icon/final_icon = icon(SSgreyscale.GetColoredIconByType(get_custom_worn_config_fallback(item_slot, item), fallback_greyscale_colors))
 	// Duplicate to the specific icon_state and set.
 	final_icon.Insert(final_icon, icon_state = human_icon_state) // include the expected icon_state
 	// Cache the clean copy.

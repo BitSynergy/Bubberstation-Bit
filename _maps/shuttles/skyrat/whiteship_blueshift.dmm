@@ -48,7 +48,7 @@
 /turf/open/floor/plating,
 /area/shuttle/abandoned/crew)
 "aq" = (
-/obj/machinery/light/small/built/directional/west,
+/obj/machinery/light/small/empty/directional/west,
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/iron,
 /area/shuttle/abandoned)
@@ -70,9 +70,27 @@
 	},
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/decal/cleanable/dirt,
-/obj/effect/decal/cleanable/oil,
+/obj/effect/decal/cleanable/blood/oil,
 /turf/open/floor/iron/dark,
 /area/shuttle/abandoned/cargo)
+"aU" = (
+/obj/effect/decal/cleanable/dirt,
+/obj/effect/turf_decal/box/white/corners{
+	dir = 8
+	},
+/obj/effect/turf_decal/tile/neutral{
+	dir = 1
+	},
+/obj/effect/turf_decal/tile/neutral,
+/obj/effect/turf_decal/tile/neutral{
+	dir = 4
+	},
+/obj/effect/turf_decal/tile/neutral{
+	dir = 8
+	},
+/obj/machinery/door/window/left/directional/west,
+/turf/open/floor/iron/dark,
+/area/shuttle/abandoned)
 "aZ" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/turf_decal/tile/neutral{
@@ -137,6 +155,16 @@
 /obj/effect/mob_spawn/corpse/human/cook,
 /turf/open/floor/iron/cafeteria,
 /area/shuttle/abandoned/crew)
+"bE" = (
+/obj/machinery/light/small/empty/directional/north,
+/obj/effect/decal/cleanable/dirt,
+/obj/machinery/atmospherics/components/unary/vent_pump/on,
+/obj/structure/alien/weeds/node,
+/obj/structure/bed/double/pod,
+/obj/effect/spawner/random/bedsheet/double,
+/obj/structure/sign/poster/random/directional/east,
+/turf/open/floor/wood,
+/area/shuttle/abandoned/crew)
 "bQ" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/decal/cleanable/dirt,
@@ -200,7 +228,7 @@
 /turf/open/floor/plating,
 /area/shuttle/abandoned/crew)
 "cG" = (
-/obj/machinery/light/small/built/directional/north,
+/obj/machinery/light/small/empty/directional/north,
 /obj/effect/decal/cleanable/dirt,
 /obj/machinery/atmospherics/pipe/smart/simple/supply/hidden{
 	dir = 8
@@ -238,7 +266,7 @@
 "dg" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/decal/cleanable/dirt,
-/obj/machinery/light/small/built/directional/west,
+/obj/machinery/light/small/empty/directional/west,
 /obj/effect/turf_decal/tile/blue,
 /obj/effect/turf_decal/tile/blue{
 	dir = 8
@@ -254,9 +282,7 @@
 /obj/structure/bed,
 /obj/item/bedsheet/medical,
 /obj/machinery/iv_drip,
-/obj/structure/curtain{
-	layer = 4.1
-	},
+/obj/structure/curtain,
 /obj/structure/alien/weeds/node,
 /turf/open/floor/iron/white,
 /area/shuttle/abandoned/medbay)
@@ -284,7 +310,7 @@
 /turf/open/floor/iron,
 /area/shuttle/abandoned/crew)
 "dw" = (
-/obj/machinery/light/small/built/directional/south,
+/obj/machinery/light/small/empty/directional/south,
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/turf_decal/tile/neutral{
 	dir = 4
@@ -321,7 +347,7 @@
 /obj/item/reagent_containers/cup/glass/drinkingglass{
 	pixel_y = 3
 	},
-/obj/item/reagent_containers/cup/rag,
+/obj/item/rag,
 /turf/open/floor/iron/dark,
 /area/shuttle/abandoned/bar)
 "dI" = (
@@ -342,7 +368,7 @@
 /area/shuttle/abandoned)
 "dN" = (
 /obj/effect/decal/cleanable/dirt,
-/obj/effect/decal/cleanable/oil,
+/obj/effect/decal/cleanable/blood/oil,
 /obj/structure/alien/weeds,
 /turf/open/floor/iron/dark,
 /area/shuttle/abandoned/cargo)
@@ -359,7 +385,7 @@
 /obj/structure/table,
 /obj/effect/decal/cleanable/dirt,
 /obj/machinery/cell_charger,
-/obj/item/stock_parts/cell/super,
+/obj/item/stock_parts/power_store/cell/super,
 /turf/open/floor/iron/dark,
 /area/shuttle/abandoned/bridge)
 "ei" = (
@@ -372,7 +398,7 @@
 /turf/open/floor/iron/dark,
 /area/shuttle/abandoned/engine)
 "ev" = (
-/obj/machinery/light/built/directional/west,
+/obj/machinery/light/empty/directional/west,
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/decal/cleanable/dirt,
 /obj/structure/closet/crate/large,
@@ -455,7 +481,7 @@
 /turf/open/floor/iron,
 /area/shuttle/abandoned/engine)
 "fj" = (
-/obj/machinery/light/small/built/directional/west,
+/obj/machinery/light/small/empty/directional/west,
 /obj/effect/decal/cleanable/dirt,
 /obj/structure/cable,
 /obj/structure/alien/weeds,
@@ -614,7 +640,7 @@
 /obj/effect/turf_decal/box/white/corners,
 /obj/effect/decal/cleanable/dirt,
 /obj/structure/alien/weeds,
-/obj/effect/decal/cleanable/xenoblood/xgibs/body,
+/obj/effect/decal/cleanable/blood/gibs/xeno/body,
 /turf/open/floor/iron/dark,
 /area/shuttle/abandoned/cargo)
 "gv" = (
@@ -685,24 +711,6 @@
 /obj/structure/alien/weeds,
 /turf/open/floor/iron,
 /area/shuttle/abandoned/bridge)
-"hc" = (
-/obj/effect/decal/cleanable/dirt,
-/obj/effect/turf_decal/box/white/corners{
-	dir = 8
-	},
-/obj/effect/turf_decal/tile/neutral{
-	dir = 1
-	},
-/obj/effect/turf_decal/tile/neutral,
-/obj/effect/turf_decal/tile/neutral{
-	dir = 4
-	},
-/obj/effect/turf_decal/tile/neutral{
-	dir = 8
-	},
-/obj/machinery/door/window/left/directional/west,
-/turf/open/floor/iron/dark,
-/area/shuttle/abandoned)
 "ho" = (
 /obj/effect/turf_decal/stripes/white/line{
 	dir = 1
@@ -728,16 +736,6 @@
 /obj/effect/decal/cleanable/dirt,
 /obj/structure/alien/weeds,
 /turf/open/floor/iron,
-/area/shuttle/abandoned/crew)
-"hZ" = (
-/obj/machinery/light/small/built/directional/north,
-/obj/effect/decal/cleanable/dirt,
-/obj/machinery/atmospherics/components/unary/vent_pump/on,
-/obj/structure/alien/weeds/node,
-/obj/structure/bed/double/pod,
-/obj/effect/spawner/random/bedsheet/double,
-/obj/structure/sign/poster/random/directional/east,
-/turf/open/floor/wood,
 /area/shuttle/abandoned/crew)
 "id" = (
 /obj/machinery/smartfridge,
@@ -1189,7 +1187,7 @@
 /turf/open/floor/iron/freezer,
 /area/shuttle/abandoned/crew)
 "lO" = (
-/obj/machinery/light/small/built/directional/east,
+/obj/machinery/light/small/empty/directional/east,
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/turf_decal/tile/neutral{
@@ -1364,7 +1362,7 @@
 /turf/open/floor/iron/dark,
 /area/shuttle/abandoned/cargo)
 "mO" = (
-/obj/machinery/light/small/built/directional/east,
+/obj/machinery/light/small/empty/directional/east,
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/decal/cleanable/dirt,
@@ -1383,7 +1381,7 @@
 /turf/open/floor/iron/dark,
 /area/shuttle/abandoned/crew)
 "mP" = (
-/obj/machinery/light/built/directional/east,
+/obj/machinery/light/empty/directional/east,
 /obj/effect/decal/cleanable/dirt,
 /obj/machinery/airalarm/directional/west,
 /obj/effect/mapping_helpers/airalarm/all_access,
@@ -1398,7 +1396,7 @@
 /obj/structure/sign/warning/vacuum/external{
 	pixel_x = -32
 	},
-/obj/machinery/light/small/built/directional/west,
+/obj/machinery/light/small/empty/directional/west,
 /turf/open/floor/plating,
 /area/shuttle/abandoned/crew)
 "mZ" = (
@@ -1492,6 +1490,17 @@
 /obj/effect/spawner/structure/window/reinforced/shuttle,
 /turf/open/floor/plating,
 /area/shuttle/abandoned/bridge)
+"nX" = (
+/obj/effect/spawner/random/bedsheet,
+/obj/machinery/atmospherics/components/unary/vent_pump/on,
+/obj/effect/decal/cleanable/dirt,
+/obj/effect/decal/cleanable/dirt,
+/obj/structure/alien/weeds,
+/obj/machinery/light/small/directional/north,
+/obj/structure/bed/pod,
+/obj/structure/sign/poster/random/directional/east,
+/turf/open/floor/wood,
+/area/shuttle/abandoned/crew)
 "nY" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/turf_decal/tile/blue{
@@ -1680,8 +1689,8 @@
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/turf_decal/bot_white,
 /obj/structure/guncase,
-/obj/item/ammo_box/a357,
-/obj/item/ammo_box/a357,
+/obj/item/ammo_box/speedloader/c357,
+/obj/item/ammo_box/speedloader/c357,
 /obj/item/gun/ballistic/revolver,
 /obj/item/ammo_box/magazine/wt550m9,
 /obj/item/ammo_box/magazine/wt550m9,
@@ -1752,7 +1761,7 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
 	},
-/obj/effect/decal/cleanable/xenoblood/xsplatter,
+/obj/effect/decal/cleanable/blood/splatter/xeno,
 /turf/open/floor/iron/dark,
 /area/shuttle/abandoned/cargo)
 "qj" = (
@@ -1799,7 +1808,7 @@
 /turf/open/floor/iron/dark,
 /area/shuttle/abandoned)
 "qu" = (
-/obj/machinery/light/small/built/directional/south,
+/obj/machinery/light/small/empty/directional/south,
 /obj/effect/turf_decal/stripes/white/line{
 	dir = 5
 	},
@@ -1846,7 +1855,7 @@
 /area/shuttle/abandoned/crew)
 "qM" = (
 /obj/effect/decal/cleanable/dirt,
-/obj/machinery/vending/boozeomat/all_access,
+/obj/machinery/vending/boozeomat,
 /obj/structure/alien/weeds,
 /turf/open/floor/iron/dark,
 /area/shuttle/abandoned/bar)
@@ -2002,7 +2011,6 @@
 	},
 /obj/structure/barricade/security,
 /obj/machinery/door/airlock/highsecurity{
-	layer = 3.0;
 	name = "Armory"
 	},
 /turf/open/floor/iron/dark,
@@ -2051,7 +2059,7 @@
 "sq" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/structure/alien/weeds,
-/obj/effect/decal/cleanable/xenoblood/xgibs/core,
+/obj/effect/decal/cleanable/blood/gibs/xeno/core,
 /turf/open/floor/iron/dark,
 /area/shuttle/abandoned/cargo)
 "ss" = (
@@ -2098,7 +2106,7 @@
 /area/shuttle/abandoned/medbay)
 "tb" = (
 /obj/effect/decal/cleanable/dirt,
-/obj/effect/decal/cleanable/xenoblood/xsplatter,
+/obj/effect/decal/cleanable/blood/splatter/xeno,
 /turf/open/floor/iron/dark,
 /area/shuttle/abandoned/cargo)
 "tc" = (
@@ -2141,7 +2149,7 @@
 /obj/machinery/atmospherics/pipe/smart/simple/supply/hidden{
 	dir = 8
 	},
-/obj/effect/decal/cleanable/xenoblood/xsplatter,
+/obj/effect/decal/cleanable/blood/splatter/xeno,
 /turf/open/floor/iron/dark,
 /area/shuttle/abandoned/cargo)
 "ts" = (
@@ -2201,7 +2209,7 @@
 	dir = 6
 	},
 /obj/effect/decal/cleanable/dirt,
-/obj/machinery/light/small/built/directional/north,
+/obj/machinery/light/small/empty/directional/north,
 /obj/effect/decal/cleanable/dirt,
 /obj/structure/tank_dispenser,
 /obj/structure/alien/weeds,
@@ -2228,7 +2236,7 @@
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/turf_decal/bot_white,
 /obj/structure/guncase/shotgun,
-/obj/machinery/light/small/built/directional/east,
+/obj/machinery/light/small/empty/directional/east,
 /obj/item/storage/box/lethalshot,
 /obj/item/gun/ballistic/shotgun/riot{
 	pixel_y = 3
@@ -2381,7 +2389,7 @@
 	},
 /obj/item/soap,
 /obj/structure/curtain,
-/obj/machinery/light/small/built/directional/south,
+/obj/machinery/light/small/empty/directional/south,
 /obj/effect/decal/cleanable/dirt,
 /obj/structure/drain,
 /obj/structure/alien/weeds,
@@ -2622,7 +2630,7 @@
 /turf/open/floor/iron/dark,
 /area/shuttle/abandoned/cargo)
 "yM" = (
-/obj/machinery/light/small/built/directional/north,
+/obj/machinery/light/small/empty/directional/north,
 /obj/effect/decal/cleanable/dirt,
 /obj/machinery/firealarm/directional/north,
 /obj/machinery/atmospherics/pipe/smart/simple/supply/hidden{
@@ -2671,7 +2679,7 @@
 /obj/structure/sign/warning/vacuum/external{
 	pixel_x = 32
 	},
-/obj/machinery/light/small/built/directional/east,
+/obj/machinery/light/small/empty/directional/east,
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/decal/cleanable/dirt,
 /obj/structure/alien/weeds,
@@ -2895,7 +2903,6 @@
 /area/shuttle/abandoned/medbay)
 "BB" = (
 /obj/machinery/turretid{
-	icon_state = "control_kill";
 	lethal = 1;
 	locked = 0;
 	pixel_x = -28;
@@ -3170,17 +3177,6 @@
 /obj/item/camera,
 /turf/open/floor/iron/dark,
 /area/shuttle/abandoned/bridge)
-"Ei" = (
-/obj/effect/spawner/random/bedsheet,
-/obj/machinery/atmospherics/components/unary/vent_pump/on,
-/obj/effect/decal/cleanable/dirt,
-/obj/effect/decal/cleanable/dirt,
-/obj/structure/alien/weeds,
-/obj/machinery/light/small/directional/north,
-/obj/structure/bed/pod,
-/obj/structure/sign/poster/random/directional/east,
-/turf/open/floor/wood,
-/area/shuttle/abandoned/crew)
 "Er" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/machinery/atmospherics/components/unary/vent_pump/on,
@@ -3254,10 +3250,10 @@
 /area/shuttle/abandoned/cargo)
 "Fi" = (
 /obj/effect/decal/cleanable/dirt,
-/obj/machinery/light/small/built/directional/east,
+/obj/machinery/light/small/empty/directional/east,
 /obj/effect/turf_decal/bot,
 /obj/structure/alien/weeds/node,
-/obj/machinery/anesthetic_machine,
+/obj/machinery/breath_machine/anesthetic,
 /obj/item/tank/internals/anesthetic,
 /turf/open/floor/iron/white/side,
 /area/shuttle/abandoned/medbay)
@@ -3388,7 +3384,7 @@
 	dir = 10
 	},
 /obj/effect/decal/cleanable/dirt,
-/obj/machinery/light/small/built/directional/north,
+/obj/machinery/light/small/empty/directional/north,
 /obj/structure/reagent_dispensers/fueltank,
 /obj/structure/alien/weeds,
 /turf/open/floor/iron/dark{
@@ -3556,7 +3552,7 @@
 /turf/open/floor/iron/dark,
 /area/shuttle/abandoned/crew)
 "Ia" = (
-/obj/machinery/light/small/built/directional/west,
+/obj/machinery/light/small/empty/directional/west,
 /obj/effect/decal/cleanable/dirt,
 /obj/structure/table,
 /obj/machinery/microwave{
@@ -3594,6 +3590,17 @@
 /obj/structure/closet,
 /turf/open/floor/iron/dark,
 /area/shuttle/abandoned/cargo)
+"IN" = (
+/obj/effect/decal/cleanable/dirt,
+/obj/machinery/light/small/directional/north,
+/obj/machinery/atmospherics/components/unary/vent_pump/on,
+/obj/structure/alien/weeds,
+/obj/structure/alien/weeds,
+/obj/structure/bed/double/pod,
+/obj/effect/spawner/random/bedsheet/double,
+/obj/structure/sign/poster/random/directional/east,
+/turf/open/floor/wood,
+/area/shuttle/abandoned/crew)
 "IS" = (
 /obj/structure/railing,
 /obj/effect/decal/cleanable/dirt,
@@ -3841,7 +3848,7 @@
 /turf/open/floor/plating,
 /area/shuttle/abandoned/cargo)
 "KD" = (
-/obj/machinery/light/built/directional/east,
+/obj/machinery/light/empty/directional/east,
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/decal/cleanable/dirt,
 /obj/machinery/firealarm/directional/east,
@@ -3889,6 +3896,16 @@
 /obj/structure/lattice/catwalk,
 /turf/template_noop,
 /area/shuttle/abandoned/bridge)
+"LG" = (
+/obj/effect/spawner/random/bedsheet,
+/obj/machinery/atmospherics/components/unary/vent_pump/on,
+/obj/effect/decal/cleanable/dirt,
+/obj/structure/alien/weeds,
+/obj/machinery/light/small/directional/north,
+/obj/structure/bed/pod,
+/obj/structure/sign/poster/random/directional/east,
+/turf/open/floor/wood,
+/area/shuttle/abandoned/crew)
 "LN" = (
 /obj/effect/turf_decal/bot_white,
 /obj/machinery/door/poddoor{
@@ -3909,7 +3926,7 @@
 	},
 /area/shuttle/abandoned/crew)
 "LU" = (
-/obj/machinery/light/small/built/directional/south,
+/obj/machinery/light/small/empty/directional/south,
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/turf_decal/stripes/white/line,
@@ -3948,8 +3965,8 @@
 /area/shuttle/abandoned/cargo)
 "Mj" = (
 /obj/effect/decal/cleanable/dirt,
-/obj/effect/decal/cleanable/xenoblood/xgibs/limb,
-/obj/effect/decal/cleanable/xenoblood/xsplatter,
+/obj/effect/decal/cleanable/blood/gibs/xeno/limb,
+/obj/effect/decal/cleanable/blood/splatter/xeno,
 /turf/open/floor/iron/dark,
 /area/shuttle/abandoned/cargo)
 "Mn" = (
@@ -4037,9 +4054,7 @@
 /obj/machinery/airalarm/directional/north,
 /obj/effect/mapping_helpers/airalarm/all_access,
 /obj/structure/table/glass,
-/obj/structure/curtain{
-	layer = 4.1
-	},
+/obj/structure/curtain,
 /obj/item/reagent_containers/syringe,
 /obj/structure/alien/weeds,
 /obj/item/clothing/gloves/latex/nitrile,
@@ -4096,7 +4111,7 @@
 /obj/structure/sign/warning/vacuum/external{
 	pixel_x = 32
 	},
-/obj/machinery/light/small/built/directional/east,
+/obj/machinery/light/small/empty/directional/east,
 /obj/effect/decal/cleanable/dirt,
 /obj/structure/alien/weeds,
 /obj/item/spear,
@@ -4107,7 +4122,7 @@
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/decal/cleanable/dirt,
 /obj/machinery/firealarm/directional/east,
-/obj/machinery/light/small/built/directional/east,
+/obj/machinery/light/small/empty/directional/east,
 /obj/effect/turf_decal/tile/blue{
 	dir = 4
 	},
@@ -4253,6 +4268,25 @@
 /obj/item/t_scanner,
 /turf/open/floor/iron/dark,
 /area/shuttle/abandoned/cargo)
+"Pk" = (
+/obj/effect/decal/cleanable/dirt,
+/obj/effect/turf_decal/box/white/corners{
+	dir = 1
+	},
+/obj/effect/turf_decal/tile/neutral{
+	dir = 1
+	},
+/obj/effect/turf_decal/tile/neutral,
+/obj/effect/turf_decal/tile/neutral{
+	dir = 4
+	},
+/obj/effect/turf_decal/tile/neutral{
+	dir = 8
+	},
+/obj/structure/window/reinforced/spawner/directional/west,
+/obj/machinery/computer/secure_data,
+/turf/open/floor/iron/dark,
+/area/shuttle/abandoned)
 "Pm" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/turf_decal/tile/blue{
@@ -4396,7 +4430,7 @@
 /turf/open/floor/iron/dark,
 /area/shuttle/abandoned)
 "QH" = (
-/obj/machinery/light/built/directional/west,
+/obj/machinery/light/empty/directional/west,
 /obj/effect/decal/cleanable/dirt,
 /obj/machinery/firealarm/directional/west,
 /obj/structure/closet/crate/internals,
@@ -4424,7 +4458,7 @@
 /area/shuttle/abandoned/cargo)
 "QS" = (
 /obj/effect/decal/cleanable/dirt,
-/obj/machinery/light/small/built/directional/west,
+/obj/machinery/light/small/empty/directional/west,
 /obj/effect/turf_decal/tile/blue{
 	dir = 1
 	},
@@ -4462,17 +4496,6 @@
 /obj/structure/bed/nest,
 /turf/open/floor/iron/dark,
 /area/shuttle/abandoned/engine)
-"Rx" = (
-/obj/effect/decal/cleanable/dirt,
-/obj/machinery/light/small/directional/north,
-/obj/machinery/atmospherics/components/unary/vent_pump/on,
-/obj/structure/alien/weeds,
-/obj/structure/alien/weeds,
-/obj/structure/bed/double/pod,
-/obj/effect/spawner/random/bedsheet/double,
-/obj/structure/sign/poster/random/directional/east,
-/turf/open/floor/wood,
-/area/shuttle/abandoned/crew)
 "RC" = (
 /obj/effect/turf_decal/box/white/corners{
 	dir = 1
@@ -4635,7 +4658,7 @@
 "SV" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/decal/cleanable/dirt,
-/obj/machinery/light/small/built/directional/east,
+/obj/machinery/light/small/empty/directional/east,
 /obj/effect/turf_decal/tile/blue,
 /obj/machinery/atmospherics/pipe/smart/simple/supply/hidden,
 /obj/structure/alien/weeds,
@@ -4773,7 +4796,7 @@
 /area/shuttle/abandoned/engine)
 "UA" = (
 /obj/effect/decal/cleanable/dirt,
-/obj/machinery/light/small/built/directional/east,
+/obj/machinery/light/small/empty/directional/east,
 /obj/structure/alien/weeds/node,
 /turf/open/floor/iron/dark,
 /area/shuttle/abandoned)
@@ -4788,16 +4811,6 @@
 	},
 /turf/open/floor/plating,
 /area/shuttle/abandoned/engine)
-"UC" = (
-/obj/effect/spawner/random/bedsheet,
-/obj/machinery/atmospherics/components/unary/vent_pump/on,
-/obj/effect/decal/cleanable/dirt,
-/obj/structure/alien/weeds,
-/obj/machinery/light/small/directional/north,
-/obj/structure/bed/pod,
-/obj/structure/sign/poster/random/directional/east,
-/turf/open/floor/wood,
-/area/shuttle/abandoned/crew)
 "UE" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/machinery/light/small/directional/west,
@@ -4946,7 +4959,7 @@
 /turf/template_noop,
 /area/shuttle/abandoned)
 "VK" = (
-/obj/machinery/light/small/built/directional/west,
+/obj/machinery/light/small/empty/directional/west,
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/decal/cleanable/dirt,
 /obj/structure/cable,
@@ -5017,25 +5030,6 @@
 /obj/machinery/duct,
 /turf/open/floor/iron/cafeteria,
 /area/shuttle/abandoned/crew)
-"VU" = (
-/obj/effect/decal/cleanable/dirt,
-/obj/effect/turf_decal/box/white/corners{
-	dir = 1
-	},
-/obj/effect/turf_decal/tile/neutral{
-	dir = 1
-	},
-/obj/effect/turf_decal/tile/neutral,
-/obj/effect/turf_decal/tile/neutral{
-	dir = 4
-	},
-/obj/effect/turf_decal/tile/neutral{
-	dir = 8
-	},
-/obj/structure/window/reinforced/spawner/directional/west,
-/obj/machinery/computer/records/security,
-/turf/open/floor/iron/dark,
-/area/shuttle/abandoned)
 "Wc" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/turf_decal/siding/wood{
@@ -5052,9 +5046,7 @@
 	pixel_x = -3;
 	pixel_y = 8
 	},
-/obj/item/stock_parts/cell/high{
-	charge = 100;
-	maxcharge = 15000;
+/obj/item/stock_parts/power_store/cell/high{
 	pixel_x = 3;
 	pixel_y = -1
 	},
@@ -5204,11 +5196,11 @@
 /obj/structure/table,
 /obj/effect/turf_decal/bot,
 /obj/machinery/cell_charger,
-/obj/item/stock_parts/cell/high,
+/obj/item/stock_parts/power_store/cell/high,
 /obj/item/multitool,
 /obj/effect/decal/cleanable/dirt,
 /obj/structure/alien/weeds,
-/obj/item/stock_parts/cell/super,
+/obj/item/stock_parts/power_store/cell/super,
 /turf/open/floor/plating,
 /area/shuttle/abandoned/engine)
 "Xj" = (
@@ -5301,7 +5293,7 @@
 	pixel_x = -32
 	},
 /obj/effect/decal/cleanable/dirt,
-/obj/machinery/light/small/built/directional/west,
+/obj/machinery/light/small/empty/directional/west,
 /turf/open/floor/plating,
 /area/shuttle/abandoned/crew)
 "Yo" = (
@@ -6257,7 +6249,7 @@ GH
 (35,1,1) = {"
 GH
 an
-UC
+LG
 Ov
 MH
 dg
@@ -6299,7 +6291,7 @@ GH
 (37,1,1) = {"
 GH
 an
-Ei
+nX
 Ja
 AX
 ty
@@ -6341,7 +6333,7 @@ GH
 (39,1,1) = {"
 GH
 an
-hZ
+bE
 fW
 JY
 pG
@@ -6383,7 +6375,7 @@ GH
 (41,1,1) = {"
 GH
 an
-Rx
+IN
 BQ
 dw
 ty
@@ -6540,8 +6532,8 @@ GH
 Uq
 GH
 AR
-VU
-hc
+Pk
+aU
 Xu
 PN
 Ae

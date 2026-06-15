@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useBackend, useLocalState } from 'tgui/backend';
 import {
   Box,
@@ -8,7 +9,7 @@ import {
   Section,
   Stack,
   Table,
-} from 'tgui/components';
+} from 'tgui-core/components';
 
 import { CharacterPreview } from '../common/CharacterPreview';
 import { EditableText } from '../common/EditableText';
@@ -16,7 +17,7 @@ import { CRIMESTATUS2COLOR, CRIMESTATUS2DESC } from './constants';
 import { CrimeWatcher } from './CrimeWatcher';
 import { getSecurityRecord } from './helpers';
 import { RecordPrint } from './RecordPrint';
-import { SecurityRecordsData } from './types';
+import type { SecurityRecordsData } from './types';
 
 /** Views a selected record. */
 export const SecurityRecordView = (props) => {
@@ -53,10 +54,12 @@ const RecordInfo = (props) => {
   const { available_statuses } = data;
   const [open, setOpen] = useLocalState<boolean>('printOpen', false);
 
-  const { min_age, max_age } = data;
+  // const { min_age, max_age } = data; // ORIGINAL
+  const { min_age, max_age, max_chrono_age } = data; // SKYRAT EDIT CHANGE - Chronological age
 
   const {
     age,
+    chrono_age, // SKYRAT EDIT ADDITION - Chronological age
     crew_ref,
     crimes,
     fingerprint,
@@ -72,6 +75,8 @@ const RecordInfo = (props) => {
     past_security_records,
     // SKYRAT EDIT END
   } = foundRecord;
+
+  const [isValid, setIsValid] = useState(true);
 
   const hasValidCrimes = !!crimes.find((crime) => !!crime.valid);
 
@@ -93,11 +98,12 @@ const RecordInfo = (props) => {
               </Stack.Item>
               <Stack.Item>
                 <Button.Confirm
-                  content="Delete"
                   icon="trash"
                   onClick={() => act('delete_record', { crew_ref: crew_ref })}
                   tooltip="Delete record data."
-                />
+                >
+                  Delete
+                </Button.Confirm>
               </Stack.Item>
             </Stack>
           }
@@ -150,20 +156,41 @@ const RecordInfo = (props) => {
             <LabeledList.Item label="Job">
               <EditableText field="rank" target_ref={crew_ref} text={rank} />
             </LabeledList.Item>
-            <LabeledList.Item label="Age">
+            {/* <LabeledList.Item label="Age"> // ORIGINAL */}
+            {/* SKYRAT EDIT CHANGE BEGIN - Chronological age */}
+            <LabeledList.Item label="Physical Age">
+              {/* SKYRAT EDIT CHANGE END */}
               <RestrictedInput
                 minValue={min_age}
                 maxValue={max_age}
-                onEnter={(event, value) =>
+                onEnter={(value) =>
+                  isValid &&
                   act('edit_field', {
                     crew_ref: crew_ref,
                     field: 'age',
                     value: value,
                   })
                 }
+                onValidationChange={setIsValid}
                 value={age}
               />
             </LabeledList.Item>
+            {/* SKYRAT EDIT ADDITION BEGIN - Chronological age */}
+            <LabeledList.Item label="Chronological Age">
+              <RestrictedInput
+                minValue={min_age}
+                maxValue={max_chrono_age}
+                onEnter={(value) =>
+                  act('edit_field', {
+                    crew_ref: crew_ref,
+                    field: 'chrono_age',
+                    value: value,
+                  })
+                }
+                value={chrono_age}
+              />
+            </LabeledList.Item>
+            {/* SKYRAT EDIT ADDITION END */}
             <LabeledList.Item label="Species">
               <EditableText
                 field="species"

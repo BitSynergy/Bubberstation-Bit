@@ -1,12 +1,27 @@
-/* Bubberstation Removal
-/datum/supply_pack/security/armory/cmg
-	name = "Carwo 'Sindano' Submachinegun Crate"
-	desc = "Three entirely proprietary Sindano kits, chambered in .35 Sol Short. Each kit contains three empty magazines and a box each of incapacitator and lethal rounds."
-	cost = CARGO_CRATE_VALUE * 20
+/*
+/datum/supply_pack/imports/lmg
+	name = "Smuggled Sol Light Machinegun Crate"
+	desc = "(*!&@#GOOD NEWS, OPERATIVE! WE GOT YOU THE BIG LEAGUE AUTOMATIC WEAPONS. BY \
+		SMUGGLING THIS CRATE THROUGH A FEW OUTDATED CUSTOMS CHECKPOINTS, WE'VE THE NEXT BEST THING! \
+		A FUCKING LIGHT MACHINE GUN. DON'T WORRY, THE RUMORS ABOUT THE GUN MELTING YOU ARE JUST THAT! RUMORS! \
+		THESE THINGS WORK FINE! MIGHT BE SLIGHTLY DIRTY.!#@*$"
+	hidden = TRUE
+	cost = CARGO_CRATE_VALUE * 52
 	contains = list(
-		/obj/item/storage/toolbox/guncase/skyrat/carwo_large_case/sindano,
-		/obj/item/storage/toolbox/guncase/skyrat/carwo_large_case/sindano,
-		/obj/item/storage/toolbox/guncase/skyrat/carwo_large_case/sindano,
+		/obj/item/gun/ballistic/automatic/sol_rifle/machinegun = 1,
+		/obj/item/ammo_box/magazine/c40sol_rifle/drum = 2,
 	)
-	crate_name = "Carwo 'Sindano' Submachinegun Crate"
-*/
+*/ //BUBBER EDIT: IT'S AS BAD AS YOU THOUGHT
+
+//Goodies
+
+//Override
+/datum/supply_pack/security/ammo
+	contains = list(/obj/item/ammo_box/advanced/s12gauge/bean = 3,
+					/obj/item/ammo_box/advanced/s12gauge/rubber = 3,
+					/obj/item/ammo_box/speedloader/c38/trac,
+					/obj/item/ammo_box/speedloader/c38/hotshot,
+					/obj/item/ammo_box/speedloader/c38/iceblox,
+				)
+
+//This makes the Security ammo crate use the cool advanced ammo boxes instead of the old ones

@@ -1,7 +1,7 @@
 /datum/action/cooldown/spell/return_back
 	name = "Return"
 	desc = "Activates your return beacon."
-	sound = 'sound/magic/Repulse.ogg'
+	sound = 'sound/effects/magic/Repulse.ogg'
 	button_icon_state = "lightning"
 	spell_requirements = NONE
 	invocation = "Return on!"
@@ -21,10 +21,7 @@
 
 	var/mob/dead/observer/ghost = user.ghostize(FALSE)
 
-	var/datum/effect_system/spark_spread/quantum/sparks = new
-	sparks.set_up(10, 1, user)
-	sparks.attach(user.loc)
-	sparks.start()
+	do_sparks(10, TRUE, user, spark_type = /datum/effect_system/basic/spark_spread/quantum)
 
 	qdel(user)
 

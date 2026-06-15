@@ -113,6 +113,7 @@
 	icon_state = "misc"
 	default_reagent_types = BASE_SHAKER_MISC_REAGENTS
 
+/* //BUBBERS EDIT This is a default module, it doesn't need to be in upgrades.
 // Wirebrush for janiborg
 /datum/design/borg_wirebrush
 	name = "Wire-brush Module"
@@ -130,7 +131,7 @@
 /obj/item/borg/upgrade/wirebrush
 	name = "janitor cyborg wire-brush"
 	desc = "A tool to remove rust from walls."
-	icon_state = "cyborg_upgrade3"
+	icon_state = "module_janitor"
 	require_model = TRUE
 	model_type = list(/obj/item/robot_model/janitor)
 	model_flags = BORG_MODEL_JANITOR
@@ -154,3 +155,9 @@
 		var/obj/item/wirebrush/brush = new (cyborg.model)
 		cyborg.model.basic_modules += brush
 		cyborg.model.add_module(brush, FALSE, TRUE)
+*/
+
+#undef BASE_SHAKER_JUICE_REAGENTS
+#undef BASE_SHAKER_ALCOHOL_REAGENTS
+#undef BASE_SHAKER_SODA_REAGENTS
+#undef BASE_SHAKER_MISC_REAGENTS

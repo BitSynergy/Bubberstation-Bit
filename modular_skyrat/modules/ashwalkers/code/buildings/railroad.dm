@@ -12,15 +12,16 @@
 /obj/item/stack/rail_track/fifty
 	amount = 50
 
-/obj/item/stack/rail_track/afterattack(atom/target, mob/user, proximity_flag, click_parameters)
-	if(!isopenturf(target) || !proximity_flag)
-		return ..()
-	var/turf/target_turf = get_turf(target)
+/obj/item/stack/rail_track/interact_with_atom(atom/interacting_with, mob/living/user, list/modifiers)
+	if(!isopenturf(interacting_with))
+		return NONE
+	var/turf/open/target_turf = get_turf(interacting_with)
 	var/obj/structure/railroad/check_rail = locate() in target_turf
 	if(check_rail || !use(1))
-		return ..()
+		return NONE
 	to_chat(user, span_notice("You place [src] on [target_turf]."))
-	new /obj/structure/railroad(get_turf(target))
+	new /obj/structure/railroad(target_turf)
+	return ITEM_INTERACT_SUCCESS
 
 /obj/structure/railroad
 	name = "railroad track"
@@ -147,10 +148,10 @@
 	vehicle_move_delay = 0.5
 	ride_check_flags = RIDER_NEEDS_LEGS | RIDER_NEEDS_ARMS | UNBUCKLE_DISABLED_RIDER
 
-/datum/component/riding/vehicle/rail_cart/handle_specials()
-	. = ..()
-	set_riding_offsets(RIDING_OFFSET_ALL, list(TEXT_NORTH = list(0, 13), TEXT_SOUTH = list(0, 13), TEXT_EAST = list(0, 13), TEXT_WEST = list(0, 13)))
-	set_vehicle_dir_layer(SOUTH, OBJ_LAYER)
-	set_vehicle_dir_layer(NORTH, OBJ_LAYER)
-	set_vehicle_dir_layer(EAST, OBJ_LAYER)
-	set_vehicle_dir_layer(WEST, OBJ_LAYER)
+/datum/component/riding/vehicle/rail_cart/get_rider_offsets_and_layers(pass_index, mob/offsetter)
+	return list(
+		TEXT_NORTH = list(0, 13, OBJ_LAYER),
+		TEXT_SOUTH = list(0, 13, OBJ_LAYER),
+		TEXT_EAST = list(0, 13, OBJ_LAYER),
+		TEXT_WEST = list(0, 13, OBJ_LAYER),
+	)

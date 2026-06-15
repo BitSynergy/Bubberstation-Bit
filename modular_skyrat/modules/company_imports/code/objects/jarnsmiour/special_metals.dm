@@ -5,12 +5,12 @@
 /datum/material/cobolterium
 	name = "cobolterium"
 	desc = "Cobolterium"
-	color = list(0.2,0.5,0.7,0, 0,0,0,0, 0,0,0,0, 0,0,0,1, 0,0,0,0)
-	greyscale_colors = "#264d61"
-	categories = list(MAT_CATEGORY_RIGID = TRUE, MAT_CATEGORY_BASE_RECIPES = TRUE, MAT_CATEGORY_ITEM_MATERIAL = TRUE)
+	color = "#264d61"
+	mat_flags = MATERIAL_CLASS_RIGID | MATERIAL_CLASS_METAL | MATERIAL_BASIC_RECIPES
 	sheet_type = /obj/item/stack/sheet/cobolterium
 
 /datum/material/cobolterium/on_accidental_mat_consumption(mob/living/carbon/victim, obj/item/source_item)
+	..()
 	victim.apply_damage(10, BRUTE, BODY_ZONE_HEAD, wound_bonus = 5)
 	return TRUE
 
@@ -34,12 +34,12 @@
 /datum/material/copporcitite
 	name = "copporcitite"
 	desc = "Copporcitite"
-	color = list(0.8,0.35,0.1,0, 0,0,0,0, 0,0,0,0, 0,0,0,1, 0,0,0,0)
-	greyscale_colors = "#c55a1d"
-	categories = list(MAT_CATEGORY_RIGID = TRUE, MAT_CATEGORY_BASE_RECIPES = TRUE, MAT_CATEGORY_ITEM_MATERIAL = TRUE)
+	color = "#c55a1d"
+	mat_flags = MATERIAL_CLASS_RIGID | MATERIAL_CLASS_METAL | MATERIAL_BASIC_RECIPES
 	sheet_type = /obj/item/stack/sheet/copporcitite
 
 /datum/material/copporcitite/on_accidental_mat_consumption(mob/living/carbon/victim, obj/item/source_item)
+	..()
 	victim.apply_damage(10, BRUTE, BODY_ZONE_HEAD, wound_bonus = 5)
 	return TRUE
 
@@ -63,12 +63,12 @@
 /datum/material/tinumium
 	name = "tinumium"
 	desc = "Tinumium"
-	color = list(0.45,0.5,0.6,0, 0,0,0,0, 0,0,0,0, 0,0,0,1, 0,0,0,0)
-	greyscale_colors = "#717e97"
-	categories = list(MAT_CATEGORY_RIGID = TRUE, MAT_CATEGORY_BASE_RECIPES = TRUE, MAT_CATEGORY_ITEM_MATERIAL = TRUE)
+	color = "#717e97"
+	mat_flags = MATERIAL_CLASS_RIGID | MATERIAL_CLASS_METAL | MATERIAL_BASIC_RECIPES
 	sheet_type = /obj/item/stack/sheet/tinumium
 
 /datum/material/tinumium/on_accidental_mat_consumption(mob/living/carbon/victim, obj/item/source_item)
+	..()
 	victim.apply_damage(10, BRUTE, BODY_ZONE_HEAD, wound_bonus = 5)
 	return TRUE
 
@@ -92,12 +92,12 @@
 /datum/material/brussite
 	name = "brussite"
 	desc = "Brussite"
-	color = list(0.9,0.75,0.4,0, 0,0,0,0, 0,0,0,0, 0,0,0,1, 0,0,0,0)
-	greyscale_colors = "#E1C16E"
-	categories = list(MAT_CATEGORY_RIGID = TRUE, MAT_CATEGORY_BASE_RECIPES = TRUE, MAT_CATEGORY_ITEM_MATERIAL = TRUE)
+	color = "#E1C16E"
+	mat_flags = MATERIAL_CLASS_RIGID | MATERIAL_CLASS_METAL | MATERIAL_BASIC_RECIPES
 	sheet_type = /obj/item/stack/sheet/brussite
 
 /datum/material/brussite/on_accidental_mat_consumption(mob/living/carbon/victim, obj/item/source_item)
+	..()
 	victim.apply_damage(10, BRUTE, BODY_ZONE_HEAD, wound_bonus = 5)
 	return TRUE
 

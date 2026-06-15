@@ -19,7 +19,7 @@
 	/// The type we drop when deflated.
 	var/deflated_type = /obj/item/inflatable
 	/// The hitsound made when we're... hit...
-	var/hit_sound = 'sound/effects/Glasshit.ogg'
+	var/hit_sound = 'sound/effects/glass/glasshit.ogg'
 	/// How quickly we deflate when manually deflated.
 	var/manual_deflation_time = 3 SECONDS
 	/// Whether or not the inflatable has been deflated
@@ -161,19 +161,19 @@
 	if(locate(structure_type) in get_turf(user))
 		to_chat(user, span_warning("There is already a wall here!"))
 		return
-	playsound(loc, 'sound/items/zip.ogg', 75, 1)
+	playsound(loc, 'sound/items/zip/zip.ogg', 75, 1)
 	to_chat(user, span_notice("You inflate [src]."))
 	if(do_after(user, 1 SECONDS, src))
 		new structure_type(get_turf(user))
 		qdel(src)
 
 /obj/item/inflatable/attackby(obj/item/attacking_item, mob/user)
-	if(!istype(attacking_item, /obj/item/stack/sticky_tape))
+	if(!istype(attacking_item, /obj/item/stack/medical/wrap/sticky_tape))
 		return ..()
 	if(!torn)
 		to_chat(user, span_notice("[src] does not need repairing!"))
 		return
-	var/obj/item/stack/sticky_tape/attacking_tape = attacking_item
+	var/obj/item/stack/medical/wrap/sticky_tape/attacking_tape = attacking_item
 	if(attacking_tape.use(TAPE_REQUIRED_TO_FIX, check = TRUE))
 		to_chat(user, span_danger("There is not enough of [attacking_tape]! You need at least [TAPE_REQUIRED_TO_FIX] pieces!"))
 		return

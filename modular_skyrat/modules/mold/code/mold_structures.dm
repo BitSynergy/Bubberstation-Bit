@@ -20,9 +20,9 @@
 /obj/structure/mold/play_attack_sound(damage_amount, damage_type = BRUTE, damage_flag = 0)
 	switch(damage_type)
 		if(BRUTE)
-			playsound(loc, 'sound/effects/attackblob.ogg', 100, TRUE)
+			playsound(loc, 'sound/effects/blob/attackblob.ogg', 100, TRUE)
 		if(BURN)
-			playsound(loc, 'sound/items/welder.ogg', 100, TRUE)
+			playsound(loc, 'sound/items/tools/welder.ogg', 100, TRUE)
 
 /obj/structure/mold/Initialize(mapload, passed_type)
 	. = ..()
@@ -49,7 +49,7 @@
 
 /datum/looping_sound/core_heartbeat
 	mid_length = 3 SECONDS
-	mid_sounds = list('modular_skyrat/master_files/sound/effects/heart_beat_loop3.ogg' = 1)
+	mid_sounds = list('modular_zubbers/sound/effects/heart_beat_loop3.ogg' = 1)
 	volume = 20
 
 /**
@@ -60,7 +60,7 @@
 	icon = 'modular_skyrat/modules/mold/icons/blob_core.dmi'
 	icon_state = "blob_core"
 	layer = TABLE_LAYER
-	max_integrity = 600 //BUBBERSTATION CHANGE
+	max_integrity = 600
 
 	/// The soundloop played by the core
 	var/datum/looping_sound/core_heartbeat/soundloop
@@ -131,9 +131,9 @@
 	icon = 'modular_skyrat/modules/mold/icons/blob_resin.dmi'
 	icon_state = "blob_floor"
 	density = FALSE
-	plane = FLOOR_PLANE
+	plane = GAME_PLANE
 	layer = LOW_SIGIL_LAYER
-	max_integrity = 25 //BUBBERSTATION CHANGE
+	max_integrity = 25
 	var/blooming = FALSE
 	/// Are we a floor resin? If not then we're a wall resin
 	var/floor = TRUE
@@ -224,7 +224,7 @@
 	light_color = LIGHT_COLOR_LAVA
 	var/is_full = FALSE
 	var/list/registered_turfs = list()
-	max_integrity = 50 //BUBBERSTATION CHANGE
+	max_integrity = 50
 
 /obj/structure/mold/structure/bulb/Initialize(mapload)
 	. = ..()
@@ -238,7 +238,7 @@
 	if(!isliving(nearby_atom))
 		return
 	var/mob/living/nearby_mob = nearby_atom
-	if(!(FACTION_MOLD in nearby_mob.faction))
+	if(!(nearby_mob.has_faction(FACTION_MOLD)))
 		INVOKE_ASYNC(src, PROC_REF(discharge))
 
 /obj/structure/mold/structure/bulb/proc/make_full()
@@ -267,7 +267,7 @@
 	addtimer(CALLBACK(src, PROC_REF(make_full)), 1 MINUTES, TIMER_UNIQUE|TIMER_NO_HASH_WAIT)
 
 /obj/structure/mold/structure/bulb/attack_generic(mob/user, damage_amount, damage_type, damage_flag, sound_effect, armor_penetration)
-	if(FACTION_MOLD in user.faction)
+	if(user.has_faction(FACTION_MOLD))
 		return ..()
 	discharge()
 	. = ..()
@@ -311,7 +311,7 @@
 	smoothing_flags = SMOOTH_BITMASK
 	smoothing_groups = SMOOTH_GROUP_ALIEN_RESIN
 	canSmoothWith = SMOOTH_GROUP_ALIEN_RESIN
-	max_integrity = 100 //BUBBERSTATION CHANGE
+	max_integrity = 100
 	can_atmos_pass = ATMOS_PASS_DENSITY
 
 /obj/structure/mold/wall/Destroy()
@@ -332,11 +332,11 @@
 	icon_state = "blob_vent"
 	density = FALSE
 	layer = SIGIL_LAYER
-	max_integrity = 75 //BUBBERSTATION CHANGE
+	max_integrity = 75
 	/// The mold atmosphere conditioner will spawn the mold's preferred atmosphere every so often.
 	var/happy_atmos = null
 	/// The time between injections of that mold type's preferred atmos
-	var/puff_cooldown = 30 SECONDS //BUBBERSTATION CHANGE
+	var/puff_cooldown = 30 SECONDS
 	/// Tracks the status of the cooldown
 	var/puff_delay = 0
 
@@ -371,7 +371,7 @@
 	icon_state = "blob_spawner"
 	density = FALSE
 	layer = SIGIL_LAYER
-	max_integrity = 75 //BUBBERSTATION CHANGE
+	max_integrity = 75
 
 /obj/structure/mold/structure/spawner/Destroy()
 	if(mold_controller)

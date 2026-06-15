@@ -9,7 +9,7 @@
 /obj/item/borg/upgrade/syndicate_access/action(mob/living/silicon/robot/R, user)
 	. = ..()
 	// Turns out this is all you need for access to the doors. See code\game\machinery\_machinery.dm
-	R.faction += ROLE_SYNDICATE
+	R.add_faction(ROLE_SYNDICATE)
 	to_chat(R, span_alert("Additional access detected! Remote camera interface destroyed."))
 	to_chat(user, span_warning("The cyborg whirrs a bit as additional access levels are added, and the remote camera module shorts out a fuse."))
 	// Remove the camera, much like how the camera is removed for ghost cafe cyborgs
@@ -19,15 +19,15 @@
 
 /obj/item/borg/upgrade/syndicate_access/deactivate(mob/living/silicon/robot/R, user)
 	. = ..()
-	R.faction = initial(R.faction)
+	R.set_faction(initial(faction))
 
 /obj/item/borg/upgrade/syndicate_access/dauntless/examine_more(mob/user)
 	. = ..()
-	. += span_notice("This one seems to include a Interdyne communication chip. How neat!")
+	. += span_notice("This one seems to include an Interdyne communication chip. How neat!")
 
 /obj/item/borg/upgrade/syndicate_access/dauntless/action(mob/living/silicon/robot/R, user)
 	. = ..()
 
 	// Yes, this forces out and removes any other keys. Which it should, in this case.
-	R.radio.keyslot = new /obj/item/encryptionkey/headset_syndicate/interdyne(src)
+	R.radio.keyslot = new /obj/item/encryptionkey/headset_syndicate/cybersun(src)
 	R.radio.recalculateChannels()

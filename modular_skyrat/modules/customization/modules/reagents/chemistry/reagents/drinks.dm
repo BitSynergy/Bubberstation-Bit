@@ -44,7 +44,7 @@
 			user.visible_message(span_warning("[user] crushes the can of [src] on [user.p_their()] forehead!"), span_notice("You crush the can of [src] on your forehead."))
 		else
 			user.visible_message(span_warning("[user] crushes the can of [src] on [M]'s forehead!"), span_notice("You crush the can of [src] on [M]'s forehead."))
-		playsound(M,'sound/weapons/pierce.ogg', rand(10,50), TRUE)
+		playsound(M,'sound/items/weapons/pierce.ogg', rand(10,50), TRUE)
 		var/obj/item/trash/can/skyrat/crushed_can = new /obj/item/trash/can/skyrat(M.loc)
 		crushed_can.icon_state = icon_state
 		qdel(src)
@@ -75,7 +75,7 @@
 
 /obj/item/reagent_containers/cup/soda_cans/skyrat/throw_impact(atom/hit_atom, datum/thrownthing/throwingdatum)
 	. = ..()
-	if(. || spillable || !reagents.total_volume) // if it was caught, already opened, or has nothing in it
+	if(. || !reagents.total_volume) // if it was caught, already opened, or has nothing in it
 		return
 
 	fizziness += SODA_FIZZINESS_THROWN

@@ -17,6 +17,13 @@
 	max_heat_protection_temperature = ARMOR_MAX_TEMP_PROTECT
 	supports_variations_flags = CLOTHING_DIGITIGRADE_VARIATION_NO_NEW_ICON
 
+/obj/item/clothing/suit/armor/vest/nanotrasen_consultant/green
+	name = "nanotrasen officers green coat"
+	desc = "A premium green coat with real fur round the neck, it seems to have some armor padding inside as well."
+	icon = 'icons/obj/clothing/suits/jacket.dmi'
+	worn_icon = 'icons/mob/clothing/suits/jacket.dmi'
+	icon_state = "centcom_coat"
+
 /obj/item/clothing/head/nanotrasen_consultant
 	name = "nanotrasen consultant's hat"
 	desc = "A cap made from durathread, it has an insignia on the front denoting the rank of \"Nanotrasen Consultant\"."
@@ -43,10 +50,17 @@
 /obj/item/clothing/head/nanotrasen_consultant/beret
 	name = "nanotrasen consultant's beret"
 	desc = "A beret made from durathread, it has an insignia on the front denoting the rank of \"Nanotrasen Consultant\"."
+	icon = 'icons/map_icons/clothing/head/beret.dmi'
+	icon_state = "/obj/item/clothing/head/nanotrasen_consultant/beret"
 	greyscale_config = /datum/greyscale_config/beret_badge
 	greyscale_config_worn = /datum/greyscale_config/beret_badge/worn
 	greyscale_colors = "#3F3C40#155326"
-	icon_state = "beret_badge"
+	post_init_icon_state = "beret_badge"
+
+/obj/item/clothing/head/nanotrasen_consultant/beret/officer
+	name = "nanotrasen officer's beret"
+	icon_state = "/obj/item/clothing/head/nanotrasen_consultant/beret/officer"
+	greyscale_colors = "#397F3F#FFCE5B"
 
 /obj/item/clothing/head/beret/centcom_formal/nt_consultant
 	armor_type = /datum/armor/beret_centcom_formal_nt_consultant
@@ -90,3 +104,10 @@
 /obj/item/clothing/gloves/combat/naval/nanotrasen_consultant
 	name = "\improper CentCom gloves"
 	desc = "A high quality pair of thick gloves covered in gold stitching."
+
+/obj/item/storage/backpack/satchel/nanotrasen
+	name = "nanotrasen satchel"
+	desc = "An expensive green branded Nanotrasen satchel."
+	icon = 'modular_zubbers/icons/obj/storage/backpack.dmi'
+	worn_icon = 'modular_zubbers/icons/mob/clothing/back/backpack.dmi'
+	icon_state = "satchel-nanotrasen"

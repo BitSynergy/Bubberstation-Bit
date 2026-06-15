@@ -35,7 +35,7 @@ GLOBAL_DATUM_INIT(latejoin_menu, /datum/latejoin_menu, new)
 		ui.open()
 
 /datum/latejoin_menu/proc/scream_at_player(mob/dead/new_player/player)
-	if(istype(player) && !player.jobs_menu_mounted)
+	if(!player.jobs_menu_mounted)
 		to_chat(player, span_notice("If the late join menu isn't showing, hold CTRL while clicking the join button!"))
 
 /datum/latejoin_menu/ui_data(mob/user)
@@ -51,8 +51,7 @@ GLOBAL_DATUM_INIT(latejoin_menu, /datum/latejoin_menu, new)
 			if(SHUTTLE_ESCAPE)
 				data["shuttle_status"] = "The station has been evacuated."
 			if(SHUTTLE_CALL, SHUTTLE_DOCKED, SHUTTLE_IGNITING, SHUTTLE_ESCAPE)
-				if(!SSshuttle.canRecall())
-					data["shuttle_status"] = "The station is currently undergoing evacuation procedures."
+				data["shuttle_status"] = "The station is currently undergoing evacuation procedures."
 
 	for(var/datum/job/prioritized_job in SSjob.prioritized_jobs)
 		if(prioritized_job.current_positions >= prioritized_job.total_positions)
@@ -190,7 +189,6 @@ GLOBAL_DATUM_INIT(latejoin_menu, /datum/latejoin_menu, new)
 				return TRUE
 
 			owner.vote_on_poll_handler(poll, params)
-
 			return TRUE
 
 /// Gives the user a random job that they can join as, and prompts them if they'd actually like to keep it, rerolling if not. Cancellable by the user.

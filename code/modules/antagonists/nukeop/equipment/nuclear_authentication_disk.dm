@@ -1,21 +1,14 @@
-/obj/item/disk
-	icon = 'icons/obj/devices/circuitry_n_data.dmi'
-	w_class = WEIGHT_CLASS_TINY
-	inhand_icon_state = "card-id"
-	lefthand_file = 'icons/mob/inhands/equipment/idcards_lefthand.dmi'
-	righthand_file = 'icons/mob/inhands/equipment/idcards_righthand.dmi'
-	icon_state = "datadisk0"
-	drop_sound = 'sound/items/handling/disk_drop.ogg'
-	pickup_sound = 'sound/items/handling/disk_pickup.ogg'
-
 // DAT FUKKEN DISK.
 /obj/item/disk/nuclear
 	name = "nuclear authentication disk"
 	desc = "Better keep this safe."
 	icon_state = "nucleardisk"
 	max_integrity = 250
+	sticker_icon_state = null
 	armor_type = /datum/armor/disk_nuclear
 	resistance_flags = INDESTRUCTIBLE | LAVA_PROOF | FIRE_PROOF | ACID_PROOF
+	read_only = TRUE
+	read_only_locked = TRUE
 	/// Whether we're a real nuke disk or not.
 	var/fake = FALSE
 
@@ -27,17 +20,21 @@
 /obj/item/disk/nuclear/Initialize(mapload)
 	. = ..()
 	AddElement(/datum/element/bed_tuckable, mapload, 6, -6, 0)
-	AddComponent(/datum/component/stationloving, !fake)
 
 	if(!fake)
-		AddComponent(/datum/component/keep_me_secure, CALLBACK(src, PROC_REF(secured_process)), CALLBACK(src, PROC_REF(unsecured_process)))
+		AddComponent(/datum/component/stationloving, !fake)
+		AddComponent(/datum/component/keep_me_secure, CALLBACK(src, PROC_REF(secured_process)), CALLBACK(src, PROC_REF(unsecured_process)), 20) //BUBBER EDIT: Changed value from 10 to 20 for population
 		SSpoints_of_interest.make_point_of_interest(src)
 	else
+		// Ensure fake disks still have examine text, but dont actually do anything
 		AddComponent(/datum/component/keep_me_secure)
+
+/obj/item/disk/nuclear/setup_reskins()
+	return
 
 /obj/item/disk/nuclear/proc/secured_process(last_move)
 	var/turf/new_turf = get_turf(src)
-	var/datum/round_event_control/operative/loneop = locate(/datum/round_event_control/operative) in SSevents.control
+	var/datum/round_event_control/operative/loneop = locate(/datum/round_event_control/operative) in SSgamemode.control //Bubber edit - changed to work with Storyteller
 	if(istype(loneop) && loneop.occurrences < loneop.max_occurrences && prob(loneop.weight))
 		loneop.weight = max(loneop.weight - 1, 0)
 		if(loneop.weight % 5 == 0 && SSticker.totalPlayers > 1)
@@ -55,7 +52,7 @@
 			disk_comfort_level++
 
 	if(last_move < world.time - 500 SECONDS && prob((world.time - 500 SECONDS - last_move)*0.0001))
-		var/datum/round_event_control/operative/loneop = locate(/datum/round_event_control/operative) in SSevents.control
+		var/datum/round_event_control/operative/loneop = locate(/datum/round_event_control/operative) in SSgamemode.control //Bubber edit - changed to work with Storyteller
 		if(istype(loneop) && loneop.occurrences < loneop.max_occurrences)
 			loneop.weight += 1
 			if(loneop.weight % 5 == 0 && SSticker.totalPlayers > 1)
@@ -81,7 +78,7 @@
 
 	return discover_after
 
-/obj/item/disk/nuclear/attackby(obj/item/weapon, mob/living/user, params)
+/obj/item/disk/nuclear/attackby(obj/item/weapon, mob/living/user, list/modifiers, list/attack_modifiers)
 	if(istype(weapon, /obj/item/claymore/highlander) && !fake)
 		var/obj/item/claymore/highlander/claymore = weapon
 		if(claymore.nuke_disk)
@@ -102,7 +99,7 @@
 
 /obj/item/disk/nuclear/suicide_act(mob/living/user)
 	user.visible_message(span_suicide("[user] is going delta! It looks like [user.p_theyre()] trying to commit suicide!"))
-	playsound(src, 'sound/machines/alarm.ogg', 50, -1, TRUE)
+	playsound(src, 'sound/announcer/alarm/nuke_alarm.ogg', 50, -1, TRUE)
 	for(var/i in 1 to 100)
 		addtimer(CALLBACK(user, TYPE_PROC_REF(/atom, add_atom_colour), (i % 2)? COLOR_VIBRANT_LIME : COLOR_RED, ADMIN_COLOUR_PRIORITY), i)
 	addtimer(CALLBACK(src, PROC_REF(manual_suicide), user), 101)
@@ -111,7 +108,7 @@
 /obj/item/disk/nuclear/proc/manual_suicide(mob/living/user)
 	user.remove_atom_colour(ADMIN_COLOUR_PRIORITY)
 	user.visible_message(span_suicide("[user] is destroyed by the nuclear blast!"))
-	user.adjustOxyLoss(200)
+	user.adjust_oxy_loss(200)
 	user.death(FALSE)
 
 /obj/item/disk/nuclear/fake

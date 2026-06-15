@@ -18,12 +18,12 @@
 
 	place_trap(get_turf(src), user)
 
-/obj/item/clockwork/trap_placer/afterattack(atom/target, mob/user, proximity_flag, click_parameters)
-	. = ..()
-	if(!IS_CLOCK(user) || !isturf(target) || !proximity_flag)
-		return
+/obj/item/clockwork/trap_placer/interact_with_atom(atom/interacting_with, mob/living/user, list/modifiers)
+	if(!IS_CLOCK(user) || !isturf(interacting_with))
+		return NONE
 
-	place_trap(target, user)
+	place_trap(interacting_with, user)
+	return ITEM_INTERACT_SUCCESS
 
 
 /obj/item/clockwork/trap_placer/proc/place_trap(atom/target, mob/user)
@@ -135,7 +135,7 @@
 	return
 
 /// Signal proc when the trap has PARENT_ATTACKBY called on it
-/datum/component/clockwork_trap/proc/on_attackby(datum/source, obj/item/attack_item, mob/user)
+/datum/component/clockwork_trap/proc/on_attackby(datum/source, obj/item/attack_item, mob/user, list/modifiers)
 	SIGNAL_HANDLER
 
 	if(!IS_CLOCK(user) || !istype(attack_item, /obj/item/clockwork/clockwork_slab))

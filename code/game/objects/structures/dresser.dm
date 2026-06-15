@@ -1,6 +1,6 @@
 //THIS FILE HAS BEEN EDITED BY SKYRAT EDIT
 
-/obj/structure/dresser//SKYRAT EDIT - ICON OVERRIDEN BY AESTHETICS - SEE MODULE
+/obj/structure/dresser//SKYRAT EDIT - ICON OVERRIDDEN BY AESTHETICS - SEE MODULE
 	name = "dresser"
 	desc = "A nicely-crafted wooden dresser. It's filled with lots of undies."
 	icon = 'icons/obj/fluff/general.dmi'
@@ -8,8 +8,9 @@
 	resistance_flags = FLAMMABLE
 	density = TRUE
 	anchored = TRUE
+	custom_materials = list(/datum/material/wood = SHEET_MATERIAL_AMOUNT * 10)
 
-/obj/structure/dresser/attackby(obj/item/I, mob/user, params)
+/obj/structure/dresser/attackby(obj/item/I, mob/user, list/modifiers, list/attack_modifiers)
 	if(I.tool_behaviour == TOOL_WRENCH)
 		to_chat(user, span_notice("You begin to [anchored ? "unwrench" : "wrench"] [src]."))
 		if(I.use_tool(src, user, 20, volume=50))
@@ -42,38 +43,38 @@
 		return
 	switch(choice)
 		if("Underwear")
-			var/new_undies = tgui_input_list(user, "Select your underwear", "Changing", GLOB.underwear_list)
+			var/new_undies = tgui_input_list(user, "Select your underwear", "Changing", SSaccessories.underwear_list)
 			if(new_undies)
 				dressing_human.underwear = new_undies
 		if("Underwear Color")
-			var/new_underwear_color = input(dressing_human, "Choose your underwear color", "Underwear Color", dressing_human.underwear_color) as color|null
+			var/new_underwear_color = tgui_color_picker(dressing_human, "Choose your underwear color", "Underwear Color", dressing_human.underwear_color)
 			if(new_underwear_color)
 				dressing_human.underwear_color = sanitize_hexcolor(new_underwear_color)
 		if("Undershirt")
-			var/new_undershirt = tgui_input_list(user, "Select your undershirt", "Changing", GLOB.undershirt_list)
+			var/new_undershirt = tgui_input_list(user, "Select your undershirt", "Changing", SSaccessories.undershirt_list)
 			if(new_undershirt)
 				dressing_human.undershirt = new_undershirt
 		if("Socks")
-			var/new_socks = tgui_input_list(user, "Select your socks", "Changing", GLOB.socks_list)
+			var/new_socks = tgui_input_list(user, "Select your socks", "Changing", SSaccessories.socks_list)
 			if(new_socks)
 				dressing_human.socks = new_socks
 		//SKYRAT EDIT ADDITION BEGIN - Colorable Undershirt/Socks/Bras
 		if("Undershirt Color")
-			var/new_undershirt_color = input(dressing_human, "Choose your undershirt color", "Undershirt Color", dressing_human.undershirt_color) as color|null
+			var/new_undershirt_color = tgui_color_picker(dressing_human, "Choose your undershirt color", "Undershirt Color", dressing_human.undershirt_color) // BUBBERSTATION EDIT: TGUI COLOR PICKER
 			if(new_undershirt_color)
 				dressing_human.undershirt_color = sanitize_hexcolor(new_undershirt_color)
 		if("Socks Color")
-			var/new_socks_color = input(dressing_human, "Choose your socks color", "Socks Color", dressing_human.socks_color) as color|null
+			var/new_socks_color = tgui_color_picker(dressing_human, "Choose your socks color", "Socks Color", dressing_human.socks_color) // BUBBERSTATION EDIT: TGUI COLOR PICKER
 			if(new_socks_color)
 				dressing_human.socks_color = sanitize_hexcolor(new_socks_color)
 
 		if("Bra")
-			var/new_bra = tgui_input_list(user, "Select your Bra", "Changing", GLOB.bra_list)
+			var/new_bra = tgui_input_list(user, "Select your Bra", "Changing", SSaccessories.bra_list)
 			if(new_bra)
 				dressing_human.bra = new_bra
 
 		if("Bra Color")
-			var/new_bra_color = input(dressing_human, "Choose your Bra color", "Bra Color", dressing_human.bra_color) as color|null
+			var/new_bra_color = tgui_color_picker(dressing_human, "Choose your Bra color", "Bra Color", dressing_human.bra_color) // BUBBERSTATION EDIT: TGUI COLOR PICKER
 			if(new_bra_color)
 				dressing_human.bra_color = sanitize_hexcolor(new_bra_color)
 

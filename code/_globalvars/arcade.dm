@@ -1,4 +1,5 @@
 ///List of all things that can be dispensed by an arcade cabinet and the weight of them being picked.
+/* BUBBERSTATION CHANGE: MODULAR OVERRIDE
 GLOBAL_LIST_INIT(arcade_prize_pool, list(
 	/obj/item/storage/box/snappops = 2,
 	/obj/item/toy/talking/ai = 2,
@@ -44,7 +45,7 @@ GLOBAL_LIST_INIT(arcade_prize_pool, list(
 	/obj/item/restraints/handcuffs/fake = 2,
 	/obj/item/grenade/chem_grenade/glitter/pink = 1,
 	/obj/item/grenade/chem_grenade/glitter/blue = 1,
-	/obj/item/grenade/chem_grenade/glitter/white = 1,
+	/obj/item/grenade/chem_grenade/glitter = 1,
 	/obj/item/toy/eightball = 2,
 	/obj/item/toy/windup_toolbox = 2,
 	/obj/item/toy/clockwork_watch = 2,
@@ -54,13 +55,13 @@ GLOBAL_LIST_INIT(arcade_prize_pool, list(
 	/obj/item/card/emagfake = 1,
 	/obj/item/clothing/shoes/wheelys = 2,
 	/obj/item/clothing/shoes/kindle_kicks = 2,
-	/obj/item/toy/plush/goatplushie = 2,
 	/obj/item/toy/plush/moth = 2,
 	/obj/item/toy/plush/pkplush = 2,
 	/obj/item/toy/plush/rouny = 2,
 	/obj/item/toy/plush/abductor = 2,
 	/obj/item/toy/plush/abductor/agent = 2,
 	/obj/item/toy/plush/shark = 2,
+	/obj/item/toy/plush/monkey = 2,
 	/obj/item/storage/belt/military/snack/full = 2,
 	/obj/item/toy/brokenradio = 2,
 	/obj/item/toy/braintoy = 2,
@@ -71,3 +72,4 @@ GLOBAL_LIST_INIT(arcade_prize_pool, list(
 	/obj/item/clothing/mask/party_horn = 2,
 	/obj/item/storage/box/party_poppers = 2,
 ))
+BUBBERSTATION CHANGE END */

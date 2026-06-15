@@ -12,7 +12,7 @@
 	/// If we're a click action, the text shown on disable
 	var/disable_text
 
-/datum/action/innate/Trigger(trigger_flags)
+/datum/action/innate/Trigger(mob/clicker, trigger_flags)
 	if(!..())
 		return FALSE
 	// We're a click action, trigger just sets it as active or not
@@ -21,7 +21,7 @@
 			unset_ranged_ability(owner, disable_text)
 		else
 			set_ranged_ability(owner, enable_text)
-		build_all_button_icons(UPDATE_BUTTON_STATUS)
+		build_all_button_icons(UPDATE_BUTTON_BACKGROUND | UPDATE_BUTTON_STATUS) // BUBBER EDIT: This is just an upstream error, it should have BUTTON_BACKGROUND
 		return TRUE
 
 	// We're not a click action (we're a toggle or otherwise)
@@ -76,17 +76,17 @@
 	on_who.click_intercept = null
 
 /// Handles whenever a mob clicks on something
-/datum/action/innate/proc/InterceptClickOn(mob/living/caller, params, atom/clicked_on)
+/datum/action/innate/proc/InterceptClickOn(mob/living/clicker, params, atom/clicked_on)
 	if(!IsAvailable(feedback = TRUE))
-		unset_ranged_ability(caller)
+		unset_ranged_ability(clicker)
 		return FALSE
 	if(!clicked_on)
 		return FALSE
 
-	return do_ability(caller, clicked_on)
+	return do_ability(clicker, clicked_on)
 
 /// Actually goes through and does the click ability
-/datum/action/innate/proc/do_ability(mob/living/caller, atom/clicked_on)
+/datum/action/innate/proc/do_ability(mob/living/clicker, atom/clicked_on)
 	return FALSE
 
 /datum/action/innate/Remove(mob/removed_from)

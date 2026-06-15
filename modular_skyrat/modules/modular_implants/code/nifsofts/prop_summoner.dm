@@ -35,7 +35,7 @@
 		/obj/item/toy/foamblade/nanite,
 		/obj/item/cane/white/nanite,
 		/obj/item/lighter/nanite,
-		/obj/item/clothing/mask/holocigarette/nanite,
+		/obj/item/holocigarette/nanite,
 	)
 
 	///The objects currently summoned by the NIFSoft
@@ -51,13 +51,13 @@
 	if(tgui_alert(linked_mob, "Do you wish to summon a new item or dispel an already existing item?", program_name, list("Summon", "Dispel")) == "Dispel")
 		refund_activation_cost()
 		if(!length(summoned_items))
-			linked_mob.balloon_alert(linked_mob, "You have no summoned items!")
+			linked_mob.balloon_alert(linked_mob, "you have no summoned items!")
 			return FALSE
 
-		var/obj/item/choice = tgui_input_list(linked_mob, "Chose an object to desummon.", program_name, summoned_items)
+		var/obj/item/choice = tgui_input_list(linked_mob, "Choose an object to desummon.", program_name, summoned_items)
 
 		if(!choice)
-			linked_mob.balloon_alert(linked_mob, "You did not chose an item!")
+			linked_mob.balloon_alert(linked_mob, "you did not choose an item!")
 			return FALSE
 
 		summoned_items -= choice
@@ -65,7 +65,7 @@
 		return TRUE
 
 	if(length(summoned_items) >= max_summoned_items)
-		linked_mob.balloon_alert(linked_mob, "You have the max ammount of items summoned!")
+		linked_mob.balloon_alert(linked_mob, "you have the max amount of items summoned!")
 		refund_activation_cost()
 		return FALSE
 
@@ -198,7 +198,7 @@
 	name = "catchflame"
 	special_desc = "A work of art by the standards of normal Icons, this one was worked on for five continuous years by a single summoner; now known as Neophyte Inverse after adoption of the Icon by the few physically-bodied members of the Altspace Coven. The engram's work involves the use of nanites to ignite atmospheric hydrogen molecules, the blue glow from the Icon arising from perfect and complete combustion. This allows the lighter to function exactly as a normal zippo would, the description reading '...useful for lighting hearth fires, candles, and incense; try white sage if you can order some off the net, just pray it doesn't dispel engrams lol.'"
 
-/obj/item/clothing/mask/holocigarette/nanite
+/obj/item/holocigarette/nanite
 	name = "cloudstick"
 	special_desc = "One of mankind's many attempts at ending the legacy of Big Tobacco. Contributed by a fully anonymous engram and then forked countless times into countless replications of brands and flavors, the 'Cloudstick' is more of a genre than a single Icon. Most downloadable ones even allow the summoner to change the pixelation of the smoke, to grant them a more 'detached' experience from the real thing. Several summoners report these to help them in quitting smoking, others simply commenting 'It's why I first downloaded the Catchflame.'"
 

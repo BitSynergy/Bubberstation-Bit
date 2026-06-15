@@ -13,7 +13,7 @@
 		layer = LYING_MOB_LAYER //so mob lying always appear behind standing mobs
 	density = FALSE // We lose density and stop bumping passable dense things.
 
-	if(model && model.model_features && (TRAIT_R_TALL in model.model_features))
+	if(model && model.model_features && ((TRAIT_R_TALL in model.model_features) || (TRAIT_R_BIG in model.model_features)))
 		maptext_height = 32 //Offset base chat-height value
 
 		// Resting effects
@@ -46,6 +46,8 @@
 	density = initial(density) // We were prone before, so we become dense and things can bump into us again.
 	if(model && model.model_features && (TRAIT_R_TALL in model.model_features))
 		maptext_height = 48 //Offset value of tallborgs
+	if(model && model.model_features && (TRAIT_R_BIG in model.model_features))
+		maptext_height = 64
 
 /mob/living/silicon/robot/proc/rest_style()
 	set name = "Switch Rest Style"
@@ -92,10 +94,25 @@
 		robot_resting = FALSE
 		update_icons()
 
+/mob/living/silicon/robot/update_worn_icons()
+	if(!hat_overlay)
+		return
+	cut_overlay(hat_overlay)
+
+	var/list/offset_list = ((robot_resting && model.rest_hat_offset) ? model.rest_hat_offset : model.hat_offset)
+	if(islist(offset_list))
+		var/list/offset = offset_list[ISDIAGONALDIR(dir) ? dir2text(dir & (WEST|EAST)) : dir2text(dir)]
+		if(offset)
+			hat_overlay.pixel_w = offset[1]
+			hat_overlay.pixel_z = offset[2]
+
+	add_overlay(hat_overlay)
+
 /mob/living/silicon/robot/update_module_innate()
 	..()
-	if(hands)
-		hands.icon = (model.model_select_alternate_icon ? model.model_select_alternate_icon : initial(hands.icon))
+	var/atom/movable/screen/robot_hands = hud_used?.screen_objects[HUD_CYBORG_HANDS]
+	if(robot_hands)
+		robot_hands.icon = (model.model_select_alternate_icon ? model.model_select_alternate_icon : initial(robot_hands.icon))
 
 /**
  * Safe check of the cyborg's model_features list.
@@ -103,7 +120,7 @@
  * model_features is defined in modular_skyrat\modules\altborgs\code\modules\mob\living\silicon\robot\robot_model.dm.
  */
 /mob/living/silicon/robot/proc/can_rest()
-	if(model && model.model_features && ((TRAIT_R_WIDE in model.model_features) || (TRAIT_R_TALL in model.model_features)))
+	if(model && model.model_features && ((TRAIT_R_WIDE in model.model_features) || (TRAIT_R_TALL in model.model_features) || (TRAIT_R_SQUADRUPED in model.model_features) || (TRAIT_R_BIG in model.model_features)))
 		if(TRAIT_IMMOBILIZED in _status_traits)
 			return FALSE
 		return TRUE

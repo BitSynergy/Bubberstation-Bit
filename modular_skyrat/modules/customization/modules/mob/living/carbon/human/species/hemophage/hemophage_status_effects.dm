@@ -21,7 +21,7 @@
 	if(!owner || !ishuman(owner))
 		return FALSE
 
-	var/obj/item/organ/internal/heart/hemophage/tumor_heart = owner.get_organ_by_type(/obj/item/organ/internal/heart/hemophage)
+	var/obj/item/organ/heart/hemophage/tumor_heart = owner.get_organ_by_type(/obj/item/organ/heart/hemophage)
 
 	if(!tumor_heart)
 		return FALSE
@@ -36,7 +36,7 @@
 	if(!owner || !ishuman(owner))
 		return
 
-	var/obj/item/organ/internal/heart/hemophage/tumor_heart = owner.get_organ_by_type(/obj/item/organ/internal/heart/hemophage)
+	var/obj/item/organ/heart/hemophage/tumor_heart = owner.get_organ_by_type(/obj/item/organ/heart/hemophage)
 
 	if(!tumor_heart)
 		return
@@ -51,7 +51,7 @@
 	alert_type = /atom/movable/screen/alert/status_effect/blood_regen_active
 	/// Current multiplier for how much blood they spend healing themselves for every point of damage healed.
 	var/blood_to_health_multiplier = 1
-	var/cost_blood = 1 /// BUBBER CHANGE, allows scaling of hemophage healing blood cost.
+	var/cost_blood = 1
 
 
 /datum/status_effect/blood_regen_active/on_apply()
@@ -73,7 +73,7 @@
 	if(!linked_alert)
 		return
 
-	var/obj/item/organ/internal/heart/hemophage/tumor_heart = owner.get_organ_by_type(/obj/item/organ/internal/heart/hemophage)
+	var/obj/item/organ/heart/hemophage/tumor_heart = owner.get_organ_by_type(/obj/item/organ/heart/hemophage)
 	if(tumor_heart)
 		var/old_layer = tumor_heart.layer
 		var/old_plane = tumor_heart.plane
@@ -105,7 +105,7 @@
 	var/blood_used = NONE
 
 	var/brutes_to_heal = NONE
-	var/brute_damage = regenerator.getBruteLoss()
+	var/brute_damage = regenerator.get_brute_loss()
 
 	// We have to check for the damaged bodyparts like this as well, to account for robotic bodyparts, as we don't want to heal those. Stupid, I know, but that's the best proc we got to check that currently.
 	if(brute_damage && length(regenerator.get_damaged_bodyparts(brute = TRUE, burn = FALSE, required_bodytype = BODYTYPE_ORGANIC)))
@@ -114,7 +114,7 @@
 		max_blood_for_regen -= brutes_to_heal * blood_to_health_multiplier
 
 	var/burns_to_heal = NONE
-	var/burn_damage = regenerator.getFireLoss()
+	var/burn_damage = regenerator.get_fire_loss()
 
 	if(burn_damage && max_blood_for_regen > NONE && length(regenerator.get_damaged_bodyparts(brute = FALSE, burn = TRUE, required_bodytype = BODYTYPE_ORGANIC)))
 		burns_to_heal = min(max_blood_for_regen, min(BLOOD_REGEN_BURN_AMOUNT, burn_damage) * seconds_between_ticks)
@@ -124,19 +124,19 @@
 	if(brutes_to_heal || burns_to_heal)
 		regenerator.heal_overall_damage(brutes_to_heal, burns_to_heal, NONE, BODYTYPE_ORGANIC)
 
-	var/toxin_damage = regenerator.getToxLoss()
+	var/toxin_damage = regenerator.get_tox_loss()
 
 	if(toxin_damage && max_blood_for_regen > NONE)
 		var/toxins_to_heal = min(max_blood_for_regen, min(BLOOD_REGEN_TOXIN_AMOUNT, toxin_damage) * seconds_between_ticks)
 		blood_used += toxins_to_heal * blood_to_health_multiplier
 		max_blood_for_regen -= toxins_to_heal * blood_to_health_multiplier
-		regenerator.adjustToxLoss(-toxins_to_heal)
+		regenerator.adjust_tox_loss(-toxins_to_heal)
 
 	if(!blood_used)
 		regenerator.remove_status_effect(/datum/status_effect/blood_regen_active)
 		return
 
-	regenerator.blood_volume = max(regenerator.blood_volume - blood_used * cost_blood, MINIMUM_VOLUME_FOR_REGEN) // BUBBER CHANGE, allows scaling of hemophage healing blood cost.
+	regenerator.blood_volume = max(regenerator.blood_volume - blood_used * cost_blood, MINIMUM_VOLUME_FOR_REGEN)
 
 
 /datum/movespeed_modifier/hemophage_dormant_state

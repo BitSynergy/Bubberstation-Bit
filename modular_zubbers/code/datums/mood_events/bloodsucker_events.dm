@@ -1,5 +1,5 @@
 /datum/mood_event/drankblood
-	description = "<span class='nicegreen'>I have fed greedly from that which nourishes me.</span>\n"
+	description = "<span class='nicegreen'>I have fed greedily from that which nourishes me.</span>\n"
 	mood_change = 10
 	timeout = 8 MINUTES
 
@@ -46,8 +46,16 @@
 	mood_change = -6
 	timeout = 6 MINUTES
 
-///Candelabrum's mood event to non Bloodsucker/Vassals
+///Candelabrum's mood event to non Bloodsucker/Ghouls
 /datum/mood_event/vampcandle
 	description = "<span class='boldwarning'>Something is making your mind feel... loose.</span>\n"
 	mood_change = -15
 	timeout = 5 MINUTES
+
+/datum/mood_event/nosferatu_examined
+	mood_change = -10
+	timeout = 5 MINUTES
+
+/datum/mood_event/nosferatu_examined/add_effects(target, level = 0)
+	description = span_danger("You feel a deep sense of revulsion at the sight of [target].")
+	mood_change = level * -5

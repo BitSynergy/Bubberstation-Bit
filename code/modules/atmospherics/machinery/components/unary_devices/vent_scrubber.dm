@@ -3,6 +3,7 @@
 
 	name = "air scrubber"
 	desc = "Has a valve and pump attached to it."
+	construction_type = /obj/item/pipe/directional/scrubber
 	use_power = IDLE_POWER_USE
 	idle_power_usage = BASE_MACHINE_IDLE_CONSUMPTION * 0.1
 	active_power_usage = BASE_MACHINE_ACTIVE_CONSUMPTION * 0.15
@@ -85,21 +86,6 @@
 	. = ..()
 	disconnect_from_area(area_to_unregister)
 
-///adds a gas or list of gases to our filter_types. used so that the scrubber can check if its supposed to be processing after each change
-/obj/machinery/atmospherics/components/unary/vent_scrubber/proc/add_filters(filter_or_filters)
-	if(!islist(filter_or_filters))
-		filter_or_filters = list(filter_or_filters)
-
-	for(var/gas_to_filter in filter_or_filters)
-		var/translated_gas = istext(gas_to_filter) ? gas_id2path(gas_to_filter) : gas_to_filter
-
-		if(ispath(translated_gas, /datum/gas))
-			filter_types |= translated_gas
-			continue
-
-	atmos_conditions_changed()
-	return TRUE
-
 ///remove a gas or list of gases from our filter_types.used so that the scrubber can check if its supposed to be processing after each change
 /obj/machinery/atmospherics/components/unary/vent_scrubber/proc/remove_filters(filter_or_filters)
 	if(!islist(filter_or_filters))
@@ -134,7 +120,7 @@
 
 /obj/machinery/atmospherics/components/unary/vent_scrubber/update_icon_nopipes()
 	cut_overlays()
-	if(showpipe)
+	if(underfloor_state)
 		var/image/cap = get_pipe_image(icon, "scrub_cap", initialize_directions)
 		add_overlay(cap)
 	else
@@ -197,7 +183,7 @@
 	if(welded || !is_operational)
 		return FALSE
 	if(!nodes[1] || !on || (!filter_types && scrubbing != ATMOS_DIRECTION_SIPHONING))
-		on = FALSE
+		set_on(FALSE)
 		return FALSE
 
 	var/list/changed_gas = air.gases
@@ -214,7 +200,7 @@
 	if(welded || !is_operational)
 		return FALSE
 	if(!nodes[1] || !on)
-		on = FALSE
+		set_on(FALSE)
 		return FALSE
 	var/turf/open/us = loc
 	if(!istype(us))
@@ -270,12 +256,6 @@
 
 			environment.garbage_collect()
 
-			// SKYRAT EDIT ADDITION
-			if(isopenturf(tile))
-				var/turf/open/floor_turf = tile
-				floor_turf.pollution?.scrub_amount(1)
-			// SKYRAT EDIT END
-
 			//Remix the resulting gases
 			air_contents.merge(filtered_out)
 			update_parents()
@@ -316,7 +296,7 @@
 		else
 			user.visible_message(span_notice("[user] unwelds the scrubber."), span_notice("You unweld the scrubber."), span_hear("You hear welding."))
 			welded = FALSE
-		update_appearance()
+		update_appearance(UPDATE_ICON)
 		pipe_vision_img = image(src, loc, dir = dir)
 		SET_PLANE_EXPLICIT(pipe_vision_img, ABOVE_HUD_PLANE, src)
 		investigate_log("was [welded ? "welded shut" : "unwelded"] by [key_name(user)]", INVESTIGATE_ATMOS)
@@ -339,10 +319,10 @@
 		return
 	user.visible_message(span_warning("[user] furiously claws at [src]!"), span_notice("You manage to clear away the stuff blocking the scrubber."), span_hear("You hear loud scraping noises."))
 	welded = FALSE
-	update_appearance()
+	update_appearance(UPDATE_ICON)
 	pipe_vision_img = image(src, loc, dir = dir)
 	SET_PLANE_EXPLICIT(pipe_vision_img, ABOVE_HUD_PLANE, src)
-	playsound(loc, 'sound/weapons/bladeslice.ogg', 100, TRUE)
+	playsound(loc, 'sound/items/weapons/bladeslice.ogg', 100, TRUE)
 
 
 /obj/machinery/atmospherics/components/unary/vent_scrubber/layer2
@@ -367,4 +347,4 @@
 
 /obj/machinery/atmospherics/components/unary/vent_scrubber/disconnect()
 	..()
-	on = FALSE
+	set_on(FALSE)

@@ -19,8 +19,9 @@
 
 //Inventory depth: limits how many nested storage items you can access directly.
 //1: stuff in mob, 2: stuff in backpack, 3: stuff in box in backpack, etc
-#define INVENTORY_DEPTH 3
-#define STORAGE_VIEW_DEPTH 2
+#define REACH_DEPTH_SELF 1
+/// A storage depth ontop of SELF. REACH_DEPTH_STORAGE(1) would allow an item inside of a backpack you are carrying.
+#define REACH_DEPTH_STORAGE(level) (level + REACH_DEPTH_SELF)
 
 //ITEM INVENTORY SLOT BITMASKS
 /// Suit slot (armors, costumes, space suits, etc.)
@@ -51,21 +52,33 @@
 #define ITEM_SLOT_NECK (1<<12)
 /// A character's hand slots
 #define ITEM_SLOT_HANDS (1<<13)
-/// Inside of a character's backpack
-#define ITEM_SLOT_BACKPACK (1<<14)
 /// Suit Storage slot
-#define ITEM_SLOT_SUITSTORE (1<<15)
+#define ITEM_SLOT_SUITSTORE (1<<14)
 /// Left Pocket slot
-#define ITEM_SLOT_LPOCKET (1<<16)
+#define ITEM_SLOT_LPOCKET (1<<15)
 /// Right Pocket slot
-#define ITEM_SLOT_RPOCKET (1<<17)
+#define ITEM_SLOT_RPOCKET (1<<16)
 /// Handcuff slot
-#define ITEM_SLOT_HANDCUFFED (1<<18)
+#define ITEM_SLOT_HANDCUFFED (1<<17)
 /// Legcuff slot (bolas, beartraps)
-#define ITEM_SLOT_LEGCUFFED (1<<19)
+#define ITEM_SLOT_LEGCUFFED (1<<18)
 
 /// Total amount of slots
-#define SLOTS_AMT 20 // Keep this up to date!
+#define SLOTS_AMT 19 // Keep this up to date!
+
+///Inventory slots that can be blacklisted by a species from being equipped into
+DEFINE_BITFIELD(no_equip_flags, list(
+	"EXOSUIT" = ITEM_SLOT_OCLOTHING,
+	"JUMPSUIT" = ITEM_SLOT_ICLOTHING,
+	"GLOVES" = ITEM_SLOT_GLOVES,
+	"GLASSES" = ITEM_SLOT_EYES,
+	"EARPIECES" = ITEM_SLOT_EARS,
+	"MASKS" = ITEM_SLOT_MASK,
+	"HATS" = ITEM_SLOT_HEAD,
+	"SHOES" = ITEM_SLOT_FEET,
+	"BACKPACKS" = ITEM_SLOT_BACK,
+	"TIES" = ITEM_SLOT_NECK,
+))
 
 //SLOT GROUP HELPERS
 #define ITEM_SLOT_POCKETS (ITEM_SLOT_LPOCKET|ITEM_SLOT_RPOCKET)
@@ -74,7 +87,7 @@
 	ITEM_SLOT_MASK | ITEM_SLOT_HEAD | ITEM_SLOT_FEET | ITEM_SLOT_ID | ITEM_SLOT_BELT | ITEM_SLOT_BACK | ITEM_SLOT_NECK )
 
 //Bit flags for the flags_inv variable, which determine when a piece of clothing hides another. IE a helmet hiding glasses.
-//Make sure to update check_obscured_slots() if you add more.
+//Make sure to update obscured_slots if you add more.
 #define HIDEGLOVES (1<<0)
 #define HIDESUITSTORAGE (1<<1)
 #define HIDEJUMPSUIT (1<<2) //these first four are only used in exterior suits
@@ -92,22 +105,39 @@
 #define HIDESNOUT (1<<12)
 ///hides mutant/moth wings, does not apply to functional wings
 #define HIDEMUTWINGS (1<<13)
+///hides belts and riggings
+#define HIDEBELT (1<<14)
+///hides antennae
+#define HIDEANTENNAE (1<<15)
 
 //SKYRAT EDIT ADDITION: CUSTOM EAR TOGGLE FOR ANTHRO/ETC EAR SHOWING -
 /// Manually set this on items you want anthro ears to show on!
-#define SHOWSPRITEEARS (1<<14)
+#define SHOWSPRITEEARS (1<<16)
 /// Does this sprite hide the tail?
-#define HIDETAIL (1<<15)
+#define HIDETAIL (1<<17)
 /// Does this sprite also hide the spine on tails? Realistically only useful for the clothes that have a special tail overlay, like MODsuits
-#define HIDESPINE (1<<16)
+#define HIDESPINE (1<<18)
 /// Does this sprite hide devious devices?
-#define HIDESEXTOY (1<<17)
+#define HIDESEXTOY (1<<19)
+/// If this has our taur variant, do we hide our taur part?
+#define HIDETAUR (1<<20)
 //SKYRAT EDIT ADDITION END
+/// BUBBER ADDITION - hides frills
+#define HIDEFRILLS (1<<21)
+//Bitflags for hair appendage zones
+#define HAIR_APPENDAGE_FRONT (1<<0)
+#define HAIR_APPENDAGE_LEFT (1<<1)
+#define HAIR_APPENDAGE_RIGHT (1<<2)
+#define HAIR_APPENDAGE_REAR (1<<3)
+#define HAIR_APPENDAGE_TOP (1<<4)
+#define HAIR_APPENDAGE_HANGING_FRONT (1<<5)
+#define HAIR_APPENDAGE_HANGING_REAR (1<<6)
+#define HAIR_APPENDAGE_ALL (HAIR_APPENDAGE_FRONT|HAIR_APPENDAGE_LEFT|HAIR_APPENDAGE_RIGHT|HAIR_APPENDAGE_REAR|HAIR_APPENDAGE_TOP|HAIR_APPENDAGE_HANGING_FRONT|HAIR_APPENDAGE_HANGING_REAR)
 
 //bitflags for clothing coverage - also used for limbs
-#define HEAD (1<<0)
-#define CHEST (1<<1)
-#define GROIN (1<<2)
+#define CHEST (1<<0)
+#define GROIN (1<<1)
+#define HEAD (1<<2)
 #define LEG_LEFT (1<<3)
 #define LEG_RIGHT (1<<4)
 #define LEGS (LEG_LEFT | LEG_RIGHT)
@@ -126,6 +156,10 @@
 //defines for the index of hands
 #define LEFT_HANDS 1
 #define RIGHT_HANDS 2
+/// Checks if the value is "right" - same as ISEVEN, but used primarily for hand or foot index contexts
+#define IS_RIGHT_INDEX(value) (value % 2 == 0)
+/// Checks if the value is "left" - same as ISODD, but used primarily for hand or foot index contexts
+#define IS_LEFT_INDEX(value) (value % 2 != 0)
 
 //flags for female outfits: How much the game can safely "take off" the uniform without it looking weird
 /// For when there's simply no need for a female version of this uniform.
@@ -147,14 +181,13 @@
 #define DIGITIGRADE_STYLE 2
 
 //Flags (actual flags, fucker ^) for /obj/item/var/supports_variations_flags
-///No alternative sprites based on bodytype
-#define CLOTHING_NO_VARIATION (1<<0)
-///Has a sprite for digitigrade legs specifically.
-#define CLOTHING_DIGITIGRADE_VARIATION (1<<1)
-///The sprite works fine for digitigrade legs as-is.
-#define CLOTHING_DIGITIGRADE_VARIATION_NO_NEW_ICON (1<<2)
-///has a sprite for monkeys
-#define CLOTHING_MONKEY_VARIATION (1<<3)
+/// Has a sprite for digitigrade legs specifically.
+#define CLOTHING_DIGITIGRADE_VARIATION (1<<0)
+/// The sprite works fine for digitigrade legs as-is.
+#define CLOTHING_DIGITIGRADE_VARIATION_NO_NEW_ICON (1<<1)
+/// Auto-generates the leg portion of the sprite with GAGS
+#define CLOTHING_DIGITIGRADE_MASK (1<<2)
+
 // SKYRAT EDIT ADDITION START
 /// The sprite works fine for snouts.
 #define CLOTHING_SNOUTED_VARIATION (1<<4)
@@ -168,7 +201,9 @@
 #define CLOTHING_SNOUTED_BETTER_VOX_VARIATION (1<<8)
 /// The sprite works fine for vox snouts as is.
 #define CLOTHING_SNOUTED_BETTER_VOX_VARIATION_NO_NEW_ICON (1<<9)
-// SKYRAT EDIT END
+// SKYRAT EDIT ADDITION END
+/// All variation flags which render "correctly" on a digitigrade leg setup
+#define DIGITIGRADE_VARIATIONS (CLOTHING_DIGITIGRADE_VARIATION|CLOTHING_DIGITIGRADE_VARIATION_NO_NEW_ICON|CLOTHING_DIGITIGRADE_MASK)
 
 //flags for covering body parts
 #define GLASSESCOVERSEYES (1<<0)
@@ -178,7 +213,9 @@
 #define HEADCOVERSMOUTH (1<<4)
 #define PEPPERPROOF (1<<5) //protects against pepperspray
 #define EARS_COVERED (1<<6)
+#define ALLOW_SURGERY_THROUGH (1<<7) //item will not obstruct body part access, such as for surgery, despite covering the body part
 
+#define TINT_MILD 1.5 //Threshold of tint level to apply mild tint overlay
 #define TINT_DARKENED 2 //Threshold of tint level to apply weld mask overlay
 #define TINT_BLIND 3 //Threshold of tint level to obscure vision fully
 
@@ -193,6 +230,35 @@
 #define AFK_THEFT_MESSAGE 2
 /// The index of the entry in 'afk_thefts' with the time it happened
 #define AFK_THEFT_TIME 3
+
+/// A list of things that any suit storage can hold
+/// Should consist of ubiquitous, non-specialized items
+/// or items that are meant to be "suit storage agnostic" as
+/// a benefit, which of the time of this commit only applies
+/// to the captain's jetpack, here
+GLOBAL_LIST_INIT(any_suit_storage, typecacheof(list(
+	/obj/item/clipboard,
+	/obj/item/flashlight,
+	/obj/item/tank/internals/emergency_oxygen,
+	/obj/item/tank/internals/plasmaman,
+	/obj/item/lighter,
+	/obj/item/pen,
+	/obj/item/modular_computer/pda,
+	/obj/item/toy/plush,
+	/obj/item/radio,
+	/obj/item/storage/bag/books,
+	/obj/item/storage/fancy/cigarettes,
+	/obj/item/tank/jetpack/captain,
+	/obj/item/stack/spacecash,
+	/obj/item/storage/wallet,
+	/obj/item/folder,
+	/obj/item/storage/box/matches,
+	/obj/item/cigarette,
+	/obj/item/gun/energy/laser/bluetag,
+	/obj/item/gun/energy/laser/redtag,
+	/obj/item/storage/belt/holster,
+	/obj/item/storage/belt/sheath
+)))
 
 //Allowed equipment lists for security vests.
 
@@ -213,7 +279,6 @@ GLOBAL_LIST_INIT(detective_vest_allowed, list(
 	/obj/item/storage/belt/holster/nukie,
 	/obj/item/storage/belt/holster/energy,
 	/obj/item/gun/ballistic/shotgun/automatic/combat/compact,
-	/obj/item/gun/microfusion, //SKYRAT EDIT ADDITION
 ))
 
 GLOBAL_LIST_INIT(security_vest_allowed, list(
@@ -231,7 +296,6 @@ GLOBAL_LIST_INIT(security_vest_allowed, list(
 	/obj/item/storage/belt/holster/energy,
 	/obj/item/gun/ballistic/shotgun/automatic/combat/compact,
 	/obj/item/pen/red/security,
-	/obj/item/gun/microfusion, //SKYRAT EDIT ADDITION
 ))
 
 GLOBAL_LIST_INIT(security_wintercoat_allowed, list(
@@ -244,7 +308,6 @@ GLOBAL_LIST_INIT(security_wintercoat_allowed, list(
 	/obj/item/storage/belt/holster/nukie,
 	/obj/item/storage/belt/holster/energy,
 	/obj/item/gun/ballistic/shotgun/automatic/combat/compact,
-	/obj/item/gun/microfusion, //SKYRAT EDIT ADDITION
 ))
 
 //Allowed list for all chaplain suits (except the honkmother robe)
@@ -259,21 +322,98 @@ GLOBAL_LIST_INIT(chaplain_suit_allowed, list(
 	/obj/item/tank/internals/plasmaman,
 	/obj/item/gun/ballistic/bow/divine,
 	/obj/item/gun/ballistic/revolver/chaplain,
+	/obj/item/toy/plush/carpplushie/nullrod,
+	/obj/item/melee/energy/sword/nullrod,
 ))
 
-/// String for items placed into the left pocket.
+//Allowed list for all mining suits
+
+GLOBAL_LIST_INIT(mining_suit_allowed, list(
+	/obj/item/t_scanner/adv_mining_scanner,
+	/obj/item/melee/cleaving_saw,
+	/obj/item/climbing_hook,
+	/obj/item/flashlight,
+	/obj/item/grapple_gun,
+	/obj/item/tank/internals,
+	/obj/item/gun/energy/recharge/kinetic_accelerator,
+	/obj/item/kinetic_crusher,
+	/obj/item/knife,
+	/obj/item/mining_scanner,
+	/obj/item/organ/monster_core,
+	/obj/item/storage/bag/ore,
+	/obj/item/pickaxe,
+	/obj/item/resonator,
+	/obj/item/spear,
+	/obj/item/gun/ballistic/bow/ashenbow,
+))
+
+// Allowed list for personal carry firearms and holsters
+
+GLOBAL_LIST_INIT(personal_carry_allowed, list(
+	/obj/item/storage/belt/holster,
+	/obj/item/gun/ballistic/automatic/pistol,
+	/obj/item/gun/ballistic/revolver,
+	/obj/item/gun/energy/disabler/smoothbore,
+))
+
+/// Allowed list for improvised firearms
+
+GLOBAL_LIST_INIT(improvised_firearm_allowed, list(
+	/obj/item/gun/ballistic/rifle/boltaction/pipegun,
+	/obj/item/gun/energy/laser/musket,
+	/obj/item/gun/energy/disabler/smoothbore,
+))
+
+/// List of all "tools" that can fit into belts or work from toolboxes
+
+GLOBAL_LIST_INIT(tool_items, list(
+	/obj/item/airlock_painter,
+	/obj/item/analyzer,
+	/obj/item/assembly/signaler,
+	/obj/item/construction/rcd,
+	/obj/item/construction/rld,
+	/obj/item/construction/rtd,
+	/obj/item/crowbar,
+	/obj/item/extinguisher/mini,
+	/obj/item/flashlight,
+	/obj/item/forcefield_projector,
+	/obj/item/geiger_counter,
+	/obj/item/holosign_creator/atmos,
+	/obj/item/holosign_creator/engineering,
+	/obj/item/inducer,
+	/obj/item/lightreplacer,
+	/obj/item/multitool,
+	/obj/item/pipe_dispenser,
+	/obj/item/pipe_painter,
+	/obj/item/plunger,
+	/obj/item/radio,
+	/obj/item/screwdriver,
+	/obj/item/stack/cable_coil,
+	/obj/item/t_scanner,
+	/obj/item/weldingtool,
+	/obj/item/wirecutters,
+	/obj/item/wrench,
+	/obj/item/spess_knife,
+))
+
+// Keys for equip_in_one_of_slots, if you add new ones update the assoc lists in equip_in_one_of_slots
+/// Items placed into the left pocket.
 #define LOCATION_LPOCKET "in your left pocket"
-/// String for items placed into the right pocket
+/// Items placed into the right pocket
 #define LOCATION_RPOCKET "in your right pocket"
-/// String for items placed into the backpack.
+/// Items placed into the backpack.
 #define LOCATION_BACKPACK "in your backpack"
-/// String for items placed into the hands.
+/// Items placed into the hands.
 #define LOCATION_HANDS "in your hands"
-/// String for items placed in the glove slot.
+/// Items placed in the glove slot.
 #define LOCATION_GLOVES "on your hands"
-/// String for items placed in the eye/glasses slot.
+/// Items placed in the eye/glasses slot.
 #define LOCATION_EYES "covering your eyes"
-/// String for items placed on the head/hat slot.
+/// Items placed in the mask slot.
+#define LOCATION_MASK "covering your face"
+/// Items placed on the head/hat slot.
 #define LOCATION_HEAD "on your head"
-/// String for items placed in the neck slot.
+/// Items placed in the neck slot.
 #define LOCATION_NECK "around your neck"
+/// Items placed in the id slot
+#define LOCATION_ID "in your ID slot"

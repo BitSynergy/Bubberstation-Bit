@@ -8,6 +8,7 @@
 	inhand_icon_state = "utility"
 	w_class = WEIGHT_CLASS_BULKY //Cant fit a sheath in your bag
 	interaction_flags_click = NEED_DEXTERITY
+	custom_materials = list(/datum/material/gold = SHEET_MATERIAL_AMOUNT)
 
 /obj/item/storage/belt/crusader/Initialize(mapload)
 	. = ..()
@@ -20,18 +21,19 @@
 			/obj/item/storage/belt/storage_pouch,
 			/obj/item/forging/reagent_weapon/sword,
 			/obj/item/melee/sabre,
+			/obj/item/forging/reagent_weapon/rapier,
 			/obj/item/claymore,
 			/obj/item/melee/cleric_mace,
 			/obj/item/knife,
 			/obj/item/melee/baton,
-			/obj/item/melee/baton,
 			/obj/item/nullrod,	//holds any subset of nullrod in the sheath-storage - - -
+			/obj/item/melee/energy/sword/nullrod,
 		),
 		canthold = list(	// - - - except the second list's items (no fedora in the sheath)
 			/obj/item/nullrod/armblade,
-			/obj/item/nullrod/carp,
+			/obj/item/toy/plush/carpplushie/nullrod,
 			/obj/item/nullrod/chainsaw,
-			/obj/item/nullrod/claymore/bostaff,
+			/obj/item/nullrod/bostaff,
 			/obj/item/nullrod/hammer,
 			/obj/item/nullrod/pitchfork,
 			/obj/item/nullrod/pride_hammer,
@@ -39,7 +41,6 @@
 			/obj/item/nullrod/staff,
 			/obj/item/nullrod/fedora,
 			/obj/item/nullrod/godhand,
-			/obj/item/nullrod/staff,
 			/obj/item/nullrod/whip,
 		),
 	)
@@ -60,7 +61,7 @@
 		return
 	pouch.atom_storage.dump_content_at(dest_object, dumping_mob)
 
-/obj/item/storage/belt/crusader/CtrlClick(mob/user)	//Makes ctrl-click also open the inventory, so that you can open it with full hands without dropping the sword
+/obj/item/storage/belt/crusader/item_ctrl_click(mob/user)	//Makes ctrl-click also open the inventory, so that you can open it with full hands without dropping the sword
 	. = ..()
 	atom_storage.show_contents(user)
 	return
@@ -74,7 +75,9 @@
 			to_chat(user, span_notice("You fumble for [drawn_item] and it falls on the floor."))
 			update_appearance()
 			return CLICK_ACTION_SUCCESS
-		user.visible_message(span_notice("[user] takes [drawn_item] out of [src]."), span_notice("You take [drawn_item] out of [src]."))
+		user.visible_message(
+			span_notice("[user] takes [drawn_item] out of [src]."),
+			span_notice("You take [drawn_item] out of [src]."))
 		update_appearance()
 	else
 		to_chat(user, span_warning("[src] is empty!"))
@@ -148,12 +151,14 @@
 		/obj/item/dnainjector,
 		/obj/item/reagent_containers/dropper,
 		/obj/item/reagent_containers/cup/bottle,
-		/obj/item/reagent_containers/pill,
+		/obj/item/reagent_containers/applicator/pill,
 		/obj/item/reagent_containers/syringe,
 		/obj/item/reagent_containers/medigel,
 		/obj/item/storage/pill_bottle,
 		/obj/item/implanter,
-		/obj/item/hypospray/mkii,
+		/obj/item/hypospray,
+		/obj/item/reagent_containers/hypospray,
 		/obj/item/reagent_containers/cup/vial,
-		/obj/item/weaponcell/medical
+		/obj/item/weaponcell/medical,
+		/obj/item/reagent_containers/cup/tube
 		))

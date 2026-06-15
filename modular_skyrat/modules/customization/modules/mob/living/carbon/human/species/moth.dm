@@ -1,7 +1,6 @@
 /datum/species/moth
 	mutant_bodyparts = list()
 	inherent_traits = list(
-		TRAIT_HAS_MARKINGS,
 		TRAIT_TACKLING_WINGED_ATTACKER,
 		TRAIT_ANTENNAE,
 		TRAIT_MUTANT_COLORS,
@@ -16,11 +15,11 @@
 
 /datum/species/moth/randomize_features()
 	var/list/features = ..()
-	features["mcolor"] = "#E5CD99"
+	features[FEATURE_MUTANT_COLOR] = "#E5CD99"
 	return features
 
 /datum/species/moth/get_random_body_markings(list/passed_features)
-	var/name = "None"
+	var/name = SPRITE_ACCESSORY_NONE
 	var/list/candidates = GLOB.body_marking_sets.Copy()
 	for(var/candi in candidates)
 		var/datum/body_marking_set/setter = GLOB.body_marking_sets[candi]
@@ -35,9 +34,9 @@
 	return markings
 
 /datum/species/moth/prepare_human_for_preview(mob/living/carbon/human/moth)
-	moth.dna.features["mcolor"] = "#E5CD99"
-	moth.dna.mutant_bodyparts["moth_antennae"] = list(MUTANT_INDEX_NAME = "Plain", MUTANT_INDEX_COLOR_LIST = list("#FFFFFF", "#FFFFFF", "#FFFFFF"))
-	moth.dna.mutant_bodyparts["moth_markings"] = list(MUTANT_INDEX_NAME = "None", MUTANT_INDEX_COLOR_LIST = list("#FFFFFF", "#FFFFFF", "#FFFFFF"))
-	moth.dna.mutant_bodyparts["wings"] = list(MUTANT_INDEX_NAME = "Moth (Plain)", MUTANT_INDEX_COLOR_LIST = list("#FFFFFF", "#FFFFFF", "#FFFFFF"))
+	moth.dna.features[FEATURE_MUTANT_COLOR] = "#E5CD99"
+	moth.dna.mutant_bodyparts[FEATURE_MOTH_ANTENNAE] = list(MUTANT_INDEX_NAME = "Plain", MUTANT_INDEX_COLOR_LIST = list("#FFFFFF", "#FFFFFF", "#FFFFFF"))
+	moth.dna.mutant_bodyparts[FEATURE_MOTH_MARKINGS] = list(MUTANT_INDEX_NAME = "None", MUTANT_INDEX_COLOR_LIST = list("#FFFFFF", "#FFFFFF", "#FFFFFF"))
+	moth.dna.mutant_bodyparts[FEATURE_WINGS] = list(MUTANT_INDEX_NAME = "Moth (Plain)", MUTANT_INDEX_COLOR_LIST = list("#FFFFFF", "#FFFFFF", "#FFFFFF"))
 	regenerate_organs(moth, src, visual_only = TRUE)
 	moth.update_body(TRUE)

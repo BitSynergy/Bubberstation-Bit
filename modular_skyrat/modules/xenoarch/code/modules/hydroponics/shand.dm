@@ -1,6 +1,6 @@
 /obj/item/seeds/shand
-	name = "pack of shand seeds"
-	desc = "These seeds grow into shand plants. While not very useful on it's own, it is full of chemicals that no other plant can produce. A good candidate for crossbreeding."
+	name = "shand seed pack"
+	desc = "These seeds grow into shand plants. While not very useful on its own, it is full of chemicals that no other plant can produce. A good candidate for crossbreeding."
 	icon = 'modular_skyrat/modules/xenoarch/icons/seeds.dmi'
 	icon_state = "shand"
 	species = "shand"
@@ -24,5 +24,7 @@
 	filling_color = "#FF4500"
 	bite_consumption_mod = 0.5
 	foodtypes = FRUIT
-	juice_typepath = /datum/reagent/bromine
 	tastes = list("chemicals" = 1)
+
+/obj/item/food/grown/shand/juice_typepath()
+	return /datum/reagent/bromine

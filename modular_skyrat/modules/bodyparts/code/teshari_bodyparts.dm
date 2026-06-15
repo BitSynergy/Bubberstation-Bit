@@ -10,7 +10,7 @@
 	limb_id = SPECIES_TESHARI
 	brute_modifier = TESHARI_BRUTE_MODIFIER
 	burn_modifier = TESHARI_BURN_MODIFIER
-	head_flags = HEAD_EYESPRITES|HEAD_EYECOLOR|HEAD_EYEHOLES|HEAD_DEBRAIN
+	head_flags = HEAD_EYESPRITES|HEAD_EYECOLOR|HEAD_EYEHOLES|HEAD_DEBRAIN|HEAD_HAIR
 
 /obj/item/bodypart/head/mutant/teshari/Initialize(mapload)
 	worn_ears_offset = new(
@@ -38,6 +38,9 @@
 	limb_id = SPECIES_TESHARI
 	brute_modifier = TESHARI_BRUTE_MODIFIER
 	burn_modifier = TESHARI_BURN_MODIFIER
+
+/obj/item/bodypart/chest/mutant/teshari/get_butt_sprite()
+	return icon('modular_skyrat/master_files/icons/mob/butts.dmi', BUTT_SPRITE_VOX)
 
 /obj/item/bodypart/chest/mutant/teshari/Initialize(mapload)
 	worn_back_offset = new(
@@ -112,7 +115,6 @@
 	base_limb_id = SPECIES_TESHARI
 	brute_modifier = TESHARI_BRUTE_MODIFIER
 	burn_modifier = TESHARI_BURN_MODIFIER
-	speed_modifier = -0.1
 
 /obj/item/bodypart/leg/right/digitigrade/teshari
 	icon_greyscale = BODYPART_ICON_TESHARI
@@ -120,7 +122,6 @@
 	base_limb_id = SPECIES_TESHARI
 	brute_modifier = TESHARI_BRUTE_MODIFIER
 	burn_modifier = TESHARI_BURN_MODIFIER
-	speed_modifier = -0.1
 
 #undef TESHARI_PUNCH_LOW
 #undef TESHARI_PUNCH_HIGH

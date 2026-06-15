@@ -104,12 +104,17 @@
 				loaded_atom_movables |= thing
 
 	SSatoms.InitializeAtoms(loaded_areas + loaded_atom_movables + loaded_turfs)
+	SSlighting.setup_static_lighting_if_needed(loaded_turfs)
 	SSmachines.setup_template_powernets(loaded_cables)
 	SSair.setup_template_machinery(loaded_atmospherics)
 
 	SEND_SIGNAL(src, COMSIG_LAZY_TEMPLATE_LOADED, loaded_atom_movables, loaded_turfs, loaded_areas)
 	reservations += reservation
 	return reservation
+
+/datum/lazy_template/nukie_elevator
+	key = LAZY_TEMPLATE_KEY_NUKIEELEVATOR
+	map_name = "nukie_elevator"
 
 /datum/lazy_template/nukie_base
 	key = LAZY_TEMPLATE_KEY_NUKIEBASE
@@ -130,3 +135,7 @@
 /datum/lazy_template/heretic_sacrifice_room
 	key = LAZY_TEMPLATE_KEY_HERETIC_SACRIFICE
 	map_name = "heretic_sacrifice"
+
+/datum/lazy_template/voidwalker_void
+	key = LAZY_TEMPLATE_KEY_VOIDWALKER_VOID
+	map_name = "voidwalker_void"

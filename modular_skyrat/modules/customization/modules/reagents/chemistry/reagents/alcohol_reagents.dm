@@ -8,6 +8,28 @@
 	chemical_flags_skyrat = REAGENT_BLOOD_REGENERATING
 
 
+//Drinks from tg that are made with blood, thus hemophages are able to drink them without suffering ill effects
+
+/datum/reagent/consumable/ethanol/demonsblood
+	chemical_flags_skyrat = REAGENT_BLOOD_REGENERATING
+
+/datum/reagent/consumable/ethanol/devilskiss
+	chemical_flags_skyrat = REAGENT_BLOOD_REGENERATING
+
+/datum/reagent/consumable/ethanol/narsour
+	chemical_flags_skyrat = REAGENT_BLOOD_REGENERATING
+
+/datum/reagent/consumable/ethanol/protein_blend
+	chemical_flags_skyrat = REAGENT_BLOOD_REGENERATING
+
+/datum/reagent/consumable/ethanol/red_mead
+	chemical_flags_skyrat = REAGENT_BLOOD_REGENERATING
+
+//End of tg blood-based drinks
+
+
+
+
 // ROBOT ALCOHOL PAST THIS POINT
 // WOOO!
 
@@ -15,14 +37,14 @@
 	name = "Synthanol"
 	description = "A runny liquid with conductive capacities. Its effects on synthetics are similar to those of alcohol on organics."
 	color = "#1BB1FF"
-	process_flags = REAGENT_ORGANIC | REAGENT_SYNTHETIC
+	process_flags = REAGENT_ORGANIC | REAGENT_SYNTHETIC | REAGENT_PROTEAN
 	boozepwr = 50
 	quality = DRINK_NICE
 	taste_description = "motor oil"
 
 /datum/glass_style/drinking_glass/synthanol
 	required_drink_type = /datum/reagent/consumable/ethanol/synthanol
-	icon = 'modular_skyrat/master_files/icons/obj/drinks.dmi' // This should cover anything synthanol related. Will have to individually tag others unless we make an object path for skyrat drinks.
+	icon = 'modular_skyrat/master_files/icons/obj/drinks.dmi' // This should cover anything synthanol related. Will have to individually tag others unless we make an object path for Skyrat drinks.
 	icon_state = "synthanolglass"
 	name = "glass of synthanol"
 	desc = "The equivalent of alcohol for synthetic crewmembers. They'd find it awful if they had tastebuds too."
@@ -173,6 +195,7 @@
 	boozepwr = 66
 	quality = DRINK_FANTASTIC
 	taste_description = "overpowering sweetness with a touch of sourness, followed by iron and the sensation of a warm summer breeze"
+	chemical_flags_skyrat = REAGENT_BLOOD_REGENERATING //component drink is demon's blood, thus this drink is made with blood so hemophages can comfortably drink it
 
 /datum/glass_style/drinking_glass/sins_delight
 	required_drink_type = /datum/reagent/consumable/ethanol/sins_delight
@@ -181,7 +204,7 @@
 	name = "glass of sin's delight"
 	desc = "You can smell the seven sins rolling off the top of the glass."
 
-/datum/reagent/consumable/ethanol/strawberry_daiquiri
+/datum/reagent/consumable/ethanol/daiquiri/strawberry
 	name = "Strawberry Daiquiri"
 	description = "Pink looking alcoholic drink."
 	boozepwr = 20
@@ -189,23 +212,15 @@
 	quality = DRINK_NICE
 	taste_description = "sweet strawberry, lime and the ocean breeze"
 
-/datum/glass_style/drinking_glass/strawberry_daiquiri
-	required_drink_type = /datum/reagent/consumable/ethanol/strawberry_daiquiri
+/datum/glass_style/drinking_glass/daiquiri/strawberry
+	required_drink_type = /datum/reagent/consumable/ethanol/daiquiri/strawberry
 	icon = 'modular_skyrat/master_files/icons/obj/drinks.dmi'
 	icon_state = "strawberry_daiquiri"
 	name = "glass of strawberry daiquiri"
 	desc = "Pink looking drink with flowers and a big straw to sip it. Looks sweet and refreshing, perfect for warm days."
 
-/datum/reagent/consumable/ethanol/liz_fizz
-	name = "Liz Fizz"
-	description = "Triple citrus layered with some ice and cream."
-	boozepwr = 0
-	color = "#D8FF59"
-	quality = DRINK_NICE
-	taste_description = "brain freezing sourness"
-
 /datum/glass_style/drinking_glass/liz_fizz
-	required_drink_type = /datum/reagent/consumable/ethanol/liz_fizz
+	required_drink_type = /datum/reagent/consumable/liz_fizz
 	icon = 'modular_skyrat/master_files/icons/obj/drinks.dmi'
 	icon_state = "liz_fizz"
 	name = "glass of liz fizz"
@@ -259,7 +274,7 @@
 /datum/reagent/consumable/ethanol/hotlime_miami/on_mob_life(mob/living/carbon/affected_mob, seconds_per_tick, times_fired)
 	. = ..()
 	affected_mob.set_drugginess(1.5 MINUTES * REM * seconds_per_tick)
-	if(affected_mob.adjustStaminaLoss(-2 * REM * seconds_per_tick, updating_stamina = FALSE))
+	if(affected_mob.adjust_stamina_loss(-2 * REM * seconds_per_tick, updating_stamina = FALSE))
 		return UPDATE_MOB_HEALTH
 
 /datum/reagent/consumable/ethanol/coggrog
@@ -407,6 +422,7 @@
 	description = "Strong mead mixed with more honey and ethanol. Beloved by its human patrons."
 	boozepwr = 50 //strong!
 	taste_description = "honey and red wine"
+	chemical_flags_skyrat = REAGENT_BLOOD_REGENERATING //component drink is red mead, thus this drink is made with blood so hemophages can comfortably drink it
 
 /datum/glass_style/drinking_glass/nord_king
 	required_drink_type = /datum/reagent/consumable/ethanol/nord_king
@@ -428,6 +444,8 @@
 	description = "A bloody drink mixed with wine."
 	boozepwr = 10 //weak
 	taste_description = "iron with grapejuice"
+	chemical_flags = REAGENT_CAN_BE_SYNTHESIZED
+	chemical_flags_skyrat = REAGENT_BLOOD_REGENERATING
 
 /datum/glass_style/drinking_glass/velvet_kiss
 	required_drink_type = /datum/reagent/consumable/ethanol/velvet_kiss
@@ -437,11 +455,16 @@
 	desc = "Red and white drink for the upper classes or undead."
 
 /datum/reagent/consumable/ethanol/velvet_kiss/expose_mob(mob/living/exposed_mob, methods, reac_volume)
-	if(iszombie(exposed_mob) || isvampire(exposed_mob) || isdullahan(exposed_mob)) //Rare races!
+	if(iszombie(exposed_mob) || isvampire(exposed_mob) || isdullahan(exposed_mob) || ishemophage(exposed_mob)) //Rare races!
 		quality = RACE_DRINK
 	else
 		quality = DRINK_GOOD
 	return ..()
+
+/datum/reagent/consumable/ethanol/velvet_kiss/on_mob_life(mob/living/carbon/drinker, seconds_per_tick, times_fired)
+	. = ..()
+	if(drinker.blood_volume < BLOOD_VOLUME_NORMAL)
+		drinker.blood_volume = min(drinker.blood_volume + (1 * REM * seconds_per_tick), BLOOD_VOLUME_NORMAL) //Same as Bloody Mary, as it is roughly the same difficulty to make.  Gives hemophages a bit more choices to supplant their blood levels.
 
 /datum/reagent/consumable/ethanol/abduction_fruit
 	name = "Abduction Fruit"
@@ -544,7 +567,7 @@
 /datum/reagent/consumable/ethanol/jell_wyrm/on_mob_life(mob/living/carbon/affected_mob, seconds_per_tick, times_fired)
 	. = ..()
 	if(prob(20))
-		if(affected_mob.adjustToxLoss(0.5 * REM * seconds_per_tick, updating_health = FALSE))
+		if(affected_mob.adjust_tox_loss(0.5 * REM * seconds_per_tick, updating_health = FALSE))
 			return UPDATE_MOB_HEALTH
 
 #define JELLWYRM_DISGUST 25
@@ -680,7 +703,7 @@
 	cube.color = COLOR_CYAN
 	cube.set_anchored(TRUE)
 	drinker.forceMove(cube)
-	cryostylane_alert = drinker.throw_alert("cryostylane_alert", /atom/movable/screen/alert/status_effect/freon/cryostylane)
+	cryostylane_alert = drinker.throw_alert("cryostylane_alert", /atom/movable/screen/alert/status_effect/freon/stasis)
 	cryostylane_alert.attached_effect = src //so the alert can reference us, if it needs to
 
 /datum/reagent/consumable/ethanol/blizzard_brew/on_mob_delete(mob/living/carbon/drinker, amount)
@@ -748,7 +771,7 @@
 		affected_mob.remove_status_effect(effect)
 	affected_mob.reagents.remove_reagent(/datum/reagent/consumable/ethanol, 3 * REM * seconds_per_tick, include_subtypes = TRUE)
 	. = ..()
-	if(affected_mob.adjustToxLoss(-0.2 * REM * seconds_per_tick, updating_health = FALSE, required_biotype = affected_biotype))
+	if(affected_mob.adjust_tox_loss(-0.2 * REM * seconds_per_tick, updating_health = FALSE, required_biotype = affected_biotype))
 		. = UPDATE_MOB_HEALTH
 	affected_mob.adjust_drunk_effect(-10 * REM * seconds_per_tick)
 

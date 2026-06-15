@@ -7,6 +7,7 @@
 	icon_screen = "invaders"
 	light_color = LIGHT_COLOR_GREEN
 	interaction_flags_machine = INTERACT_MACHINE_ALLOW_SILICON|INTERACT_MACHINE_REQUIRES_LITERACY
+	projectiles_pass_chance = 0 // I guess gambling can save your life huh?
 
 	///If set, will dispense these as prizes instead of the default GLOB.arcade_prize_pool
 	///Like prize pool, it must be a list of the prize and the weight of being selected.
@@ -70,22 +71,21 @@
 		if(prize_override)
 			empprize = pick_weight(prize_override)
 		else
-			empprize = pick_weight(GLOB.arcade_prize_pool)
+			empprize = pick_weight_recursive(GLOB.arcade_prize_pool) //BUBBERSTATION CHANGE: USES PICK WEIGHT RECURSIVE
 		new empprize(loc)
 	explosion(src, devastation_range = -1, light_impact_range = 1 + num_of_prizes, flame_range = 1 + num_of_prizes)
 
 ///Dispenses the proper prizes and gives them a positive mood event. If valid, has a small chance to give a pulse rifle.
 /obj/machinery/computer/arcade/proc/prizevend(mob/living/user, prizes = 1)
-	SEND_SIGNAL(src, COMSIG_ARCADE_PRIZEVEND, user, prizes)
 	if(user.mind?.get_skill_level(/datum/skill/gaming) >= SKILL_LEVEL_LEGENDARY && HAS_TRAIT(user, TRAIT_GAMERGOD))
-		visible_message("<span class='notice'>[user] inputs an intense cheat code!",\
+		visible_message(span_notice("[user] inputs an intense cheat code!"),\
 		span_notice("You hear a flurry of buttons being pressed."))
 		say("CODE ACTIVATED: EXTRA PRIZES.")
 		prizes *= 2
 	for(var/i in 1 to prizes)
 		user.add_mood_event("arcade", /datum/mood_event/arcade)
 		if(prob(0.0001)) //1 in a million
-			new /obj/item/gun/energy/pulse/prize(src)
+			new /obj/item/gun/energy/pulse/prize(get_turf(src))
 			visible_message(span_notice("[src] dispenses.. woah, a gun! Way past cool."), span_notice("You hear a chime and a shot."))
 			user.client.give_award(/datum/award/achievement/misc/pulse, user)
 			continue
@@ -94,7 +94,14 @@
 		if(prize_override)
 			prizeselect = pick_weight(prize_override)
 		else
-			prizeselect = pick_weight(GLOB.arcade_prize_pool)
+			prizeselect = pick_weight_recursive(GLOB.arcade_prize_pool) //BUBBERSTATION CHANGE: USES PICK WEIGHT RECURSIVE
 		var/atom/movable/the_prize = new prizeselect(get_turf(src))
 		playsound(src, 'sound/machines/machine_vend.ogg', 50, TRUE, extrarange = -3)
 		visible_message(span_notice("[src] dispenses [the_prize]!"), span_notice("You hear a chime and a clunk."))
+
+/obj/machinery/computer/arcade/proc/victory_tickets(tickets, sound = TRUE)
+	SEND_SIGNAL(src, COMSIG_ARCADE_VICTORY)
+	visible_message(span_notice("[src] dispenses [tickets] ticket\s!"))
+	new /obj/item/stack/arcadeticket((get_turf(src)), tickets)
+	if(sound)
+		playsound(loc, 'sound/machines/arcade/win.ogg', 40)

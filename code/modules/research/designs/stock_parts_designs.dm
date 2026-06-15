@@ -305,7 +305,7 @@
 
 /datum/design/hyperwave_filter
 	name = "Hyperwave Filter"
-	desc = "A tiny device capable of filtering and converting super-intense radiowaves."
+	desc = "A tiny device capable of filtering and converting super-intense radio waves."
 	id = "s_filter"
 	build_type = PROTOLATHE | AWAY_LATHE
 	materials = list(/datum/material/iron =SMALL_MATERIAL_AMOUNT, /datum/material/silver =SMALL_MATERIAL_AMOUNT)
@@ -379,13 +379,13 @@
 	name = "Card Reader"
 	desc = "A small magnetic card reader, used for devices that take and transmit holocredits."
 	id = "c-reader"
-	build_type = PROTOLATHE | AWAY_LATHE
+	build_type = PROTOLATHE | AWAY_LATHE | AUTOLATHE
 	materials = list(/datum/material/iron=SMALL_MATERIAL_AMOUNT*0.5, /datum/material/glass=SMALL_MATERIAL_AMOUNT*0.1)
 	build_path = /obj/item/stock_parts/card_reader
 	category = list(
 		RND_CATEGORY_STOCK_PARTS + RND_SUBCATEGORY_STOCK_PARTS_MISC
 	)
-	departmental_flags = DEPARTMENT_BITFLAG_ENGINEERING | DEPARTMENT_BITFLAG_SCIENCE
+	departmental_flags = DEPARTMENT_BITFLAG_ENGINEERING | DEPARTMENT_BITFLAG_SCIENCE | DEPARTMENT_BITFLAG_CARGO
 
 /datum/design/water_recycler
 	name = "Water Recycler"

@@ -21,7 +21,7 @@
 		/obj/item/reagent_containers/heroinbrick = 3,
 		/obj/item/reagent_containers/blacktar = 12,
 		/obj/item/storage/pill_bottle/stimulant = 9, //ephedrine and coffee. Can actually change whether someone gets out of a runaway situation
-		/obj/item/clothing/mask/cigarette/pipe/crackpipe = 15,
+		/obj/item/cigarette/pipe/crackpipe = 15,
 		/obj/item/toy/cards/deck/syndicate = 10, //1tc, not balance breaking, small but premium commodity
 		/obj/item/reagent_containers/cup/bottle/morphine = 8,
 		/obj/item/reagent_containers/syringe/contraband/methamphetamine = 12,
@@ -103,21 +103,12 @@
 /obj/item/storage/backpack/messenger/sec
 	name = "security messenger bag"
 	desc = "A robust messenger bag for security related needs."
-	icon_state = "messenger_security_black"
-	inhand_icon_state = "messenger_security_black"
-	uses_advanced_reskins = TRUE
-	unique_reskin = list(
-		"Black Variant" = list(
-			RESKIN_ICON_STATE = "messenger_security_black",
-			RESKIN_WORN_ICON_STATE = "messenger_security_black",
-			RESKIN_INHAND_STATE = "messenger_security_black",
-		),
-		"White Variant" = list(
-			RESKIN_ICON_STATE = "messenger_security_white",
-			RESKIN_WORN_ICON_STATE = "messenger_security_white",
-			RESKIN_INHAND_STATE = "messenger_security_white",
-		),
-	)
+	icon = 'icons/obj/storage/backpack.dmi'
+	worn_icon = 'icons/mob/clothing/back/backpack.dmi'
+	lefthand_file = 'icons/mob/inhands/equipment/backpack_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/equipment/backpack_righthand.dmi'
+	icon_state = "messenger_security"
+	inhand_icon_state = "messenger_security"
 
 /obj/item/storage/backpack/messenger/explorer
 	name = "explorer messenger bag"
@@ -127,7 +118,7 @@
 
 /obj/item/storage/backpack/messenger/cap
 	name = "captain's messenger bag"
-	desc = "An exclusive messenger bag for NanoTrasen officers, made of real whaleleather."
+	desc = "An exclusive messenger bag for Nanotrasen officers, made of real whaleleather."
 	icon_state = "messenger_captain"
 	inhand_icon_state = "messenger_captain"
 

@@ -7,7 +7,7 @@
 	var/recommended_species = list(SPECIES_MAMMAL, SPECIES_TAJARAN, SPECIES_VULP, SPECIES_AQUATIC, SPECIES_AKULA)
 
 /datum/body_marking_set/none
-	name = "None"
+	name = SPRITE_ACCESSORY_NONE
 	recommended_species = null
 	body_marking_list = list()
 
@@ -144,8 +144,8 @@
 	body_marking_list = list("Scolipede", "Scolipede Spikes")
 
 /datum/body_marking_set/guilmon
-	name = "Guilmon"
-	body_marking_list = list("Guilmon", "Guilmon Mark")
+	name = "Toraxen"
+	body_marking_list = list("Toraxen", "Toraxen Mark")
 
 /datum/body_marking_set/xeno
 	name = "Xeno"

@@ -1,20 +1,3 @@
-/obj/item/storage/medkit/emergency
-	icon = 'modular_skyrat/modules/aesthetics/storage/storage.dmi'
-
-/obj/item/borg/upgrade/rped
-	icon = 'modular_skyrat/modules/aesthetics/storage/storage.dmi'
-
-/obj/item/storage/part_replacer
-	icon = 'modular_skyrat/modules/aesthetics/storage/storage.dmi'
-
-/obj/item/storage/part_replacer/bluespace
-	icon = 'icons/obj/storage/storage.dmi'
-
-/obj/item/storage/part_replacer/cyborg
-	icon = 'modular_skyrat/modules/aesthetics/storage/storage.dmi'
-
-
-
 /*
 // Boxes
 */
@@ -119,6 +102,10 @@
 /obj/item/storage/box/slugs
 	icon_state = "secbox_xl"
 	illustration = "breacherslug"
+
+/obj/item/storage/box/large_dart
+	icon_state = "secbox_xl"
+	illustration = "shotdart"
 
 /obj/item/storage/box/evidence
 	icon_state = "secbox"

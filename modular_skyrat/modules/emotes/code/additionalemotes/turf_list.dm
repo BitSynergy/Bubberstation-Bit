@@ -23,7 +23,7 @@
 			name = "sprouted vines"
 			desc = "It's an entanglement of vines."
 			icon_state = pick("kudzu1", "kudzu1", "kudzu3")
-			playsound(get_turf(src), 'sound/creatures/venus_trap_hurt.ogg', 25, TRUE)
+			playsound(get_turf(src), 'sound/mobs/non-humanoids/venus_trap/venus_trap_hurt.ogg', 25, TRUE)
 
 
 		if("water")
@@ -32,7 +32,7 @@
 			icon_state = "water"
 			src.add_overlay(image('modular_skyrat/master_files/icons/effects/turf_effects.dmi', "water_top", EXTRA_ABOVE_MOB_LAYER))
 			flick_overlay_static(image('modular_skyrat/modules/liquids/icons/obj/effects/splash.dmi', "splash", EXTRA_ABOVE_MOB_LAYER), 20)
-			playsound(get_turf(src), 'modular_skyrat/master_files/sound/effects/watersplash.ogg', 25, TRUE)
+			playsound(get_turf(src), 'modular_zubbers/sound/effects/watersplash.ogg', 25, TRUE)
 
 		if("smoke")
 			name = "blazing mist"
@@ -51,14 +51,14 @@
 			name = "physical hologram"
 			desc = "It's a hologram of a pet bed."
 			icon_state = "holobed"
-			playsound(get_turf(src), 'sound/misc/compiler-stage2.ogg', 25, TRUE)
+			playsound(get_turf(src), 'sound/machines/compiler/compiler-stage2.ogg', 25, TRUE)
 
 		if("holoseat")
 			name = "physical hologram"
 			desc = "It's a hologram of a barstool."
 			icon_state = "holoseat"
 			src.add_overlay(image('modular_skyrat/master_files/icons/effects/turf_effects.dmi', "holoseat_top", EXTRA_ABOVE_MOB_LAYER))
-			playsound(get_turf(src), 'sound/misc/compiler-stage2.ogg', 25, TRUE)
+			playsound(get_turf(src), 'sound/machines/compiler/compiler-stage2.ogg', 25, TRUE)
 
 		if("slime")
 			name = "pile of oozing slime"
@@ -108,33 +108,10 @@
 			icon = 'modular_skyrat/master_files/icons/effects/turf_effects_64.dmi'
 			icon_state = "tails"
 			pixel_x = -16 //correcting the offset for 64
-			var/mutable_appearance/overlay = mutable_appearance(
-				'modular_skyrat/master_files/icons/effects/turf_effects_64.dmi',
-				"tails_top",
-				EXTRA_ABOVE_MOB_LAYER,
-				src,
-				ABOVE_GAME_PLANE,
-				)
+			var/mutable_appearance/overlay = mutable_appearance('modular_skyrat/master_files/icons/effects/turf_effects_64.dmi', "tails_top", EXTRA_ABOVE_MOB_LAYER, src)
 			overlay.appearance_flags = TILE_BOUND|PIXEL_SCALE|KEEP_TOGETHER
 			src.add_overlay(overlay)
-			playsound(get_turf(src), 'sound/weapons/thudswoosh.ogg', 25, TRUE)
-
-		if("constrict")
-			name = "tail"
-			desc = "It's a scaly tail."
-			icon = 'modular_skyrat/master_files/icons/effects/turf_effects_64.dmi'
-			icon_state = "naga"
-			pixel_x = -16
-			var/mutable_appearance/overlay = mutable_appearance(
-				'modular_skyrat/master_files/icons/effects/turf_effects_64.dmi',
-				"naga_top",
-				EXTRA_ABOVE_MOB_LAYER,
-				src,
-				ABOVE_GAME_PLANE,
-				)
-			overlay.appearance_flags = TILE_BOUND|PIXEL_SCALE|KEEP_TOGETHER
-			src.add_overlay(overlay)
-			playsound(get_turf(src), 'modular_skyrat/modules/emotes/sound/emotes/hiss.ogg', 25, TRUE)
+			playsound(get_turf(src), 'sound/items/weapons/thudswoosh.ogg', 25, TRUE)
 
 		//prints
 		if("pawprint")
@@ -190,7 +167,7 @@
 			return
 
 /obj/structure/mark_turf/proc/turf_check(mob/living/user) //This gets called when a player leaves their turf
-	var/list/no_trail = list("tail", "constrict")
+	var/list/no_trail = list("tail")
 	var/list/long_trail = list("pawprint", "hoofprint", "clawprint", "footprint", "shoeprint")
 
 	if(user.owned_turf.name in no_trail)
@@ -204,6 +181,6 @@
 
 	if(ishuman(user))
 		var/mob/living/carbon/human/human_user = user
-		human_user.update_mutant_bodyparts()
+		human_user.update_body_parts()
 
 #undef EXTRA_ABOVE_MOB_LAYER
