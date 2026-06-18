@@ -79,6 +79,7 @@
 		/obj/item/stack/sheet/plasteel = list(GLOB.skyrat_plasteel_recipes),
 		/obj/item/stack/sheet/mineral/wood = list(GLOB.skyrat_wood_recipes),
 		/obj/item/stack/sheet/cloth = list(GLOB.skyrat_cloth_recipes),
+		/obj/item/stack/sheet/plastic = list(GLOB.skyrat_plastic_recipes),
 		/obj/item/stack/ore/glass = list(GLOB.skyrat_sand_recipes),
 		/obj/item/stack/rods = list(GLOB.skyrat_rod_recipes),
 		/obj/item/stack/sheet/mineral/stone = list(GLOB.stone_recipes),

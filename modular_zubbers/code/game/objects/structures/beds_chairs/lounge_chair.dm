@@ -1,14 +1,29 @@
 /obj/structure/bed/lounge_chair
-	name = "Lounge Chair"
+	name = "lounge chair"
 	desc = "A chair used to lay in, sleep in or strap on."
 	icon = 'modular_zubbers/icons/obj/structures/lounge_chair.dmi'
 	icon_state = "loungechair"
 	anchored = TRUE
 	can_buckle = TRUE
-	// The mutable appearance used for the overlay over buckled mobs.
-	var/mutable_appearance/armrest
-	// custom_materials = list(/datum/material/iron = SHEET_MATERIAL_AMOUNT * 4)
+	var/mutable_appearance/armrest // For the overlay over buckled mobs.
 
+/obj/structure/bed/lounge_chair/plastic
+	name = "plastic lounge chair"
+	desc = "A plastic chair used to lay in, sleep in or strap on."
+	icon = 'modular_zubbers/icons/obj/structures/lounge_chair.dmi'
+	icon_state = "loungechair_plastic"
+	anchored = TRUE
+	can_buckle = TRUE
+	build_stack_type = /obj/item/stack/sheet/plastic
+
+/obj/structure/bed/lounge_chair/wood
+	name = "wooden lounge chair"
+	desc = "A wooden chair used to lay in, sleep in or strap on."
+	icon = 'modular_zubbers/icons/obj/structures/lounge_chair.dmi'
+	icon_state = "loungechair_wood"
+	anchored = TRUE
+	can_buckle = TRUE
+	build_stack_type = /obj/item/stack/sheet/mineral/wood
 
 //Chair armrest code
 /obj/structure/bed/lounge_chair/Initialize(mapload)

@@ -90,6 +90,8 @@ GLOBAL_LIST_INIT(skyrat_wood_recipes, list(
 	new/datum/stack_recipe("sturdy wooden fence", /obj/structure/railing/wooden_fencing, 5, time = 2 SECONDS, crafting_flags = CRAFT_CHECK_DENSITY | CRAFT_ONE_PER_TURF | CRAFT_ON_SOLID_GROUND, category = CAT_STRUCTURE),
 	new/datum/stack_recipe("sturdy wooden fence gate", /obj/structure/railing/wooden_fencing/gate, 5, time = 2 SECONDS, crafting_flags = CRAFT_CHECK_DENSITY | CRAFT_ONE_PER_TURF | CRAFT_ON_SOLID_GROUND, category = CAT_STRUCTURE),
 	new/datum/stack_recipe("large wooden gate", /obj/structure/mineral_door/wood/large_gate, 10, time = 5 SECONDS, crafting_flags = CRAFT_CHECK_DENSITY | CRAFT_ONE_PER_TURF | CRAFT_ON_SOLID_GROUND, category = CAT_STRUCTURE),
+	new/datum/stack_recipe("wooden lounge chair", /obj/structure/bed/lounge_chair/wood, 2, category = CAT_FURNITURE),
+
 ))
 
 
@@ -162,3 +164,14 @@ GLOBAL_LIST_INIT(skyrat_sand_recipes, list(
 /obj/item/stack/ore/glass/get_main_recipes()
 	. = ..()
 	. += GLOB.skyrat_sand_recipes
+
+// Plastic
+
+GLOBAL_LIST_INIT(skyrat_plastic_recipes, list(
+	new/datum/stack_recipe("plastic lounge chair", /obj/structure/bed/lounge_chair/plastic, 2, category = CAT_FURNITURE),
+	new/datum/stack_recipe("plastic chair", /obj/structure/chair/plastic/monobloc, 2, category = CAT_FURNITURE),
+))
+
+/obj/item/stack/sheet/plastic/get_main_recipes()
+	. = ..()
+	. += GLOB.skyrat_plastic_recipes
