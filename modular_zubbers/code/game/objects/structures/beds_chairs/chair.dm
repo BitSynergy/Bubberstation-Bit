@@ -9,7 +9,7 @@
 
 /obj/item/chair/plastic/monobloc
 	name = "plastic chair"
-	desc = "(todo: write something funny)"
+	desc = "No matter how much you squirm, it'll still be uncomfortable."
 	icon = 'modular_zubbers/icons/obj/structures/chairs.dmi'
 	icon_state = "monobloc_toppled"
 	inhand_icon_state = "monobloc"
